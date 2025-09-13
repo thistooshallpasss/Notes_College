@@ -3391,3 +3391,1478 @@ Algorithm har lift ke liye ek "cost" (kitna time lagega) calculate karta hai aur
 * Jab woh apne upar ke sabse aakhri destination par pahunch jaati hai, to woh apni disha badal leti hai (DOWN) aur neeche aate hue baaki requests ko poora karti hai.
 * Isse bewajah upar-neeche jaana kam ho jaata hai aur efficiency badh jaati hai.
 ---
+
+
+
+
+# 📌 WhatsApp Messenger System Design
+
+---
+
+### ## What is WhatsApp?
+
+WhatsApp ek free, cross-platform instant messaging (IM) service hai. Yeh users ko internet ke zariye text messages, voice messages, images, videos, documents bhejne aur voice/video calls karne ki anumati deta hai. Iski sabse badi khaasiyat iski simplicity aur end-to-end encryption hai.
+
+---
+
+### ## Problem Statement (Humein Banana Kya Hai?)
+
+Humein ek scalable messaging system design karna hai jo billions of users ke liye 1-on-1 aur group chats ko support kar sake.
+
+#### Functional Requirements (System Ko Kya-Kya Karna Chahiye?)
+* User 1-on-1 (personal) chat kar sake.
+* User group chat kar sake (kai logon ke saath).
+* Message ke status dikhne chahiye: Sent (✓), Delivered (✓✓), Read (blue ✓✓).
+* User ka online status ya "last seen" timestamp dikhna chahiye.
+* Media files (photos, videos, documents) share karne ki suvidha honi chahiye.
+* End-to-end encryption honi chahiye (halanki hum isko high-level par hi discuss karenge).
+
+#### Non-Functional Requirements (System Ko Kaisa Perform Karna Chahiye?)
+* **High Availability:** Service hamesha on rehni chahiye, 24/7.
+* **Low Latency:** Messages turant (real-time mein) deliver honi chahiye.
+* **Durability:** Bheja gaya message network failure ya kisi aur dikkat ke bawajood kabhi khona (lost) nahi chahiye.
+* **Scalability:** System ko achanak badhne wale users aur messages ke load ko aasani se handle karna aana chahiye.
+* **Efficiency:** Battery aur data ka istemal kam se kam hona chahiye, khaaskar mobile devices par.
+
+---
+
+### ## Low Level Design (Data Models)
+
+* **Users Table:**
+    * `UserID` (PRIMARY KEY)
+    * `PhoneNumber` (UNIQUE): User ko identify karne ka mukhya zariya.
+    * `Username`
+    * `ProfilePictureURL`: Profile photo ka link (Object storage mein stored).
+    * `StatusText`
+    * `LastSeenTimestamp`: User kab aakhri baar online tha.
+    * `CreatedAt`
+
+* **Chats Table:**
+    * `ChatID` (PRIMARY KEY): Har 1-on-1 ya group chat ke liye ek unique ID.
+    * `IsGroupChat` (Boolean): Yeh batane ke liye ki chat group hai ya personal.
+    * `GroupName` (NULL for 1-on-1 chats)
+    * `GroupIconURL`
+    * `CreatedAt`
+
+* **User_Chats_Mapping Table:** (Many-to-Many relationship ke liye)
+    * `UserID` (ForeignKey)
+    * `ChatID` (ForeignKey)
+
+* **Messages Table:** (Ye sabse zaroori aur write-heavy table hai)
+    * `MessageID` (PRIMARY KEY): Har message ke liye ek unique ID.
+    * `ChatID` (ForeignKey): Message kis chat ka hissa hai.
+    * `SenderID` (ForeignKey): Message kisne bheja hai.
+    * `Content`: Asli text message. Encrypted hoga.
+    * `MessageType`: (e.g., TEXT, IMAGE, VIDEO, DOC).
+    * `MediaURL`: Agar media hai, to uska link (Object Storage, jaise S3 mein).
+    * `Timestamp`: Message kab bheja gaya tha.
+
+---
+
+### ## Architecture and Components (System Ka Naksha)
+
+WhatsApp ek normal web service jaisa nahi hai jo sirf HTTP request/response par chale. Real-time chat ke liye, client (mobile app) aur server ke beech ek **persistent (lagatar) connection** zaroori hai. Iske liye **WebSockets** ka istemal kiya jaata hai.
+
+### A. Core Connection Management
+
+1.  **Client Se Connection:** Jab user WhatsApp open karta hai, to app ek **WebSocket connection** hamare **Chat Server** ke saath banata hai. Yeh connection tab tak active rehta hai jab tak app background mein chalta rehta hai.
+2.  **Session Management:** Kaun sa user kis Chat Server se connected hai, iski information ek fast **Key-Value Store (jaise Redis)** mein rakhi jaati hai.
+    * *Mapping:* `UserID` -> `ChatServer_IP`
+    * Isse ek server doosre server ko aasani se message bhej sakta hai.
+
+### B. The Message Sending Path (1-on-1 Chat)
+
+Sochiye, User A, User B ko message bhej raha hai.
+
+1.  **Request:** User A apne phone par message type karke 'Send' dabata hai. Message uske phone se uske designated **Chat Server (Server 1)** tak WebSocket connection ke zariye jaata hai.
+
+2.  **Server Ka Kaam:**
+    * **Store Message:** Server 1 message ko turant **Database** mein store karta hai. Yeh **Durability** sunishchit karta hai. Message ab safe hai.
+    * **Find Receiver:** Server 1, Redis se poochta hai, "User B kis server se connected hai?".
+
+3.  **Deliver Message (2 Scenarios):**
+    * **Case 1: User B is Online:** Redis batata hai ki User B, **Chat Server 2** se connected hai. Server 1 message ko Server 2 ko bhej deta hai. Server 2 us message ko User B ke phone par unke WebSocket connection ke zariye turant bhej deta hai.
+    * **Case 2: User B is Offline:** Redis batata hai ki User B ka koi active connection nahi hai. Is case mein, Server 1 ek **Push Notification Service** (jaise Google's FCM ya Apple's APNS) ko bolta hai ki User B ko ek notification bheje ("You have a new message"). Jab User B app kholega, to app server se saare pending messages sync kar lega.
+
+4.  **Acknowledgment (✓, ✓✓, Blue ✓✓):**
+    * **Sent (✓):** Jaise hi Server 1 ko User A se message milta hai aur woh use DB mein store kar leta hai, woh User A ko ek `ACK` (acknowledgment) bhejta hai. User A ko **ek tick** dikhta hai.
+    * **Delivered (✓✓):** Jab User B ka phone message receive kar leta hai, to woh apne server (Server 2) ko `ACK` bhejta hai. Server 2 is `ACK` ko Server 1 tak pahunchata hai, aur Server 1 ise User A ko bhejta hai. User A ko **do ticks** dikhte hain.
+    * **Read (Blue ✓✓):** Jab User B, User A ka chat window kholta hai, to uska app ek `MessageRead` event server ko bhejta hai. Ye event aakhir mein User A tak pahunchta hai, aur use **blue ticks** dikhte hain.
+
+### C. Media Sharing (Photos/Videos)
+
+Bade files ko WebSocket par bhejna aklmandi nahi hai. Iske liye ek alag flow hai:
+1.  User A ek photo select karta hai.
+2.  App pehle us photo ko direct ek **Object Storage (jaise AWS S3)** par upload karta hai.
+3.  Upload hone ke baad, S3 ek unique URL deta hai.
+4.  Ab User A ka app us URL ko ek normal text message ki tarah User B ko bhejta hai (upar bataye gaye message flow ke zariye).
+5.  User B ke phone par jab yeh URL wala message aata hai, to uska app us URL se photo ko download karke display kar deta hai.
+
+### Database Ka Chunav
+
+* Is system ke liye ek **NoSQL Database** jaise **Cassandra** ya **DynamoDB** behtareen hai.
+* **Kyun?**
+    * **Massive Write Load:** Har second laakhon-karodon messages likhe ja rahe hain. Cassandra high write throughput ke liye design kiya gaya hai.
+    * **Scalability:** Users badhne par hum aasani se aur server add kar sakte hain (Horizontal Scaling).
+    * **Data Model:** Hamara primary query pattern hai: "Ek `ChatID` ke saare messages de do". Ye key-value type query NoSQL databases mein behad fast hoti hai.
+
+---
+# 📌 Facebook Messenger System Design
+
+---
+
+### ## What is Facebook Messenger?
+
+Facebook Messenger (ya Messenger) Meta ka ek instant messaging platform hai jo Facebook ke social graph se juda hua hai. WhatsApp ke विपरीत, jahan aapki pehchaan aapka phone number hota hai, Messenger mein aapki pehchaan aapka Facebook account hota hai. Ye users ko apne Facebook friends aur doosre logon ke saath chat karne, media share karne, aur voice/video calls karne ki suvidha deta hai. Yeh ek standalone app ke roop mein aur Facebook website ke andar bhi kaam karta hai.
+
+---
+
+### ## Problem Statement (Humein Banana Kya Hai?)
+
+Humein ek messaging system design karna hai jo Facebook ke astitv (existing) social graph par kaam kare aur users ko multiple devices (web, mobile) par ek seamless (nirbaadh) chat anubhav pradaan kare.
+
+#### Functional Requirements (System Ko Kya-Kya Karna Chahiye?)
+* User apne Facebook friends ke saath 1-on-1 chat kar sake.
+* User kai logon ke saath group chat bana sake.
+* Message ke status dikhne chahiye: Sent, Delivered, Seen (dekha gaya).
+* User ka "Active Now" status dikhna chahiye.
+* Media files (photos, videos, GIFs, stickers) share karne ki suvidha honi chahiye.
+* **Sabse Zaroori:** Chat history sabhi devices (e.g., phone, laptop, tablet) par poori tarah se sync honi chahiye. Ek device par bheja ya padha gaya message doosre device par bhi waisa hi dikhna chahiye.
+
+#### Non-Functional Requirements (System Ko Kaisa Perform Karna Chahiye?)
+* **High Availability:** Service hamesha upalbdh honi chahiye.
+* **Low Latency:** Real-time mein messages ki delivery honi chahiye.
+* **Consistency:** User ka data sabhi devices par consistent (ek samaan) hona chahiye. Ye behad zaroori hai.
+* **Scalability:** System ko Facebook ke arabon (billions) users ke message load ko handle karne ke liye scalable hona chahiye.
+* **Durability:** Ek baar bheja gaya message kabhi khona nahi chahiye.
+
+---
+
+### ## Low Level Design (Data Models)
+
+Ye WhatsApp jaisa hi hai, lekin yahan user ki pehchaan Facebook `UserID` se hoti hai.
+
+* **Users Table:** (Ye Facebook ka main user table ho sakta hai)
+    * `UserID` (PRIMARY KEY)
+    * `Username`
+    * `ProfilePictureURL`
+    * `LastActiveTimestamp`: User kab aakhri baar active tha.
+
+* **Threads Table:** (Har chat (1-on-1 ya group) ko ek "thread" ya "conversation" kaha jaa sakta hai)
+    * `ThreadID` (PRIMARY KEY)
+    * `IsGroupThread` (Boolean)
+    * `ThreadName`, `ThreadIconURL` (Groups ke liye)
+    * `LastMessageTimestamp`: Is thread mein aakhri message kab aaya tha (chats ko sort karne ke liye).
+
+* **User_Threads_Mapping Table:** (Many-to-Many relationship ke liye)
+    * `UserID` (ForeignKey)
+    * `ThreadID` (ForeignKey)
+
+* **Messages Table:** (Sabse active table)
+    * `MessageID` (PRIMARY KEY): Har message ke liye ek unique ID.
+    * `ThreadID` (ForeignKey): Message kis conversation ka hissa hai.
+    * `SenderID` (ForeignKey): Message kisne bheja.
+    * `Content`: Asli text message (encrypted).
+    * `MessageType`: (TEXT, IMAGE, STICKER, etc.).
+    * `MediaURL`: Agar media hai to uska S3/Object Storage link.
+    * `Timestamp`
+
+* **Seen_Status Table:** (Track karne ke liye kisne kab tak message dekha hai)
+    * `ThreadID`
+    * `UserID`
+    * `LastSeenMessageID`: Is user ne is thread mein kaunsa aakhri message dekha hai.
+
+---
+
+### ## Architecture and Components (System Ka Naksha)
+
+Messenger ka core bhi **WebSockets** par chalta hai taaki real-time communication ho sake. Mukhya chunauti (challenge) multiple devices ko sync mein rakhna hai.
+
+### A. Core Connection Management (Multi-Device Support)
+
+Ek user ek hi samay mein apne phone aur laptop dono par online ho sakta hai. Iska matlab hai ki ek `UserID` ke liye **multiple WebSocket connections** ho sakte hain.
+
+1.  **Multiple Connections:** Jab user apne phone se login karta hai, to ek WebSocket connection banta hai. Jab woh apne laptop par Facebook kholta hai, to ek aur WebSocket connection banta hai.
+2.  **Session Management (Redis):** Hamara session store ab thoda complex hoga. Humein har user ke saare active connections ko store karna hoga.
+    * *Mapping:* `UserID` -> `[ {deviceId: 'phone123', server: 'Server1_IP'}, {deviceId: 'laptop456', server: 'Server2_IP'} ]`
+    * Isse pata chalta hai ki ek user ke kaun-kaun se device kis-kis server se jude hain.
+
+### B. The Message Sending Path (Syncing is Key)
+
+Sochiye, User A apne **laptop** se User B ko message bhej raha hai.
+
+1.  **Request:** User A ke laptop se message WebSocket ke zariye uske connected **Chat Server (Server 1)** tak jaata hai.
+
+2.  **Server Ka Kaam:**
+    * **Store Message:** Server 1 message ko **Database** mein store karta hai. (Durability)
+    * **Sync Sender's Other Devices:** Server 1, Redis se User A ke doosre active devices ki list nikalta hai (e.g., uska phone, jo Server 3 se connected hai). Server 1, Server 3 ko message bhejta hai taaki User A ke phone par bhi "sent" message dikh jaaye. **Yeh seamless sync ka pehla kadam hai.**
+    * **Find Receiver:** Server 1, Redis se User B ke saare active devices ki list nikalta hai. Maan lijiye User B ka phone Server 4 par aur tablet Server 5 par active hai.
+
+3.  **Deliver Message to Receiver:**
+    * Server 1 message ko **Server 4** aur **Server 5** dono ko bhej deta hai.
+    * Server 4 use User B ke phone par bhejta hai.
+    * Server 5 use User B ke tablet par bhejta hai.
+    * Agar User B ka koi device offline hai, to uss device ke liye ek **Push Notification** bhej di jaati hai.
+
+### C. Handling "Seen" Status
+
+Ye status bhi sabhi devices par sync hona chahiye.
+
+1.  User B apne **phone** par message padhta hai. Uska phone `MessageSeen` event **Server 4** ko bhejta hai.
+2.  Server 4, `Seen_Status` table mein update karta hai ki User B ne is thread mein yahan tak padh liya hai.
+3.  Ab is information ko sab jagah sync karna hai:
+    * Server 4 is "seen" update ko **User A ke sabhi active devices** tak bhejta hai (via Server 1 & 2), taaki User A ko "Seen" dikh jaaye.
+    * Server 4 is update ko **User B ke doosre active devices** (jaise tablet, via Server 5) tak bhi bhejta hai, taaki wahan par message "unread" na dikhe.
+
+### Database Ka Chunav
+
+* **NoSQL (Cassandra/DynamoDB):** WhatsApp ki tarah hi, Messenger ka data bhi NoSQL ke liye ek perfect fit hai. Write load bahut zyada hai, data model simple (key-value jaisa) hai, aur horizontal scaling ki sakht zaroorat hai. Facebook ne apne messaging platform ke liye shuru mein HBase aur baad mein custom solutions ka istemal kiya, jo NoSQL ke hi principles par aadhaarit hain.
+
+---
+# 📌 Gmail System Design
+
+---
+
+### ## What is Gmail?
+
+Gmail (ya Google Mail) Google dwara di jaane wali ek free email service hai. Jab ise 2004 mein launch kiya gaya tha, to isne 1 GB storage dekar email industry mein kranti la di thi, jo uss samay anokha tha. Gmail apni shaktishali (powerful) search capabilities, conversation view (ek hi subject waale emails ko ek saath group karna), aur behad prabhavi (effective) spam filtering ke liye jaana jaata hai. Yeh ek web-based platform hai, lekin saath hi IMAP aur POP3 jaise standard email protocols ko bhi support karta hai.
+
+---
+
+### ## Problem Statement (Humein Banana Kya Hai?)
+
+Humein ek atyant vishwasniya (highly reliable), scalable, aur tezi se search karne wala email system design karna hai jo arabon users aur unke petabytes (1 PB = 1000 TB) data ko sambhal sake.
+
+#### Functional Requirements (System Ko Kya-Kya Karna Chahiye?)
+* User email bhej sake (To, CC, BCC ke saath).
+* User email prapt (receive) kar sake.
+* User apne emails ki list dekh sake (Inbox, Sent, Drafts, Spam, etc.).
+* **Sabse Zaroori:** User apne saare emails (jo saalon purane ho sakte hain) mein se kuch bhi **bahut tezi se search** kar sake.
+* User emails ko manage kar sake (delete, archive, label lagana, spam mark karna).
+* Attachments (files) bhejne aur receive karne ki suvidha honi chahiye.
+
+#### Non-Functional Requirements (System Ko Kaisa Perform Karna Chahiye?)
+* **Durability (Ati-Vishwasniyata):** Ek user ka email khona (lost) bilkul bhi swikar nahi kiya jaa sakta. Data ko kai jagah replicate aur backup karna anivarya hai. Yeh system ki sabse badi zaroorat hai.
+* **High Availability:** Email service hamesha upalbdh honi chahiye. Downtime na ke barabar hona chahiye.
+* **Low Latency (for UI and Search):** Email delivery mein thodi deri ho sakti hai, lekin user ka inbox load karna ya search results dikhana secondon mein hona chahiye.
+* **Scalability:** System ko users aur unke data ki badhti sankhya ke saath aasaani se scale hona chahiye.
+
+---
+
+### ## Low Level Design (Data Models)
+
+Gmail ke scale par, ek single `Emails` table mein sab kuch store karna asambhav hai. Humein data ko uske upyog ke aadhar par alag-alag store karna hoga. Ek email jo 10 logon ko bheja jaata hai, use 10 baar store nahi kiya jaata; use ek baar store karke, 10 jagah reference kiya jaata hai.
+
+* **Users Table:**
+    * `UserID`, `EmailAddress` (PRIMARY KEY), `PasswordHash`, `StorageQuota`, `CreatedAt`
+
+* **Emails Table (The Core Content):**
+    * `EmailID` (PRIMARY KEY): Har unique email ke liye.
+    * `Subject`, `Body`: Email ka asli content.
+    * `FromAddress`
+    * `Timestamp`
+    * *Note:* Is table mein `To` ya `CC` ki list nahi hoti. Yeh sirf email ka raw content store karta hai.
+
+* **Email_Recipients Table:**
+    * `EmailID` (ForeignKey): Kaunsa email.
+    * `RecipientAddress`: Kisko bheja gaya.
+    * `RecipientType`: (TO, CC, BCC).
+
+* **User_Mailbox Table (The Index):** *Yeh sabse zaroori table hai.* Yeh har user ka "view" represent karta hai. Ismein email ka content nahi hota, sirf metadata aur pointers hote hain.
+    * `UserID` (Indexed)
+    * `EmailID` (ForeignKey)
+    * `MailboxFolder`: (INBOX, SENT, DRAFTS, SPAM, TRASH).
+    * `IsRead` (Boolean)
+    * `Labels`: (e.g., ['work', 'important']). Array ya ek alag mapping table ho sakta hai.
+    * Jab aap apna inbox kholte hain, to system isi table se query karke aapko emails ki list dikhata hai.
+
+* **Attachments Table:**
+    * `AttachmentID` (PRIMARY KEY)
+    * `EmailID` (ForeignKey)
+    * `FileName`, `FileSize`, `FileType`
+    * `StorageURL`: File kahan store hai, uska pointer (e.g., Google Cloud Storage ka link).
+
+---
+
+### ## Architecture and Components (System Ka Naksha)
+
+Gmail ka architecture kai alag-alag, specialized microservices se bana hai.
+
+### A. The Email Receiving Path (Email Kaise Aata Hai)
+
+1.  **SMTP Servers:** Jab koi aapko email bhejta hai, to woh pehle Gmail ke **SMTP Servers** par aata hai. Ye internet se email receive karne ke liye standard entry point hain.
+
+2.  **Processing Pipeline & Queue:** SMTP server email ko ek **Message Queue** (jaise Pub/Sub ya Kafka) mein daal deta hai. Isse aage ka process asynchronous (background mein) ho jaata hai.
+
+3.  **Spam Filtering Service:** Ek worker is email ko queue se uthata hai aur sabse pehle use ek advanced **ML-based Spam Filter** se guzarta hai.
+
+4.  **Data Storage:**
+    * **Content Store:** Agar email spam nahi hai, to uske `Body` aur `Subject` ko ek bade **NoSQL Database / Object Store (jaise Google Bigtable)** mein store kiya jaata hai aur ek unique `EmailID` generate hota hai. Attachments ko **Google Cloud Storage (GCS)** jaise object storage mein daala jaata hai.
+    * **Metadata Store:** Ab, har recipient ke liye, `User_Mailbox` table (jo ek sharded SQL ya Spanner jaise distributed database mein hai) mein ek entry banayi jaati hai. Jaise, `(UserID: 'userB', EmailID: 'email123', MailboxFolder: 'INBOX', IsRead: false)`.
+
+5.  **Indexing for Search:** Isi dauran, email ka content (subject, body, sender) ek **Asynchronous Worker** ko bheja jaata hai, jo use **Search Index** mein daal deta hai.
+
+6.  **Notification:** User ko ek push notification bheji jaati hai ki "You have a new email".
+
+### B. The Search Magic (Search Itna Tez Kaise Hai?)
+
+Gmail har baar search karne par aapke saare emails ko scan nahi karta. Woh Google Search ki tarah hi ek **Inverted Index** ka istemal karta hai.
+
+* **Inverted Index Kya Hai?** Yeh ek data structure hai jo aam index ka ulta hota hai.
+    * *Normal Index:* `EmailID` -> `[word1, word2, word3]`
+    * *Inverted Index:* `word` -> `[EmailID1, EmailID5, EmailID99]` (ye word kin-kin emails mein hai)
+
+* **Kaise Kaam Karta Hai?**
+    1.  Jab ek naya email aata hai, to background workers uske saare shabdon (words) ko nikaal kar is Inverted Index ko update kar dete hain.
+    2.  Jab aap "yearly report" search karte hain, to system 'yearly' ke aage likhi `EmailID` list aur 'report' ke aage likhi `EmailID` list ko uthata hai.
+    3.  Fir woh dono lists ka **intersection** (common IDs) nikalta hai. Result aapko turant mil jaata hai.
+    4.  Yeh poora Search Index itna bada hota hai ki use `UserID` ke aadhar par kai hazaar servers mein **shard (baant)** kar rakha jaata hai. Har user ke paas ek tarah se uska apna chota Google Search engine hota hai.
+
+### C. The Email Sending Path
+
+Yeh receiving path ka ulta hai.
+1.  Aap browser mein 'Send' click karte hain. Request **Web Server** par jaati hai.
+2.  System content ko **Content Store** mein save karta hai, `EmailID` generate karta hai.
+3.  Aapke `User_Mailbox` mein 'SENT' folder ke liye ek entry banata hai.
+4.  Agar recipient bhi Gmail user hai, to uske `User_Mailbox` mein 'INBOX' ke liye ek entry banata hai.
+5.  Agar recipient bahar ka hai (e.g., @yahoo.com), to email ko ek **outbound SMTP server** ko de diya jaata hai, jo use internet par aage bhej deta hai.
+
+---
+
+
+# 📌 Chess.com System Design
+
+---
+
+### ## What is Chess.com?
+
+Chess.com ek online chess platform hai jo duniya bhar ke chess khiladiyon ko aapas mein jodata hai. Yeh sirf chess khelne ka ek madhyam nahi hai, balki ek poora community platform hai. Users yahan live chess khel sakte hain (alag-alag time controls ke saath jaise blitz, rapid, classical), daily puzzles solve kar sakte hain, lessons se seekh sakte hain, aur bade tournaments mein hissa le sakte hain ya unhe live dekh sakte hain.
+
+---
+
+### ## Problem Statement (Humein Banana Kya Hai?)
+
+Humein ek scalable online platform design karna hai jahan laakhon users ek saath (concurrently) live chess games khel sakein. System ko efficiently players ko match karna, game state ko manage karna, aur game ke baad analysis pradaan karna chahiye.
+
+#### Functional Requirements (System Ko Kya-Kya Karna Chahiye?)
+* User doosre user ke khilaaf ek live chess game khel sake.
+* System ko user ke skill level (rating) ke aadhar par ek uchit pratidvandi (opponent) se **match** karna chahiye.
+* System ko chess ke niyamon ke anusaar har move ko **validate** karna chahiye (illegal moves ko rokna).
+* Har game ke liye player ke time clocks ko manage karna chahiye.
+* Game ke result (jeet, haar, draw) ko record karna aur uske aadhar par players ki rating ko update karna.
+* Users apni pichli (past) games ko review aur analyze kar sakein.
+* Users doosre logon ke (khaaskar top players ke) live games dekh sakein.
+
+#### Non-Functional Requirements (System Ko Kaisa Perform Karna Chahiye?)
+* **Low Latency (Behad Zaroori):** Ek player dwara ki gayi move doosre player ke screen par turant (milliseconds mein) dikhni chahiye. Blitz jaise fast games mein delay bilkul bhi swikar nahi kiya jaa sakta.
+* **High Availability:** Platform hamesha khelne ke liye uplabdh hona chahiye.
+* **Stateful Service:** Har chal rahe game ka state (board position, kiska turn hai, clock time) server par maintain karna anivarya hai. Yeh ek stateless web app se bilkul alag hai.
+* **Scalability:** System ko ek saath chal rahe laakhon games ko handle karne ke liye scalable hona chahiye.
+* **Fair Play:** Cheating (engine ka istemal) ko rokne ke liye mechanisms hone chahiye (halanki yeh ek advanced feature hai).
+
+---
+
+### ## Low Level Design (Data Models)
+
+* **Users Table:**
+    * `UserID` (PRIMARY KEY)
+    * `Username`, `PasswordHash`, `Email`
+    * `RatingBlitz`, `RatingRapid`, `RatingClassical`: Alag-alag time formats ke liye alag ELO ratings.
+    * `Country`, `JoinedAt`
+
+* **Games Table (Completed Games):**
+    * `GameID` (PRIMARY KEY)
+    * `WhitePlayerID` (ForeignKey to Users)
+    * `BlackPlayerID` (ForeignKey to Users)
+    * `Result`: (e.g., '1-0' for white win, '0-1' for black win, '1/2-1/2' for draw).
+    * `EndReason`: (e.g., 'Checkmate', 'Timeout', 'Resignation').
+    * `GamePGN`: Poore game ki moves ko Portable Game Notation (PGN) format mein store karna. Yeh text-based hota hai aur bahut efficient hai.
+    * `EndTime`, `TimeFormat`
+
+* **Live Game State (In-Memory Store, e.g., Redis):**
+    Active games ko SQL database mein baar-baar update karna bahut slow hoga. Iske liye Redis jaise in-memory database ka istemal hota hai.
+    * **Key:** `GameID`
+    * **Value:** Ek JSON object ya Hash jismein saari live information ho:
+        * `BoardState`: FEN (Forsyth–Edwards Notation) string mein board ki current position.
+        * `WhoseTurn`: ('white' or 'black').
+        * `WhitePlayerID`, `BlackPlayerID`
+        * `WhiteTimeLeft`, `BlackTimeLeft` (milliseconds mein).
+        * `LastMoveTimestamp`
+
+---
+
+### ## Architecture and Components (System Ka Naksha)
+
+Is system ka core real-time aur stateful hai. Iske liye **WebSockets** technology anivarya hai.
+
+### A. The Matchmaking Flow (Game Shuru Kaise Hota Hai)
+
+1.  **Request:** User "Play 5 min Blitz" par click karta hai. Request **API Gateway** se hote hue ek stateless **Web Server** tak jaati hai.
+2.  **Queue:** Web Server user ki request (`UserID`, `Rating`, `TimeFormat`) ko ek **Matchmaking Service** ko bhejta hai. Yeh service user ko ek **Queue** mein daal deti hai, jo rating aur time format ke aadhar par alag-alag hoti hai. Yeh queues **Redis** mein manage ki jaa sakti hain.
+3.  **Pairing:** Matchmaking Service lagatar in queues ko scan karti hai aur do compatible players (jinki rating lagbhag samaan ho) ko dhoondhti hai.
+4.  **Game Server Assignment:** Jaise hi ek match milta hai (User A vs User B), Matchmaking Service ek available **Game Server** (jo stateful hai aur jiske paas capacity hai) ko chunti hai.
+5.  **Connection Info:** Matchmaking Service dono players (User A aur B) ke clients ko us chune gaye Game Server ka address (`IP:Port`) aur ek unique `GameID` bhejti hai.
+
+### B. The Gameplay Flow (Asli Khel)
+
+1.  **WebSocket Connection:** Dono players ke client (browser/app) ab us specific **Game Server** ke saath ek **persistent WebSocket connection** banate hain. Ab saara communication isi connection par hoga.
+2.  **Game Initialization:** Game Server us `GameID` ke liye ek naya game instance apni memory mein (ya Redis mein) banata hai, jismein shuruaati board position (FEN), clocks, aur player info hoti hai.
+3.  **Move Execution:**
+    * User A (White) ek move chalta hai (e.g., `e2e4`). Yeh move data WebSocket ke zariye Game Server ko bheja jaata hai.
+    * **Server Validation:** Game Server check karta hai ki kya yeh move chess ke niyamon ke anusaar **legal** hai, kya yeh User A ka hi turn hai, etc.
+    * **State Update:** Agar move legal hai, to server game ke state ko update karta hai: FEN string badalta hai, User A ke clock se time kam karta hai, aur turn User B ko de deta hai.
+    * **Broadcast:** Game Server is nayi state (move `e2e4`, naye clock times) ko WebSocket ke zariye **dono players** ko bhejta hai. User B ke client ko move screen par dikhta hai.
+4.  Yeh **Move -> Validate -> Update -> Broadcast** ka loop tab tak chalta rehta hai jab tak game khatm na ho jaaye.
+
+### C. The Post-Game Flow (Game Khatm Hone Ke Baad)
+
+1.  **Game Over:** Game Server game ke khatm hone ki sthiti (checkmate, timeout, resignation) ko detect karta hai. Woh dono clients ko "Game Over" ka final message bhejta hai. Ab WebSocket connection band ho sakta hai.
+2.  **Asynchronous Processing:** Game Server, game ka poora data (final PGN, result, players) ko ek **Message Queue** (like RabbitMQ/SQS) mein daal deta hai.
+3.  **Background Worker:** Ek **worker** is message ko queue se uthata hai aur do kaam karta hai:
+    * Poore game ko permanent storage ke liye main **SQL Database** (`Games` table) mein save karta hai.
+    * Ek **Rating Service** ko call karke dono players ki ELO rating ko `Users` table mein update karta hai.
+    * Yeh sab background mein hota hai taaki Game Server turant agle game ko handle karne ke liye free ho jaaye.
+---
+# 📌 IRCTC System Design
+
+---
+
+### ## What is IRCTC?
+
+IRCTC (Indian Railway Catering and Tourism Corporation) Indian Railways ki ek sahayak company hai jo online ticket booking, catering, aur tourism services pradaan karti hai. Iski website, `irctc.co.in`, duniya ki sabse zyada transaction waali websites mein se ek hai. Iski sabse badi chunauti hai ek seemit inventory (train ki seats) ke liye laakhon-karodon concurrent requests ko handle karna, khaaskar **Tatkal booking** ke samay jab traffic achanak se hazaar guna badh jaata hai.
+
+---
+
+### ## Problem Statement (Humein Banana Kya Hai?)
+
+Humein ek atyant vishwasniya (highly reliable) aur scalable online ticket booking platform design karna hai jo Indian Railways ke vishaal network ke liye kaam kare. System ko race conditions (ek hi seat ke liye do logon ki booking) ko rokna aur transactions ki dridhta (integrity) sunishchit karni chahiye.
+
+#### Functional Requirements (System Ko Kya-Kya Karna Chahiye?)
+* User do stations ke beech, ek vishisht (specific) taarikh par trains khoj (search) sake.
+* System ko trains ki list, unki timing, seat ki uplabdhta (availability), aur kiraya (fare) dikhana chahiye.
+* User ek ya ek se adhik yaatriyon (passengers) ke liye ticket book kar sake.
+* System ko alag-alag quotas (General, Tatkal, Ladies, Premium Tatkal) ko handle karna chahiye.
+* User book kiye gaye ticket ko cancel kar sake, jiske baad refund process ho.
+* System ko vibhinn (various) payment gateways ke maadhyam se payment process karna chahiye.
+* User apni purani aur aane waali bookings ka itihas (history) dekh sake.
+
+#### Non-Functional Requirements (System Ko Kaisa Perform Karna Chahiye?)
+* **High Consistency (Sabse Zaroori):** Yeh system ki sabse mukhya zaroorat hai. Ek seat galti se bhi do alag logon ko book nahi honi chahiye. Sabhi booking transactions **ACID compliant** (Atomicity, Consistency, Isolation, Durability) hone chahiye.
+* **High Availability:** System, khaaskar peak hours (Tatkal time) mein, hamesha uplabdh hona chahiye.
+* **Scalability:** System ko Tatkal aur tyohaaron (festivals) ke samay aane waale achanak traffic spikes ko handle karne ke liye design kiya jaana chahiye.
+* **Fault Tolerance:** Payment failure ya server crash jaisi sthiti mein data inconsistent nahi hona chahiye (paisa kat gaya par ticket nahi mila). System ko aisi sthitiyon se gracefully recover karna chahiye.
+* **Low Latency (for Search):** Train search ka anubhav bahut tez hona chahiye. Booking process thoda dheema ho sakta hai kyunki usmein complex transactions hote hain.
+
+---
+
+### ## Low Level Design (Data Models)
+
+Is system ke liye ek **Relational Database (SQL)** jaise PostgreSQL ya Oracle anivarya hai kyunki humein strong transactional support (ACID) chahiye.
+
+* **Users Table:** `UserID`, `Username`, `PasswordHash`, `FullName`, `Age`, `Gender`, `MobileNumber`.
+* **Trains Table:** `TrainID` (PK), `TrainNumber`, `TrainName`, `SourceStationID`, `DestinationStationID`.
+* **Stations Table:** `StationID` (PK), `StationName`, `StationCode`.
+* **Train_Schedule Table:** `TrainID`, `StationID`, `ArrivalTime`, `DepartureTime`, `Distance`, `StopNumber`.
+* **Availability Table (The Core Inventory):** Har train, har din, har class, har route segment ke liye available seats ka count store karna.
+    * `TrainID`, `Class` (Sleeper, 3A, etc.), `Quota` (General, Tatkal), `TravelDate`
+    * `SourceStationID`, `DestinationStationID`
+    * `AvailableSeatsCount`
+    * *Note:* Yahi table hai jo sabse zyada read aur write jhelegi.
+* **Bookings Table (PNR Info):**
+    * `PNR` (PRIMARY KEY)
+    * `UserID`, `TrainID`, `TravelDate`
+    * `SourceStationID`, `DestinationStationID`
+    * `BookingStatus` (CONFIRMED, WAITING, CANCELLED)
+    * `TotalFare`, `TransactionID`
+* **Passengers Table:**
+    * `PNR` (ForeignKey)
+    * `PassengerName`, `Age`, `Gender`
+    * `SeatNumber`, `CoachNumber`, `BerthType` (Upper, Lower, etc.)
+    * `BookingStatus` (CONFIRMED, WAITING)
+
+---
+
+### ## Architecture and Components (System Ka Naksha)
+
+IRCTC ke architecture ka mukhya siddhant (principle) hai **read-heavy search traffic** ko **write-heavy booking traffic** se alag karna.
+
+### A. The Train Search Flow (Read-Intensive)
+
+1.  **Request:** User Source, Destination aur Date enter karta hai. Request **Load Balancer** se hote hue **Web Servers** tak jaati hai.
+2.  **Dedicated Search Service:** Request ek alag **Search Service** ko bheji jaati hai. Yeh service sirf train khojne ke liye optimized hai.
+3.  **Caching:** Search Service sabse pehle **Distributed Cache (jaise Redis)** mein check karti hai ki kya is query (e.g., `Prayagraj -> Delhi, 13-Sep-2025`) ka result pehle se मौजूद hai. Agar haan, to wahin se result bhej diya jaata hai.
+4.  **Read-Replica DB:** Agar cache mein nahi milta, to Search Service database ke **Read Replica** (main database ki ek copy jo sirf read operations ke liye hoti hai) se query karti hai. Yeh `Train_Schedule` aur `Availability` tables se data nikal kar user ko dikha deti hai. Isse main database par load nahi padta.
+
+### B. The Ticket Booking Flow (Write-Intensive & Transactional)
+
+Yeh sabse critical hissa hai aur ismein **race conditions** ko rokna zaroori hai.
+
+1.  **Request:** User "Book Now" par click karta hai. Request ek alag **Booking Service** ko jaati hai.
+2.  **Transaction & Locking (Sabse Zaroori Kadam):**
+    * Booking Service ek **DATABASE TRANSACTION** shuru karti hai.
+    * Yeh `Availability` table mein check karti hai ki seats hain ya nahi.
+    * Agar seats hain, to yeh **`AvailableSeatsCount` ko ghatati hai** aur un seats par ek **temporary lock** laga deti hai. Yeh lock ek alag `Seat_Locks` table mein entry daalkar ya row ko `LOCKED` state mein mark karke kiya jaa sakta hai. Is lock ka ek expiry time hota hai (e.g., 10 minutes).
+    * Is lock ke kaaran, usi samay koi doosra user unhi seats ko book nahi kar sakta.
+3.  **Payment:** User ko payment page par bheja jaata hai. Woh apni details daalkar payment karta hai. Request **Payment Gateway Service** ke zariye bank tak jaati hai.
+4.  **Transaction Outcome:**
+    * **Case 1: Payment Successful:** Payment Gateway success ka response bhejta hai. Booking Service database transaction ko **COMMIT** kar deti hai. Lock ek permanent booking mein badal jaata hai, PNR generate hota hai, aur `Bookings`/`Passengers` tables mein data daal diya jaata hai. User ko confirmation dikha diya jaata hai. Ek confirmation message **Message Queue (jaise Kafka)** mein daal diya jaata hai taaki background worker user ko SMS/Email bhej sake.
+    * **Case 2: Payment Failed ya Timeout:** Agar user 10 minute mein payment nahi kar paata ya payment fail ho jaata hai, to Booking Service database transaction ko **ROLLBACK** kar deti hai. Temporary lock hatt jaata hai, aur `AvailableSeatsCount` wapas badha diya jaata hai. Woh seats ab doosre users ke liye available ho jaati hain.
+
+---
+# 📌 UPI System Design
+
+---
+
+### ## What is UPI?
+
+UPI (Unified Payments Interface) ek instant real-time payment system hai jise National Payments Corporation of India (NPCI) ne develop kiya hai. Yeh ek "system" ya "platform" hai, na ki ek wallet ya bank account. Yeh alag-alag banks ko ek single mobile application ke zariye aapas mein jodata hai, jisse users turant paisa bhej aur prapt kar sakte hain.
+
+Iska jaadu iske VPA (Virtual Payment Address) jaise `naam@okbank` mein hai, jo users ko apni bank account details (account number, IFSC) share kiye bina transactions karne ki anumati deta hai. Apps jaise Google Pay, PhonePe, Paytm, etc., isi UPI platform par bane Third-Party App Providers (TPAPs) hain.
+
+---
+
+### ## Problem Statement (Humein Banana Kya Hai?)
+
+Humein ek aisi interoperable (jo alag-alag systems ke saath kaam kar sake), surakshit (secure), aur atyant vishwasniya (highly reliable) payment network design karna hai jo 24/7 kaam kare aur secondon mein inter-bank fund transfers ko poora kar sake.
+
+#### Functional Requirements (System Ko Kya-Kya Karna Chahiye?)
+* User apne mobile number ke zariye apne bank account ko link kar sake.
+* User apne liye ek unique VPA (Virtual Payment Address) bana sake.
+* User doosre VPA, Account Number, ya QR code par paisa bhej sake (Push Payment).
+* User doosre VPA se paisa anurodh (request) kar sake (Pull Payment).
+* Har transaction ko ek surakshit UPI PIN se authenticate karna anivarya hai.
+* User apne linked account ka balance check kar sake.
+* Transaction history dekhne ki suvidha honi chahiye.
+
+#### Non-Functional Requirements (System Ko Kaisa Perform Karna Chahiye?)
+* **Security (Sarvoch Prathmikta - Highest Priority):** End-to-end encryption, secure PIN handling, aur financial regulations (jaise PCI DSS) ka paalan karna anivarya hai. Data leak ya fraud ki gunjaish nahi honi chahiye.
+* **Reliability & Atomicity:** Transactions atomic hone chahiye. Ya to paisa poori tarah se transfer ho (sender se debit, receiver ko credit), ya transaction poori tarah se fail ho (aur paisa roll back ho). "Paisa beech mein fans gaya" wali sthiti nahi honi chahiye.
+* **Low Latency:** Ek transaction shuru se ant tak kuch hi secondon mein poora ho jaana chahiye.
+* **High Availability:** System 24/7/365, bina kisi downtime ke, kaam karna chahiye.
+* **High Scalability:** System ko pratidin (per day) arabon (billions) transactions ko handle karne ke liye scalable hona chahiye.
+
+---
+
+### ## Low Level Design (Data Models / API Payloads)
+
+Kyunki UPI ek single application nahi, balki ek network hai, isliye hum database tables ke bajaye system ke beech ghoomne waale data objects (API Payloads) par dhyaan denge.
+
+* **User/Account Object:**
+    * `UserID`, `MobileNumber`, `DeviceID`
+    * `LinkedBankAccounts`: [ { `AccountNumber`, `IFSC`, `BankName`, `VPA` } ]
+
+* **Transaction Object (The Core Data Packet):**
+    * `TransactionID`: Har transaction ke liye ek unique ID (TPAP dwara generate).
+    * `PayerVPA`: Bhejne waale ka VPA.
+    * `PayeeVPA`: Paane waale ka VPA.
+    * `Amount`: Kitna paisa.
+    * `Timestamp`: Kab shuru hua.
+    * `TransactionType`: (P2P, P2M).
+    * `Status`: (INITIATED, PENDING, SUCCESS, FAILED).
+    * `Remarks`: Transaction ka vivaran (description).
+    * `EncryptedPINBlock`: User dwara daala gaya PIN, jo device par encrypt kiya gaya ho.
+
+---
+
+### ## Architecture and Components (System Ka Naksha)
+
+UPI ka architecture distributed hai, jismein kai alag-alag kirdaar (players) ek saath kaam karte hain.
+
+#### The Key Players (Mukhya Kirdaar)
+1.  **TPAP (Third-Party App Provider):** Yeh aapka app hai (Google Pay, PhonePe). Yeh sirf User Interface (UI) pradaan karta hai.
+2.  **PSP (Payment Service Provider) Bank:** Yeh woh bank hai jo TPAP ko UPI infrastructure pradaan karta hai (e.g., `@okhdfcbank` handle HDFC Bank ka PSP hai).
+3.  **NPCI UPI Switch:** Yeh poore system ka "dimaag" ya "router" hai. Yeh sabhi PSPs ko aapas mein jodta hai.
+4.  **Remitter Bank (Payer's Bank):** Paisa bhejne waale ka bank.
+5.  **Beneficiary Bank (Receiver's Bank):** Paisa paane waale ka bank.
+
+### The Transaction Flow (Paisa Bhejne Ka Pura Safar)
+
+Chaliye ek transaction ko trace karte hain: **User A (Google Pay, SBI account)**, **User B (PhonePe, ICICI account)** ko ₹100 bhej raha hai.
+
+1.  **Initiation (TPAP App):**
+    * User A, Google Pay mein User B ka VPA (`userb@okicici`) aur ₹100 daalta hai.
+    * App UPI PIN maangta hai. User A apna 4 ya 6 digit ka PIN daalta hai.
+    * Google Pay app transaction details aur PIN ko **encrypt** karta hai aur ise apne **PSP Bank** (maan lijiye HDFC Bank) ke server ko bhejta hai.
+
+2.  **Request to NPCI (PSP Bank):**
+    * HDFC Bank ka server is request ko receive karta hai, uski jaanch karta hai, aur use aage **NPCI UPI Switch** ko bhej deta hai.
+
+3.  **Routing (NPCI):**
+    * NPCI poore network ka central router hai.
+    * Yeh Payer ke VPA (`usera@oksbi`) ko dekhta hai aur pata lagata hai ki Remitter Bank **SBI** hai.
+    * NPCI ab SBI ke server ko ek "debit request" bhejta hai.
+
+4.  **Debit from Remitter Bank:**
+    * SBI ka server is debit request ko receive karta hai.
+    * Woh **PIN ko verify karta hai**, check karta hai ki User A ke account mein **sufficient balance** hai ya nahi.
+    * Sab theek hone par, SBI User A ke account se ₹100 **debit** kar deta hai aur NPCI ko "debit successful" ka response bhejta hai.
+
+5.  **Credit to Beneficiary Bank (via NPCI):**
+    * Jaise hi NPCI ko debit success ka confirmation milta hai, woh Payee ke VPA (`userb@okicici`) ko dekhta hai aur pata lagata hai ki Beneficiary Bank **ICICI** hai.
+    * NPCI ab ICICI ke server ko ek "credit request" bhejta hai.
+
+6.  **Credit Confirmation:**
+    * ICICI ka server is credit request ko receive karta hai aur User B ke account mein ₹100 **credit** kar deta hai.
+    * ICICI, NPCI ko "credit successful" ka response bhejta hai.
+
+7.  **Final Confirmation (The Reverse Path):**
+    * NPCI ab jaanta hai ki transaction poori tarah se safal ho gaya hai.
+    * Yeh success message Payer ke PSP (HDFC Bank) ko bhejta hai.
+    * HDFC Bank is message ko User A ke Google Pay app ko bhejta hai, aur User A ko screen par "Payment Successful" dikhta hai.
+    * Saath hi, Beneficiary Bank (ICICI) bhi User B ko SMS/notification bhejta hai ki uske account mein paise aa gaye hain.
+
+**Failure Handling:** Agar is poore process mein kahin bhi koi gadbad hoti hai (e.g., SBI "insufficient balance" bolta hai, ya ICICI ka server down hai), to NPCI transaction ko fail kar deta hai. Agar paisa debit ho chuka tha, to Remitter Bank (SBI) ko use **roll back (reverse)** karne ka nirdesh diya jaata hai. Isse atomicity sunishchit hoti hai.
+
+
+---
+
+
+# 📌 URL Shortening Service System Design
+
+---
+
+### ## What is a URL Shortening Service?
+
+Ek URL Shortening Service (jaise Bitly ya TinyURL) ek online tool hai jo ek lambe web address (URL) ko ek chote, aasani se share kiye jaa sakne wale link mein badal deta hai. Jab koi user us chote link par click karta hai, to service use automatically asli (original) lambe URL par bhej (redirect kar) deti hai. Yeh khaaskar social media (jaise Twitter, jahan character limit hoti hai) aur marketing campaigns mein bahut upyogi hai.
+
+---
+
+### ## Problem Statement (Humein Banana Kya Hai?)
+
+Humein ek atyant uplabdh (highly available) aur tezi se kaam karne waali URL shortening service banani hai jo arabon (billions) URLs ko handle kar sake.
+
+#### Functional Requirements (System Ko Kya-Kya Karna Chahiye?)
+* User ek lamba URL input kar sake aur uske badle mein ek chota, unique URL prapt kar sake.
+* Jab koi user chote URL par click kare, to use asli lambe URL par redirect kiya jaana chahiye.
+* User ek optional **custom URL** bhi bana sake (e.g., `short.ly/my-portfolio`).
+* Har link ke liye ek optional **samapti tithi (expiration date)** set karne ki suvidha honi chahiye.
+* System ko har link ke clicks ki sankhya ko track karna chahiye (analytics ke liye).
+
+#### Non-Functional Requirements (System Ko Kaisa Perform Karna Chahiye?)
+* **High Availability:** Redirect service kabhi bhi down nahi honi chahiye. Agar yeh down hoti hai, to internet par maujood laakhon-karodon links kaam karna band kar denge.
+* **Low Latency:** Redirect ka process behad tez (ideally < 50 milliseconds) hona chahiye. User ko pata bhi nahi chalna chahiye ki woh redirect ho raha hai.
+* **Read-Heavy System:** Ek link banaya (write) ek baar jaata hai, lekin us par click (read) hazaaron ya laakhon baar ho sakta hai. Isliye, system ko fast reads ke liye optimize karna zaroori hai.
+* **Scalability:** System ko badhte hue URLs aur clicks ke load ko aasaani se handle karna aana chahiye.
+* **Uniqueness:** Har generate kiya gaya chota URL poore system mein unique hona chahiye.
+
+---
+
+### ## Low Level Design (Data Models)
+
+Is system ka core ek simple mapping hai: chota URL -> lamba URL. Iske liye ek **NoSQL Key-Value Database** jaise **DynamoDB** ya **Cassandra** ek behtareen vikalp hai.
+
+* **URLs Table / Collection:**
+    * `ShortKey` (PRIMARY KEY / Partition Key): Yeh hamara 6-8 character ka unique string hoga (e.g., "aX8bZc"). Is par index hoga taaki lookup behad tez ho.
+    * `LongURL`: Asli lamba URL jo user ne diya tha.
+    * `UserID`: Link kisne banaya (registered users ke liye).
+    * `CreatedAt`: Kab banaya gaya.
+    * `ExpirationTimestamp`: Link kab expire hoga.
+    * `ClickCount`: Analytics ke liye, kitni baar click hua.
+
+**Database Ka Chunav:** Ek Key-Value store isliye achha hai kyunki hamara 99% use case ek `ShortKey` dekar uski value (`LongURL`) nikalna hai. Yeh NoSQL databases is kaam ke liye banaye gaye hain aur horizontal scaling (naye servers add karna) inmein bahut aasan hota hai.
+
+---
+
+### ## Architecture and Components (System Ka Naksha)
+
+System ke do mukhya workflows hain: naya link banana (Write Path) aur link ko redirect karna (Read Path). **Read Path ki performance sabse zaroori hai.**
+
+### A. The Write Path (Naya Link Banana)
+
+1.  **Request:** User lamba URL submit karta hai. Request **Load Balancer** se hote hue ek **Application Server** tak pahunchti hai.
+
+2.  **Unique Short Key Generation (Sabse Zaroori Step):** Application server ko ek unique key banani hai.
+    * **Approach 1 (Dheema Tarika):** Ek random string generate karo aur DB mein check karo ki woh exist karti hai ya nahi. Agar karti hai (collision), to fir se try karo. Yeh har write ke liye ek extra DB read maangta hai, jo slow hai.
+    * **Approach 2 (Behtar Tarika - Base62 Encoding):** Ek counter service se ek unique incrementing number lo (jaise 1001). Is number ko **Base62** (`[0-9a-zA-Z]`) mein convert kar do. Yeh hamesha unique hoga.
+    * **Approach 3 (Sabse Scalable - Key Generation Service):** Ek alag **Key Generation Service (KGS)** banao.
+        * Yeh service pehle se hi laakhon unique keys generate karke ek fast queue (jaise **Redis**) mein store kar leti hai.
+        * Jab Application Server ko ek nayi key chahiye hoti hai, to woh KGS se bas ek key maang leta hai. Isse "check-if-exists" wala DB call bach jaata hai aur write path behad tez ho jaata hai.
+
+3.  **Data Storage:** Application Server us unique `ShortKey` aur user ke `LongURL` ko **Database** mein store kar deta hai.
+
+4.  **Response:** Server user ko poora chota URL (e.g., `https://short.ly/aX8bZc`) response mein bhej deta hai.
+
+### B. The Read Path (Redirect Karna - Yahan Performance Hi Sab Kuch Hai)
+
+1.  **Request:** User `https://short.ly/aX8bZc` par click karta hai. Request **Application Server** tak pahunchti hai.
+
+2.  **Caching (Sabse Pehle):**
+    * Server, database mein jaane se pehle, ek **Distributed Cache (jaise Redis ya Memcached)** mein check karta hai ki kya `aX8bZc` key ka data pehle se cache mein hai.
+
+3.  **Cache Hit (Aam Taur Par Yahi Hoga):**
+    * Agar `LongURL` cache mein mil jaata hai, to use wahin se turant utha liya jaata hai. Yeh behad fast hota hai.
+
+4.  **Cache Miss (Kabhi Kabhaar):**
+    * Agar key cache mein nahi milti hai, **tabhi** server aage **Database** ke paas jaata hai.
+    * Database se `LongURL` milne ke baad, server use future requests ke liye **Cache mein daal deta hai**.
+
+5.  **Redirect:** Server user ke browser ko ek **`301 Permanent Redirect`** HTTP response bhejta hai. Is response ke `Location` header mein asli `LongURL` hota hai. Browser is response ko dekhte hi user ko automatically uss lambe URL par le jaata hai.
+
+6.  **Analytics (Asynchronously):**
+    * Redirect ko dheema na karne ke liye, click count ko usi samay update nahi kiya jaata.
+    * Server click event (ki `aX8bZc` click hua hai) ko ek **Message Queue (jaise Kafka ya SQS)** mein daal deta hai.
+    * Background mein chalne wale **Workers** is queue se messages ko batches mein uthate hain aur database mein `ClickCount` ko update karte hain. Isse critical redirect path par koi extra load nahi padta.
+
+
+---
+
+# 📌 Online Coding Judge System Design
+
+---
+
+### ## What is an Online Coding Judge?
+
+Ek Online Coding Judge (jaise LeetCode, HackerRank, ya Codeforces) ek online platform hai jahan programming ke students aur professionals coding problems ko solve karte hain. Users ek problem statement padhte hain, apni pasand ki programming language (jaise C++, Java, Python) mein code likhte hain, aur use submit karte hain. Platform is code ko automatically compile karta hai, chalaata hai, aur use kai chhupe hue (hidden) test cases ke khilaaf jaanchta hai. Ant mein, yeh ek faisla (verdict) deta hai, jaise 'Accepted', 'Wrong Answer', ya 'Time Limit Exceeded'.
+
+---
+
+### ## Problem Statement (Humein Banana Kya Hai?)
+
+Humein ek scalable aur surakshit (secure) platform design karna hai jo users dwara submit kiye gaye code ko automatically judge kar sake.
+
+#### Functional Requirements (System Ko Kya-Kya Karna Chahiye?)
+* Users ko coding problems ki ek list dikhni chahiye.
+* Users C++, Java, Python jaisi vibhinn (various) languages mein code submit kar sakein.
+* System ko submit kiye gaye code ko chhupe hue test cases ke khilaaf run karna chahiye.
+* System ko har submission ke liye **samay seema (Time Limit)** aur **memory seema (Memory Limit)** laagu karni chahiye.
+* System ko user ke code ke output ki tulna sahi (expected) output se karni chahiye.
+* User ko antim faisla (final verdict) dikhna chahiye (e.g., Accepted, Wrong Answer, TLE).
+* Users apne pichle submissions ka itihas (history) dekh sakein.
+
+#### Non-Functional Requirements (System Ko Kaisa Perform Karna Chahiye?)
+* **Security (Sabse Zaroori):** User dwara submit kiya gaya code "untrusted" hota hai. Use ek **surakshit sandbox** mein chalana anivarya hai taaki woh main system ko koi nuksaan na pahuncha sake (e.g., `rm -rf /` jaisi commands se bachav).
+* **Scalability:** System ko ek saath aane waale hazaaron submissions (khaaskar live contests ke dauran) ko handle karne ke liye scalable hona chahiye.
+* **Reliability:** Agar ek judging server crash ho jaata hai, to submission lost nahi hona chahiye. Use kisi doosre server dwara process kiya jaana chahiye.
+* **Fairness & Consistency:** Sabhi submissions ko ek samaan (identical) environment mein judge kiya jaana chahiye taaki result nishpaksh (fair) ho.
+
+---
+
+### ## Low Level Design (Data Models)
+
+* **Users Table:** `UserID`, `Username`, `PasswordHash`, `Email`, `Rating`.
+* **Problems Table:**
+    * `ProblemID` (PRIMARY KEY)
+    * `Title`, `Description` (Problem statement in Markdown/HTML)
+    * `Difficulty` (Easy, Medium, Hard)
+    * `TimeLimit` (in seconds), `MemoryLimit` (in MB)
+* **TestCases Table:**
+    * `TestCaseID` (PRIMARY KEY)
+    * `ProblemID` (ForeignKey)
+    * `InputData` (`TEXT` or File Path)
+    * `ExpectedOutput` (`TEXT` or File Path)
+* **Submissions Table:** (Ye sabse active table hai)
+    * `SubmissionID` (PRIMARY KEY)
+    * `UserID`, `ProblemID`, `Language`
+    * `Code` (`TEXT`)
+    * `Status` (Enum: PENDING, JUDGING, ACCEPTED, WRONG_ANSWER, TLE, MLE, COMPILATION_ERROR)
+    * `ExecutionTime` (in ms), `ExecutionMemory` (in KB)
+    * `Timestamp`
+
+---
+
+### ## Architecture and Components (System Ka Naksha)
+
+Is system ka sabse zaroori design principle hai **web servers** ko **judging process** se poori tarah se alag (decouple) karna. Iske liye ek **Message Queue** ka istemal kiya jaata hai.
+
+#### The Key Components
+1.  **Web Servers:** Yeh stateless servers hain jo user ke requests handle karte hain—jaise problem dikhana, submission accept karna, aur result dikhana.
+2.  **Database:** Upar diye gaye saare data models ko store karta hai (e.g., PostgreSQL, MySQL).
+3.  **Message Queue (System ka Dil):** Ek service jaise **RabbitMQ** ya **AWS SQS**. Yeh Web Servers aur Judge Workers ke beech ek buffer ka kaam karta hai.
+4.  **Judge Workers:** Yeh servers (ya containers) ka ek fleet (samooh) hai jinka ek hi kaam hai: submissions ko evaluate karna.
+5.  **Sandbox Environment:** Har Judge Worker ke andar ek surakshit, isolated environment. Iske liye **Docker Containers** industry standard hain.
+
+### The Submission & Judging Flow
+
+1.  **Submission from User:**
+    * User website par code likhta hai aur "Submit" button par click karta hai.
+    * Request, jismein `Code`, `Language`, `ProblemID`, etc., hota hai, ek **Web Server** tak pahunchti hai.
+
+2.  **Queuing the Submission:**
+    * Web Server code ko **run nahi karta**. Yeh ek bahut bada security risk hoga.
+    * Iske bajaye, Web Server `Submissions` table mein ek nayi entry banata hai jiska status `PENDING` hota hai, aur use ek `SubmissionID` mil jaata hai.
+    * Fir, Web Server is `SubmissionID` ko ek message ke roop mein **Message Queue** mein daal deta hai. Ab is submission ke liye web server ka kaam khatm. User ko screen par "In Queue..." dikhta hai.
+
+3.  **The Judging Process (Backend mein):**
+    * Ek khaali (idle) **Judge Worker** Message Queue se ek `SubmissionID` uthata hai.
+    * Worker, DB mein us submission ka status `PENDING` se `JUDGING` kar deta hai.
+    * Fir woh DB se `SubmissionID` ke aadhar par poora code aur us problem se jude saare test cases ko fetch karta hai.
+
+4.  **Sandboxed Execution (Suraksha Kavach):**
+    * Judge Worker ek naya, saaf-suthra **Docker Container** shuru karta hai. Yahi hamara sandbox hai.
+    * User ka code (`solution.cpp`) aur ek test case ki input file (`input.txt`) is container ke andar copy ki jaati hai.
+    * Worker container ke andar command chala kar code ko compile karta hai (e.g., `g++ solution.cpp`). Agar compile fail hota hai, to "Compilation Error" record karke process rok diya jaata hai.
+    * Agar compile safal hota hai, to worker program ko run karta hai, use `input.txt` deta hai, aur uske output (`output.txt`) ko capture karta hai.
+    * **Sabse Zaroori:** Is Docker container ko **resource limits** ke saath shuru kiya jaata hai (e.g., 1 second CPU time, 256 MB RAM) taaki TLE aur MLE ko laagu kiya jaa sake.
+
+5.  **Verdict Calculation:**
+    * Worker, program ke `output.txt` ki tulna test case ke `ExpectedOutput` se karta hai.
+    * **Match Nahi Hua:** Verdict -> `Wrong Answer`. Judging yahin ruk jaati hai.
+    * **Samay Seema Paar:** Verdict -> `Time Limit Exceeded (TLE)`. Judging ruk jaati hai.
+    * **Memory Seema Paar:** Verdict -> `Memory Limit Exceeded (MLE)`. Judging ruk jaati hai.
+    * **Match Ho Gaya:** Worker agle test case ke liye Step 4 aur 5 doharata hai.
+    * **Saare Test Cases Pass:** Verdict -> `Accepted (AC)`.
+
+6.  **Final Update:**
+    * Judge Worker antim verdict, execution time, aur memory usage ko `Submissions` table mein update kar deta hai.
+    * User ka browser, jo result ka intezaar kar raha tha (polling ya WebSocket ke zariye), naya result display kar deta hai. Judge Worker us Docker container ko nasht (destroy) kar deta hai aur agle submission ke liye taiyaar ho jaata hai.
+
+---
+
+# 📌 Amazon (E-commerce Platform) System Design
+
+---
+
+### ## What is Amazon?
+
+Amazon ek vishv-vyapi (global) e-commerce company hai jo "sab kuch" bechne ke liye jaani jaati hai—kitaabon aur electronics se lekar grocery aur cloud computing (AWS) tak. Yeh ek marketplace model par kaam karti hai, jahan Amazon khud bhi saaman bechta hai aur laakhon anya (third-party) sellers ko bhi apna saaman bechne ke liye platform pradaan karta hai. Iska technology stack duniya ke sabse bade aur sabse complex stacks mein se ek hai.
+
+---
+
+### ## Problem Statement (Humein Banana Kya Hai?)
+
+Humein ek atyant scalable, vishwasniya (reliable), aur pradarshan-kushal (performant) e-commerce platform design karna hai jo laakhon-karodon products aur users ko handle kar sake. Hum core shopping anubhav (experience) par dhyaan denge: product khojna, dekhna, cart mein add karna, aur order place karna.
+
+#### Functional Requirements (System Ko Kya-Kya Karna Chahiye?)
+* Users products ko **search** aur **browse** kar sakein.
+* Users product details page dekh sakein, jismein description, images, reviews, aur price ho.
+* Users items ko **shopping cart** mein add/remove kar sakein.
+* Users **order place** kar sakein aur online payment kar sakein.
+* Users apni order history dekh sakein.
+* Third-party sellers apne products list kar sakein aur apni inventory manage kar sakein.
+
+#### Non-Functional Requirements (System Ko Kaisa Perform Karna Chahiye?)
+* **High Availability:** Platform 24/7 chalna chahiye. Downtime ka matlab seedha revenue ka nuksaan hai.
+* **Scalability:** System ko rozana ke traffic ke saath-saath tyohaaron (Diwali, Black Friday) ke dauran aane waale achanak traffic spikes ko bhi handle karna aana chahiye.
+* **Low Latency:** Product pages aur search results turant (200ms ke andar) load hone chahiye.
+* **Strong Consistency:** **Inventory** aur **Orders** se juda data hamesha consistent hona chahiye. Ek out-of-stock item kabhi bhi bikna nahi chahiye.
+* **Durability:** Ek baar place kiya gaya order ya user ka data kabhi bhi khona (lost) nahi chahiye.
+* **Security:** User ki personal information aur payment details poori tarah se surakshit honi chahiye.
+
+---
+
+### ## Architecture: The Microservices Approach
+
+Amazon jaise vishaal system ko ek single application (monolith) mein banana asambhav hai. Isliye, yeh **Microservices Architecture** par bana hai. Iska matlab hai ki poore system ko chhote-chhote, independent services mein toda gaya hai. Har service ka ek hi kaam hota hai, uski apni dedicated database hoti hai, aur use alag se develop aur scale kiya jaa sakta hai.
+
+#### Key Microservices (Mukhya Services)
+1.  **Product Catalog Service:** Sabhi products ki jaankari (naam, description, price, images) manage karta hai.
+2.  **Search Service:** User ke search queries ko handle karta hai. Yeh Elasticsearch jaise search engine par bana hota hai.
+3.  **Inventory Service:** Har product ke stock (kitne items bache hain) ko track karta hai. Yeh behad critical service hai.
+4.  **Cart Service:** Har user ke shopping cart ko manage karta hai.
+5.  **Order Service:** Order place hone ke baad uski poori lifecycle (payment, shipping, delivery) ko manage karta hai.
+6.  **User Service:** User accounts, addresses, aur profiles ko manage karta hai.
+7.  **Payment Service:** Payment gateways ke saath interact karta hai.
+8.  **Recommendation Service:** "Customers who bought this also bought..." jaise recommendations generate karta hai.
+
+---
+
+### ## Low Level Design (Har Service Ka Apna Database)
+
+* **Product Catalog DB (NoSQL like DynamoDB/Cassandra):**
+    * `Products Table`: `ProductID`, `Title`, `Description`, `SellerID`, `Attributes` (JSON).
+    * Yeh read-heavy hota hai, isliye NoSQL achha hai.
+
+* **Inventory DB (Strongly Consistent SQL like PostgreSQL):**
+    * `Inventory Table`: `ProductID`, `WarehouseID`, `Quantity`.
+    * Yahan **ACID transactions** anivarya hain taaki stock count kabhi galat na ho.
+
+* **Order DB (SQL like PostgreSQL/MySQL):**
+    * `Orders Table`: `OrderID`, `UserID`, `OrderDate`, `TotalAmount`, `ShippingAddress`, `OrderStatus`.
+    * `Order_Items Table`: `OrderID`, `ProductID`, `Quantity`, `PriceAtPurchase`.
+    * Yeh bhi transactional hota hai.
+
+* **Cart DB (In-memory DB like Redis):**
+    * `Key`: `UserID`
+    * `Value`: A list of `{ProductID, Quantity}`.
+    * Cart data temporary hota hai aur fast access chahiye, isliye Redis perfect hai.
+
+---
+
+### ## Core Workflow: The Checkout Process (Order Place Karna)
+
+Yeh ek complex process hai jismein kai microservices ek saath kaam karte hain.
+
+1.  **Initiation:** User "Place Order" par click karta hai. Browser se request ek **API Gateway** par jaati hai, jo use **Order Service** ko bhej deta hai.
+
+2.  **Orchestration by Order Service:** Order Service is poore process ka "conductor" hai. Yeh ek **transaction** ya **SAGA pattern** shuru karta hai.
+
+3.  **Step 1: Check & Reserve Inventory:**
+    * Order Service, cart mein maujood har item ke liye **Inventory Service** ko call karta hai.
+    * "Kya `ProductID-123` ke 2 pieces available hain?"
+    * Inventory Service stock check karti hai aur agar available hai, to un 2 pieces ko **temporarily reserve** kar leti hai (quantity ko `on_hold` state mein daal deti hai).
+    * Agar koi bhi item out of stock hai, to process yahin fail ho jaata hai aur user ko error dikha diya jaata hai.
+
+4.  **Step 2: Process Payment:**
+    * Agar inventory reserve ho gayi hai, to Order Service **Payment Service** ko call karta hai.
+    * Payment Service, user ko payment gateway par redirect karti hai aur payment ka status dekhti hai.
+    * Agar payment fail ho jaata hai, to Order Service **Inventory Service** ko bolkar reserve kiye gaye items ko **release** kar deti hai (rollback).
+
+5.  **Step 3: Finalize the Order (Payment Successful):**
+    * Payment safal hone par, Order Service apne **Order Database** mein ek permanent entry banata hai (`OrderStatus` = `CONFIRMED`).
+    * Yeh **Inventory Service** ko ek final confirmation bhejta hai ki "stock ko permanently kam kar do".
+    * Iske baad, Order Service ek `Order_Placed` event ko ek **Message Queue (jaise AWS SQS ya Kafka)** mein daal deta hai.
+
+6.  **Asynchronous Events (Background Mein Hone Wale Kaam):**
+    * Queue mein event daalne ke baad Order Service ka kaam poora ho jaata hai aur woh user ko success response bhej deta hai.
+    * Ab, doosri services is event ko sunti hain:
+        * **Notification Service:** User ko confirmation email/SMS bhejti hai.
+        * **Shipping/Logistics Service:** Seller ke warehouse ko inform karti hai ki "yeh order pack karke ship karo".
+        * **Cart Service:** User ke cart ko khaali kar deti hai.
+
+Is microservices approach se har hissa independent rehta hai, jisse Amazon jaise vishaal system ko manage karna, scale karna, aur update karna aasan ho jaata hai.
+---
+# 📌 Google Maps System Design
+
+---
+
+### ## What is Google Maps?
+
+Google Maps Google dwara develop ki gayi ek web mapping service hai. Yeh sirf ek digital atlas nahi hai, balki ek comprehensive tool hai jo satellite imagery, street maps, 360° panoramic views (Street View), real-time traffic conditions, aur turn-by-turn navigation pradaan karta hai. Yeh duniya bhar mein laakhon-karodon logon ke liye rozmarra ki zindagi ka ek abhinna ang ban chuka hai, jise log jagah dhoondhne, raasta pata karne, aur apni yaatra plan karne ke liye istemal karte hain.
+
+---
+
+### ## Problem Statement (Humein Banana Kya Hai?)
+
+Humein ek atyant vishwasniya (highly reliable), scalable, aur kam latency wala mapping system design karna hai jo users ko nimnlikhit mukhya suvidhaayein de sake:
+
+#### Functional Requirements (System Ko Kya-Kya Karna Chahiye?)
+* User poori duniya ka interactive map dekh sakein (pan, zoom).
+* User kisi bhi jagah (Points of Interest - POI) ya address ko **search** kar sakein.
+* System ko ek jagah se doosri jagah jaane ke liye alag-alag transport modes (car, bike, walking, public transport) ke liye **sabse behtar raasta (route)** dikhana chahiye.
+* System ko sadkon par **real-time traffic** ki sthiti dikhani chahiye (e.g., laal, peela, hara rang).
+* System ko yaatra ke liye ek sateek **anumani pahunchne ka samay (Estimated Time of Arrival - ETA)** batana chahiye.
+
+#### Non-Functional Requirements (System Ko Kaisa Perform Karna Chahiye?)
+* **High Availability:** Maps hamesha uplabdh hone chahiye. Log ispar navigation ke liye nirbhar karte hain.
+* **Low Latency:** Map tiles, search results, aur routes turant load hone chahiye.
+* **Scalability:** System ko poore vishwa se aane waale arabon (billions) requests ko handle karna aana chahiye.
+* **Accuracy:** Map data, locations, aur ETAs bilkul sateek (accurate) hone chahiye.
+* **Data Freshness:** Real-time traffic data har kuch minute mein update hona chahiye.
+
+---
+
+### ## High-Level Architecture & Key Components
+
+Google Maps ek monolithic application nahi hai. Yeh kai specialized microservices ka ek jatil (complex) sangathan hai.
+
+1.  **Data Collection & Processing Layer:** Yeh neenv (foundation) hai. Data kai sroton (sources) se aata hai: satellite imagery companies, Street View cars, sarkari data, aur sabse zaroori, laakhon-karodon Android phones se aane waala **anonymized GPS location data**. Is saare data ko process karke base map, road network, aur POI database banaya jaata hai.
+
+2.  **Map Rendering Service:**
+    * Yeh service map dikhane ke liye zimmedaar hai.
+    * Yeh **Map Tiles** ke concept par kaam karti hai. Poori duniya ke map ko alag-alag zoom levels par chhote-chhote square images (tiles) mein pehle se hi render karke rakh liya jaata hai.
+    * Jab aap map dekhte hain, to aapka phone ya browser sirf unhi tiles ko request karta hai jo aapki screen par dikh rahi hain. Isse map bahut tezi se load hota hai.
+
+3.  **Search & Geocoding Service:**
+    * **Geocoding:** Yeh ek text address (e.g., "Civil Lines, Prayagraj") ko geographical coordinates (latitude, longitude) mein badalta hai.
+    * **Search:** Yeh "mere paas ke restaurants" jaisi queries ko handle karta hai. Yeh ek normal database search nahi hai, balki ek **geospatial search** hai. Iske liye specialized data structures jaise **Quadtrees** ya **Geohashing** ka istemal hota hai.
+
+4.  **Routing/Navigation Service:**
+    * Yeh raasta dhoondhne wala "dimaag" hai.
+    * Yeh poore road network ko ek vishaal **Graph** ke roop mein dekhta hai (sadkein = edges, chauraahe = nodes).
+    * Kisi bhi sadak (edge) ka 'weight' ya 'cost' sirf doori nahi, balki `samay = doori / gati` hota hai. Aur `gati` (speed) **Real-Time Traffic Service** se aati hai.
+    * Yeh **Dijkstra's** ya **A*** (A-star) jaise graph traversal algorithms ka istemal karke sabse tez raasta dhoondhta hai.
+
+5.  **Real-Time Traffic Service:**
+    * **Data Ingestion:** Laakhon Android phones se lagatar anonymized GPS pings (location + speed) aate rehte hain.
+    * **Data Processing:** Ek real-time streaming pipeline (jaise Kafka, Spark Streaming) is data ko process karti hai aur har chote-chote road segment ke liye average speed calculate karti hai.
+    * Yeh calculated speed ek fast database mein store hoti hai.
+
+6.  **ETA Prediction Service:**
+    * Yeh Routing Service se route leta hai.
+    * Route ke har segment ke liye, yeh Traffic Service se current speed nikalta hai.
+    * Saath hi, yeh **historical data** ("Prayagraj mein Shanivaar shaam ko Civil Lines mein traffic hamesha zyada hota hai") aur Machine Learning models ka istemal karke antim ETA ka sateek anuman lagata hai.
+
+---
+
+### ## Core Workflow: Ek Jagah Se Doosri Jagah Navigation
+
+Chaliye dekhte hain ki jab aap "Prayagraj Junction" se "New Yamuna Bridge" ka direction dhoondhte hain to parde ke peeche kya hota hai.
+
+1.  **Geocoding:** Aapka phone "Prayagraj Junction" aur "New Yamuna Bridge" ko **Geocoding Service** ke paas bhejta hai taaki inke latitude aur longitude coordinates mil sakein.
+
+2.  **Route Request:** Yeh coordinates ab **Routing Service** ko bheje jaate hain.
+
+3.  **Pathfinding on Graph:** Routing Service in coordinates ko apne road network graph ke sabse nazdeeki nodes se map karti hai.
+
+4.  **Real-Time Cost Calculation:** Ab, yeh A* algorithm chalaati hai. Jab bhi algorithm kisi sadak (edge) par jaane ka "cost" (samay) calculate karta hai, to woh turant **Real-Time Traffic Service** se us sadak ki current average speed poochta hai. Isse use pata chalta hai ki ek 2km lambi sadak par abhi 5 minute lagenge ya traffic jam ke kaaran 20 minute.
+
+5.  **Best Path Found:** Algorithm sabse kam samay wala raasta (kai sadkon ka sequence) dhoondh nikalta hai.
+
+6.  **ETA Calculation:** Yeh poora route ab **ETA Prediction Service** ke paas jaata hai. Yeh service har segment ke liye real-time samay ko jodti hai aur usmein historical patterns ke aadhar par thoda adjustment karke ek final, sateek ETA batati hai.
+
+7.  **Display to User:** Yeh poora route (map par line ke saath) aur final ETA aapke phone par bhej diya jaata hai.
+
+8.  **Real-Time Updates:** Jaise-jaise aap gaadi chalaate hain, aapka phone lagatar apni nayi location bhejta rehta hai. Agar aap galat mud jaate hain ya aage traffic badal jaata hai, to yeh poora process (Step 2 se) doharaya jaata hai taaki aapko hamesha sabse behtar route aur updated ETA milta rahe.
+
+
+---
+
+
+# 📌 Google Docs System Design
+
+---
+
+### ## What is Google Docs?
+
+Google Docs ek free, web-आधारित (web-based) word processor hai jo Google Drive suite ka ek hissa hai. Microsoft Word jaise traditional software se alag, iski sabse badi aur krantikari (revolutionary) visheshta iska **real-time collaboration** hai. Iska matlab hai ki kai users ek hi samay mein, ek hi document par kaam kar sakte hain, aur ek doosre ke changes (jaise typing karna, text delete karna) ko turant, live dekh sakte hain. Sabhi badlav automatically cloud mein save ho jaate hain.
+
+---
+
+### ## Problem Statement (Humein Banana Kya Hai?)
+
+Humein ek highly responsive aur vishwasniya (reliable) web-based document editor design karna hai jiska mukhya focus real-time, multi-user collaboration par ho.
+
+#### Functional Requirements (System Ko Kya-Kya Karna Chahiye?)
+* User text documents create, edit, aur format kar sakein (bold, italics, etc.).
+* **Sabse Zaroori:** Kai users ek saath ek hi document ko edit kar sakein aur ek doosre ke cursors aur changes ko live dekh sakein.
+* System ko document ka ek poora **sanshodhan itihas (version history)** save karna chahiye, jisse users purane versions ko dekh aur restore kar sakein.
+* Users **offline** bhi document par kaam kar sakein, aur online aane par unke changes automatically sync ho jaayein.
+* Users document mein comments add kar sakein aur doosre logon ke saath vishisht anumatiyon (specific permissions - view, comment, edit) ke saath share kar sakein.
+
+#### Non-Functional Requirements (System Ko Kaisa Perform Karna Chahiye?)
+* **Low Latency:** Collaborative edits (keystrokes) doosre users ki screen par lagbhag turant (near-instantly) dikhne chahiye.
+* **Consistency:** Ant mein (eventually), sabhi users ko document ka bilkul aakhri aur astitv (identical) version dikhna chahiye, chahe edits kisi bhi kram (order) mein kiye gaye hon.
+* **High Availability & Durability:** Service hamesha uplabdh honi chahiye aur user ka document kabhi bhi khona (lost) ya corrupt nahi hona chahiye.
+* **Scalability:** System ko laakhon-karodon concurrent editing sessions ko handle karne ke liye scalable hona chahiye.
+
+---
+
+### ## High-Level Architecture & The Core Algorithm
+
+Google Docs ka jaadu iske collaboration algorithm mein chhupa hai. Ek simple client-server model yahan poori tarah se kaam nahi karega kyunki server ko clients tak changes "push" karne ki zaroorat hoti hai.
+
+#### Key Components:
+1.  **Client (Browser):** Yeh user ka interface hai. Iske paas document ki ek local copy hoti hai aur yeh user ke actions ko "operations" mein badalta hai.
+2.  **Server (Collaboration Service):** Yeh system ka "dimaag" hai. Yeh document ki authoritative (pramanik) copy rakhta hai, saare operations ka ek log maintain karta hai, aur conflicts ko aane se rokta hai.
+3.  **Persistent Connection (WebSocket):** Real-time communication ke liye client aur server ke beech ek lagatar bana rehne wala connection zaroori hai. Iske liye **WebSockets** ek behtareen technology hai, jo server ko clients ko data bhejne ki anumati deti hai.
+
+### The Core Algorithm: Operational Transformation (OT)
+
+Yeh woh algorithm hai jo Google Docs ko "live" banata hai. Iska mukhya kaam concurrent edits se paida hone waale conflicts ko resolve karna hai.
+
+**OT ko aasan shabdon mein samjhein:**
+
+Sochiye, document mein text hai "Prayagraj". Server aur dono users (A aur B) abhi **version 1** par hain.
+
+* **User A** position 9 par '!' insert karna chahta hai: `Prayagraj!`
+* **User B** usi samay position 0 par 'Hello ' insert karna chahta hai: `Hello Prayagraj`
+
+**Scenario (bina OT ke):**
+Agar A ka operation (`insert '!' at 9`) pehle server tak pahunchta hai, to document ban jaata hai "Prayagraj!". Ab jab B ka operation (`insert 'Hello ' at 0`) pahunchta hai, to woh apply ho jaata hai aur document banta hai "Hello Prayagraj!". Yeh sahi hai.
+
+**Conflict (bina OT ke):**
+Lekin, agar B ka operation pehle pahunchta hai, to document ban jaata hai "Hello Prayagraj". Ab jab A ka operation (`insert '!' at 9`) pahunchta hai, to woh galat jagah apply hoga. Position 9 ab 'g' hai, to result hoga "Hello Prayag!raj". **Yeh galat hai!**
+
+**OT ka Jaadu:**
+Jab B ka operation pehle pahunch jaata hai, to server document ko "Hello Prayagraj" bana deta hai aur version ko **2** kar deta hai. Jab A ka operation (jo **version 1** par kiya gaya tha) server par aata hai, to server dekhta hai ki document ka version badal chuka hai. OT algorithm A ke operation ko "transform" karta hai. Woh samajh jaata hai ki shuru mein 6 naye characters (`Hello `) aa gaye hain, isliye `insert '!' at 9` ko ab `insert '!' at 15` (9+6) hona chahiye. Server is transformed operation ko apply karta hai, aur result banta hai "Hello Prayagraj!". **Yeh sahi hai!**
+
+OT sunishchit karta hai ki operations chahe kisi bhi kram mein aayein, unhe transform karke antim result hamesha consistent rakha jaata hai.
+
+---
+
+### ## Core Workflow: Ek User Ke Type Karne Par Kya Hota Hai?
+
+1.  **Client-Side Action:** User A ek character 'k' type karta hai. Yeh character uski screen par **turant** dikh jaata hai taaki use lag na mehsoos ho.
+
+2.  **Operation Creation:** Client ka browser poora document nahi bhejta. Woh ek chota sa "operation" banata hai, jaise: `{ action: 'insert', char: 'k', position: 50, doc_version: 10 }`.
+
+3.  **Send to Server:** Yeh operation **WebSocket** ke zariye **Collaboration Server** ko bheja jaata hai.
+
+4.  **Server-Side Processing:** Server operation receive karta hai.
+    * Woh check karta hai ki operation ka version (`10`) uske current document version se match karta hai ya nahi.
+    * Agar haan, to woh operation ko document par apply karta hai, document ka version `11` kar deta hai, aur is operation ko ek log (version history ke liye) mein save kar leta hai.
+    * Agar versions match nahi karte, to woh upar bataye gaye **OT algorithm** se operation ko transform karta hai.
+
+5.  **Broadcast to Others:** Server is naye, astitv (validated) operation ko document se jude **baaki sabhi clients** (User B, User C) ko broadcast kar deta hai.
+
+6.  **Update Other Clients:** Doosre clients (User B, C) is operation ko receive karte hain aur use apne local document copy par apply karte hain. Ab 'k' character unki screen par bhi dikhne lagta hai.
+
+### Offline Editing Kaise Kaam Karta Hai?
+* Jab user offline jaata hai, to uske saare changes (operations) uske device par ek list mein save hote rehte hain.
+* Jab woh wapas online aata hai, to client us poori list of operations ko server ko bhej deta hai.
+* Server OT ka istemal karke in saare offline operations ko un sabhi changes ke khilaaf transform karta hai jo doosre users ne us dauran kiye the, aur ant mein sabke documents ko sync kar deta hai.
+---
+# 📌 Airline Management System Design
+
+---
+
+### ## What is an Airline Management System?
+
+Ek Airline Management System (AMS) ek vishaal software suite hai jo ek airline company ke sabhi operations ko manage karne ke liye design kiya gaya hai. Yeh sirf ticket booking website nahi hai; iske kai mukhya bhaag (modules) hote hain:
+
+* **Airline Reservation System (ARS):** Jise hum design karenge. Yeh customer-facing system hai jo flight search, booking, aur payments ko handle karta hai.
+* **Flight Scheduling System:** Yeh airline ke routes, flight timings, aur kaun sa aircraft kis route par udega, yeh tay karta hai.
+* **Crew Management System:** Pilots aur cabin crew ko flights par assign karna, unke working hours aur rest periods ka dhyan rakhna.
+* **Inventory Management System:** Har flight ki seats ka hisaab-kitaab rakhna.
+* **Check-in & Boarding System:** Airport par check-in, boarding pass issue karne, aur boarding process ko manage karne wala system.
+
+Is design mein, hum mukhya roop se **Airline Reservation System (ARS)** par dhyaan denge, kyunki Prayagraj se Delhi ki flight book karne se lekar payment tak ka anubhav isi par nirbhar karta hai.
+
+---
+
+### ## Problem Statement (Reservation System Ke Liye)
+
+Humein ek global, 24/7 chalne wala flight reservation system design karna hai jo real-time mein seat availability aur dynamic pricing ko handle kar sake.
+
+#### Functional Requirements (System Ko Kya-Kya Karna Chahiye?)
+* User one-way, round-trip, ya multi-city flights **search** kar sakein.
+* System ko flight options, unki timings, duration, aur alag-alag classes (Economy, Business, First) ke liye **dynamically calculate kiye gaye fares** dikhane chahiye.
+* User flight select kar sakein, passenger details bhar sakein, aur apni pasand ki seat (agar available ho) chun sakein.
+* User credit card, UPI, ya anya methods se **payment** karke booking poori kar sakein.
+* Safal booking par system ko ek **PNR (Passenger Name Record)** aur e-ticket generate karna chahiye.
+* User flight se pehle **web check-in** kar sakein.
+* User booking ko (niyamon ke anusaar) **cancel** kar sakein.
+
+#### Non-Functional Requirements (System Ko Kaisa Perform Karna Chahiye?)
+* **High Availability:** System 24/7, poore vishwa mein, bina downtime ke uplabdh hona chahiye.
+* **Strong Consistency (Behad Zaroori):** Seat inventory aur booking data bilkul consistent hona chahiye. Ek seat do baar book nahi ho sakti. **ACID compliance** anivarya hai.
+* **Scalability:** System ko chhuttiyon (holidays) aur sales ke dauran aane waale bhaari traffic ko aasani se handle karna aana chahiye.
+* **Reliability & Fault Tolerance:** Payment failure jaisi sthiti mein system ko gracefully recover karna chahiye, bina user ke paise ya booking ko khatre mein daale.
+* **Low Latency:** Flight search results bahut tezi se aane chahiye.
+
+---
+
+### ## Low Level Design (Data Models for ARS)
+
+Is system ke core transactional hisse ke liye ek **Relational Database (SQL)**, jaise PostgreSQL, anivarya hai.
+
+* **Airports Table:**
+    * `AirportCode` (PRIMARY KEY, e.g., 'IXD' for Prayagraj), `AirportName`, `City`, `Country`.
+* **Aircrafts Table:**
+    * `AircraftID` (PK), `ModelName`, `TotalEconomySeats`, `TotalBusinessSeats`.
+* **Flights Table (Master Schedule):**
+    * `FlightID` (PK), `FlightNumber` (e.g., '6E-2025'), `AircraftID` (FK), `SourceAirportCode`, `DestinationAirportCode`.
+* **Flight_Instances Table (Rozana ki Udaanein):**
+    * `InstanceID` (PK), `FlightID` (FK), `FlightDate`, `DepartureTime`, `ArrivalTime`, `Status` (ON_TIME, DELAYED, CANCELLED).
+* **Seat_Inventory Table:**
+    * `InstanceID` (FK), `FareClass` (Economy, Business), `TotalSeats`, `BookedSeats`.
+* **Bookings Table:**
+    * `PNR` (PRIMARY KEY), `UserID`, `InstanceID` (FK), `BookingDate`, `TotalFare`, `Status` (CONFIRMED, CANCELLED).
+* **Passengers Table:**
+    * `PassengerID` (PK), `PNR` (FK), `FullName`, `Age`, `SeatNumber`.
+
+---
+
+### ## Architecture and Components (System Ka Naksha)
+
+Yeh system **Microservices Architecture** par आधारित hoga taaki alag-alag functionalities ko independently manage aur scale kiya jaa sake.
+
+#### Key Microservices
+1.  **Search Service:** Flight search queries ko handle karta hai. Yeh read-heavy hai.
+2.  **Pricing Service:** Har flight ke liye real-time mein dynamic fare calculate karta hai (demand, bachi hui seats, aur din ke aadhar par).
+3.  **Booking Service:** Booking workflow ka transactional core hai.
+4.  **Inventory Service:** Seat availability ko manage karta hai aur double-booking ko rokta hai.
+5.  **Payment Service:** Payment gateways ke saath communication handle karta hai.
+6.  **Check-in Service:** Web check-in aur seat assignment ko manage karta hai.
+7.  **Notification Service:** Booking confirmation, delays, cancellations ke liye Email/SMS bhejta hai.
+
+### Core Workflow 1: Flight Search (Read-Heavy)
+
+1.  User Prayagraj (IXD) se Delhi (DEL) ke liye 15 October 2025 ki flight search karta hai. Request **API Gateway** se **Search Service** ko jaati hai.
+2.  Search Service `Flights` aur `Flight_Instances` tables se us route aur date ki sabhi flights nikalta hai.
+3.  Har flight ke liye, yeh doosri services ko call karta hai:
+    * **Pricing Service** se us flight ka current fare poochta hai.
+    * **Inventory Service** se us flight mein bachi hui seats ki jaankari leta hai.
+4.  Search Service saari jaankari ko ek saath laakar user ko flight options ki ek list dikha deta hai. Popular routes ke results ko **Cache** kiya jaata hai taaki performance behtar ho.
+
+### Core Workflow 2: Flight Booking (Write-Heavy & Transactional)
+
+Yeh bilkul IRCTC ke Tatkal booking jaisa critical process hai.
+
+1.  User ek flight select karke "Book Now" par click karta hai. Request **Booking Service** ko jaati hai.
+2.  **Transaction & Lock:** Booking Service ek **DATABASE TRANSACTION** shuru karti hai.
+3.  Yeh **Inventory Service** se seats ki availability confirm karti hai. Agar seats available hain, to Inventory Service un seats par ek **temporary lock** laga deti hai (e.g., `BookedSeats` ko increment karke `OnHoldSeats` ko badha deti hai). Yeh lock 15 minute ke liye valid hota hai. **Yeh double-booking rokne ka sabse zaroori kadam hai.**
+4.  **Payment:** User ko **Payment Service** par redirect kiya jaata hai taaki woh payment poora kar sake.
+5.  **Transaction Outcome:**
+    * **Payment Successful:** Payment Gateway se success ka confirmation milne par, Booking Service database transaction ko **COMMIT** karti hai. Yeh PNR generate karti hai, booking details save karti hai, aur Inventory Service ko lock ko permanent `BookedSeats` mein convert karne ko bolti hai. Ek `Booking_Successful` event **Message Queue** (jaise Kafka) mein daal diya jaata hai jise **Notification Service** sunkar user ko ticket bhej deti hai.
+    * **Payment Failed / Timeout:** Agar 15 minute mein payment nahi hota ya fail ho jaata hai, to Booking Service transaction ko **ROLLBACK** kar deti hai. Yeh Inventory Service ko nirdesh deti hai ki woh temporary lock ko hata de, taaki woh seats doosre users ke liye available ho jaayein.
+
+
+---
+# 📌 Airbnb System Design
+
+---
+
+### ## What is Airbnb?
+
+Airbnb ek online marketplace hai jo logon ko apni property ya ghar ka koi kamra kiraye par dene ki suvidha deta hai. Yeh ek **two-sided marketplace** hai jo do tarah ke users ko jodta hai:
+1.  **Hosts (Mezbaan):** Woh log jo apni property (ghar, apartment, villa) ko rent ke liye list karte hain.
+2.  **Guests (Mehmaan):** Woh log jo kahin ghoomne ya rehne ke liye anokhi jagah (accommodations) dhoondh rahe hain.
+
+Yeh traditional hotels se alag hai kyunki yeh users ko local anubhav (experience) aur zyaada variety pradaan karta hai. Iska poora business model **vishwas (trust)** par aadhaarit hai, jo reviews aur secure payments ke zariye banaya jaata hai.
+
+---
+
+### ## Problem Statement (Humein Banana Kya Hai?)
+
+Humein ek scalable aur vishwasniya (reliable) platform design karna hai jo Hosts ko apni properties list karne aur Guests ko unhe search, book, aur review karne ki anumati de.
+
+#### Functional Requirements (System Ko Kya-Kya Karna Chahiye?)
+
+**Guest Side:**
+* Location, dates, aur mehmaano ki sankhya ke aadhar par properties **search** kar sakein.
+* Advanced filters ka istemal kar sakein (e.g., price range, property type, suvidhaayein jaise WiFi, Pool).
+* Property ki details, photos, reviews, aur host ki profile dekh sakein.
+* Stay **book** kar sakein aur online payment kar sakein.
+* Host ke saath platform ke zariye **message** par baat kar sakein.
+* Stay ke baad Host ko **review** kar sakein.
+
+**Host Side:**
+* Apni property ki **listing** create aur manage kar sakein.
+* Apni property ka **availability calendar** manage kar sakein (kaun si dates booked hain ya available hain).
+* Apni property ki **pricing** set kar sakein.
+* Booking requests ko accept ya decline kar sakein.
+* Guest ko **review** kar sakein.
+
+#### Non-Functional Requirements (System Ko Kaisa Perform Karna Chahiye?)
+* **High Availability:** Platform hamesha, duniya bhar ke users ke liye, uplabdh hona chahiye.
+* **Strong Consistency:** Booking aur availability calendar ke liye yeh behad zaroori hai. Ek hi property ek hi date par do baar book nahi honi chahiye.
+* **Low Latency:** Geo-spatial search (map par properties dhoondhna) bahut tez hona chahiye.
+* **Scalability:** System ko laakhon-karodon listings aur user traffic ko handle karna aana chahiye.
+* **Trust & Security:** User data, payments, aur communication surakshit hone chahiye.
+
+---
+
+### ## Low Level Design (Data Models)
+
+Core data ke liye ek **Relational Database (SQL)**, jaise PostgreSQL (jismein PostGIS jaisa powerful geospatial extension hai), ek achha vikalp hai.
+
+* **Users Table:**
+    * `UserID` (PK), `Name`, `Email`, `PasswordHash`, `ProfilePictureURL`, `Bio`, `IsHost`.
+* **Properties (Listings) Table:**
+    * `PropertyID` (PK), `HostID` (FK to Users), `Title`, `Description`, `PropertyType`, `Address`, `Latitude`, `Longitude`, `PricePerNight`, `MaxGuests`.
+* **Bookings Table (Transactional Core):**
+    * `BookingID` (PK), `GuestID` (FK), `PropertyID` (FK), `CheckInDate`, `CheckOutDate`, `TotalAmount`, `BookingStatus` (PENDING, CONFIRMED, CANCELLED).
+* **Availability Table (For Fast Search):**
+    * `PropertyID`, `Date`, `IsAvailable` (Boolean), `Price`. (Yeh table denormalized hoti hai taaki search ke waqt availability check karna tez ho).
+* **Reviews Table (Two-way reviews):**
+    * `ReviewID` (PK), `BookingID` (FK), `ReviewerID` (FK), `RevieweeID` (FK), `Rating`, `CommentText`.
+* **Messages Table:**
+    * `MessageID` (PK), `BookingID` (FK), `SenderID` (FK), `ReceiverID` (FK), `MessageText`, `Timestamp`.
+
+---
+
+### ## Architecture and Components (System Ka Naksha)
+
+Airbnb jaise complex system ke liye **Microservices Architecture** sabse behtar hai.
+
+#### Key Microservices
+1.  **Search Service:** Yeh read-heavy service hai jo geospatial queries handle karti hai. Iske liye **Elasticsearch** jaisa search engine behtareen hai.
+2.  **Listings Service:** Hosts dwara properties ki saari jaankari (CRUD operations) ko manage karta hai.
+3.  **Booking Service:** Booking workflow ka transactional core hai. Yeh strong consistency par focus karta hai.
+4.  **Availability Service:** Sabhi properties ke calendars ko manage karta hai. Double-booking ko rokna iski mukhya zimmedari hai.
+5.  **User Service:** User profiles aur authentication ko manage karta hai.
+6.  **Messaging Service:** Host aur guest ke beech chat ko power karta hai (WebSockets ka istemal kar sakta hai).
+7.  **Payment Service:** Payments ko process karta hai, guest se paise leta hai, aur check-in ke baad host ko payout manage karta hai.
+8.  **Review Service:** Two-way review system ko manage karta hai.
+
+### Core Workflow 1: Ek Guest Stay Search Kar Raha Hai
+
+1.  Guest search karta hai: "Civil Lines, Prayagraj", "15-20 October", "2 mehmaan". Request **API Gateway** se **Search Service** ko jaati hai.
+2.  Search Service apni **Elasticsearch** index par ek complex query chalaati hai:
+    * **Geo Filter:** "Civil Lines, Prayagraj" ke aas-paas ke area mein saari properties dhoondho.
+    * **Availability Filter:** Ab inmein se un properties ko hata do jo **Availability Service** ke anusaar 15 se 20 October ke beech kisi bhi din booked hain.
+    * **Attribute Filter:** Bachi hui properties ko `MaxGuests >= 2` aur anya filters (price, amenities) ke aadhar par filter karo.
+3.  Search Service in filtered `PropertyID`s ki list lautaati hai. Fir, `Listings Service` se in properties ki poori details (photos, title) mangwa kar user ko dikha di jaati hai.
+
+### Core Workflow 2: Ek Guest Property Book Kar Raha Hai
+
+Yeh ek critical, transactional workflow hai.
+
+1.  Guest "Reserve" par click karta hai. Request **Booking Service** ko jaati hai.
+2.  **Transaction & Lock:** Booking Service ek **DATABASE TRANSACTION** shuru karti hai.
+3.  **Step 1: Double-Check Availability (Race Condition se bachav):** Booking Service, **Availability Service** ko ek final call karti hai: "Kya Property XYZ 15-20 Oct ke liye abhi bhi available hai?". Availability Service un dates par ek **temporary lock** (e.g., 10 minute ke liye `PENDING` status) laga deti hai. Agar lock fail hota hai (kyunki kisi aur ne usi second book kar liya), to user ko error dikha diya jaata hai.
+4.  **Step 2: Process Payment:** Agar lock safal hota hai, to Booking Service **Payment Service** ko guest se payment lene ke liye kehti hai. Airbnb aam taur par is paise ko apne paas rakhta hai.
+5.  **Step 3: Finalize Booking (Commit):**
+    * Agar payment safal hota hai, to Booking Service transaction ko **COMMIT** karti hai.
+    * Yeh `Bookings` table mein ek `CONFIRMED` entry banati hai.
+    * Yeh **Availability Service** ko nirdesh deti hai ki woh temporary lock ko permanent **`BOOKED`** status mein badal de.
+    * Ek `Booking_Confirmed` event **Message Queue (jaise Kafka)** mein daal diya jaata hai.
+6.  **Asynchronous Actions:**
+    * Is event ko sunkar **Notification Service** guest aur host dono ko confirmation email/SMS bhejti hai.
+    * **Messaging Service** un dono ke beech ek naya message thread shuru kar deti hai.
+7.  **Failure/Rollback:** Agar payment fail ho jaata hai ya lock expire ho jaata hai, to transaction **ROLLBACK** ho jaata hai aur Availability Service lock ko hata deti hai, jisse woh dates fir se available ho jaati hain.
+
+---
+
+# 📌 Live-Streaming App System Design
+
+---
+
+### ## What is a Live-Streaming App?
+
+Ek Live-Streaming App (jaise Twitch, YouTube Live, Instagram Live) ek aisa platform hai jo users (jinhe **Streamers** ya Creators kehte hain) ko apne computer ya mobile se live video aur audio content ko internet par broadcast karne ki anumati deta hai. Doosre users (jinhe **Viewers** kehte hain) is broadcast ko real-time mein dekh sakte hain. Iska sabse zaroori hissa iski interactivity hoti hai, khaaskar **live chat** ke zariye, jisse viewers aur streamer aapas mein baat kar sakte hain.
+
+---
+
+### ## Problem Statement (Humein Banana Kya Hai?)
+
+Humein ek scalable aur kam-latency wala platform design karna hai jo duniya bhar mein laakhon-karodon viewers ko high-quality live video streams pradaan kar sake.
+
+#### Functional Requirements (System Ko Kya-Kya Karna Chahiye?)
+* Ek user (Streamer) live video broadcast shuru aur band kar sake.
+* Users (Viewers) live streams ko khoj (discover) aur dekh sakein.
+* Viewers ko video kam se kam delay (latency) ke saath milna chahiye.
+* Har stream ke liye ek **real-time chat** uplabdh honi chahiye.
+* Video stream alag-alag quality settings mein uplabdh hona chahiye (e.g., 1080p, 720p, 480p) taaki alag-alag internet speeds par chal sake.
+* Stream khatm hone ke baad, use ek normal video (Video on Demand - VOD) ke roop mein save karne ka vikalp hona chahiye.
+
+#### Non-Functional Requirements (System Ko Kaisa Perform Karna Chahiye?)
+* **Low Latency (Glass-to-Glass Delay):** Yeh sabse zaroori hai. Streamer ke camera mein jo ho raha hai aur viewer ki screen par jo dikh raha hai, uske beech ka samay (delay) kam se kam hona chahiye (aam taur par 5-10 seconds se kam).
+* **High Scalability:** Ek single stream par laakhon concurrent viewers ho sakte hain. System ko is "fan-out" load ko handle karna aana chahiye.
+* **High Availability:** Streaming infrastructure vishwasniya (reliable) honi chahiye. Stream beech mein rukni nahi chahiye.
+* **Adaptive Bitrate Streaming (ABR):** Viewer ke internet connection ke aadhar par video quality automatically adjust honi chahiye taaki video ruke (buffer) nahi.
+
+---
+
+### ## High-Level Architecture & Core Technologies
+
+Live streaming ka process ek pipeline jaisa hota hai. Ismein kai kadam (steps) hote hain.
+
+#### Key Components:
+1.  **Ingestion Service:** Yeh platform ka entry point hai. Streamer ka raw video stream sabse pehle yahan aata hai.
+2.  **Transcoding Service:** Yeh pipeline ka sabse zaroori aur compute-intensive hissa hai. Yeh streamer se aayi ek single high-quality stream ko leta hai aur use alag-alag qualities (1080p, 720p, 480p) aur formats mein convert karta hai. Yahi ABR ko sambhav banata hai.
+3.  **Stream Distribution Network (CDN):** Transcode ki hui video streams ko ek global **Content Delivery Network (CDN)** par push kiya jaata hai. CDN ke servers poori duniya mein faile hote hain.
+4.  **Metadata Service:** Yeh ek normal web service hai jo baaki sab kuch handle karti hai: user profiles, stream titles, viewer count, etc. Yeh ek standard database (SQL/NoSQL) ka istemal karti hai.
+5.  **Chat Service:** Ek alag, real-time service jo WebSockets ka istemal karke live chat ko power karti hai.
+
+#### Core Protocols:
+* **Ingestion Protocol (Streamer se Server tak):** **RTMP (Real-Time Messaging Protocol)** industry standard hai. Streamer ka software (jaise OBS) RTMP ka istemal karke video server ko bhejta hai.
+* **Delivery Protocol (Server se Viewer tak):** **HLS (HTTP Live Streaming)** aur **DASH (Dynamic Adaptive Streaming over HTTP)** modern standards hain. Yeh video stream ko chhote-chhote (2-6 second ke) video "chunks" mein tod dete hain aur unhe normal HTTP par serve karte hain. Isse yeh behad scalable ho jaata hai aur CDN ke saath achhe se kaam karta hai.
+
+---
+
+### ## Core Workflow 1: The Streaming Pipeline (Streamer se Viewer tak)
+
+Chaliye, ek streamer jo Prayagraj mein hai aur ek viewer jo Delhi mein hai, unke beech ke data flow ko dekhte hain.
+
+1.  **Capture & Ingest:** Prayagraj mein baitha streamer apne PC par "Go Live" click karta hai. Uska software (OBS) video/audio capture karke use **RTMP** protocol ke zariye hamare sabse nazdeeki **Ingestion Server** (e.g., Mumbai mein) par bhejta hai.
+
+2.  **Transcoding (The Video Factory):** Mumbai ka server us stream ko **Transcoding Service** ko bhejta hai. Yeh service us high-quality stream ko ek saath kai qualities mein badalti hai (1080p, 720p, etc.). Har quality ke stream ko chhote-chhote `.ts` video chunks mein toda jaata hai aur ek `playlist.m3u8` (manifest file) banayi jaati hai jismein in chunks ki list hoti hai.
+
+3.  **Distribution (CDN par bhejna):** Yeh saare video chunks aur manifest files turant **CDN** par upload ho jaate hain.
+
+4.  **Playback (Viewer ka Anubhav):**
+    * Delhi mein baitha viewer stream par click karta hai. Uska video player sabse pehle CDN se `playlist.m3u8` manifest file request karta hai. CDN apne sabse nazdeeki server (Delhi edge server) se yeh file bhej deta hai.
+    * Manifest file player ko batati hai ki kaun-kaun si qualities available hain. Player viewer ki internet speed check karta hai aur ma लीजिए 720p se shuru karne ka faisla karta hai.
+    * Ab player 720p waali manifest file maangta hai, jismein 720p ke saare video chunks ki list hoti hai.
+    * Player ek-ek karke in chunks ko download aur play karna shuru kar deta hai.
+    * Agar viewer ka internet dheema ho jaata hai, to player agla chunk 480p waali stream se maangega. Isse video ki quality thodi kam ho jaayegi lekin woh rukega nahi. Isi ko **Adaptive Bitrate Streaming** kehte hain.
+
+### Core Workflow 2: The Real-Time Chat System
+
+Video pipeline se alag, chat system alag se kaam karta hai.
+
+1.  Jab viewer stream join karta hai, to uska browser/app ek dedicated **Chat Server** ke saath ek **WebSocket connection** banata hai.
+2.  Jab viewer message type karke bhejta hai, to woh WebSocket ke zariye turant Chat Server tak pahunch jaata hai.
+3.  Chat Server us message ko us stream se jude **baaki sabhi viewers** ko unke respective WebSocket connections ke zariye **broadcast** kar deta hai.
+
+Isse chat ka anubhav behad tez aur real-time rehta hai, chahe viewers laakhon mein hi kyun na hon. Chat servers ko stream ID ya channel ke aadhar par shard (baanta) jaa sakta hai.
+
+---
+
+# 📌 Tinder System Design
+
+---
+
+### ## What is Tinder?
+
+Tinder ek location-based social discovery aur dating application hai. Iska istemal karke users apne aas-paas ke doosre users ke profiles ko like (swipe right) ya dislike (swipe left) kar sakte hain. Iski sabse badi khaasiyat iska **"double opt-in"** system hai: do users ke beech chat tabhi shuru ho sakti hai jab dono ne ek doosre ko like kiya ho. Isse ek **"match"** banta hai, jo unwanted messages ko rokta hai.
+
+---
+
+### ## Problem Statement (Humein Banana Kya Hai?)
+
+Humein ek highly available aur responsive dating app design karna hai, jiska mukhya focus user ko uski pasand aur location ke aadhar par personalized recommendations dena aur mutual likes ko real-time mein match karna hai.
+
+#### Functional Requirements (System Ko Kya-Kya Karna Chahiye?)
+* User apni profile (photos, bio, interests, preferences) create aur manage kar sake.
+* System ko har user ke liye unke location, age/gender preferences ke aadhar par potential matches ka ek **personalized stack (deck)** dikhana chahiye.
+* User profiles par right (like) ya left (pass) swipe kar sake.
+* Agar do users ek doosre ko like karte hain, to system ko turant ek **"match"** create karna chahiye aur dono ko notify karna chahiye.
+* Matched users aapas mein **chat** kar sakein.
+
+#### Non-Functional Requirements (System Ko Kaisa Perform Karna Chahiye?)
+* **High Availability:** App hamesha on rehna chahiye, khaaskar peak hours (jaise weekend nights) mein.
+* **Low Latency:** Profile deck ka load time aur swipe ka response time bahut kam hona chahiye. Match notification real-time mein aani chahiye.
+* **Scalability:** System ko laakhon-karodon users aur pratidin (daily) arabon (billions) swipes ko handle karna aana chahiye.
+* **Data Privacy & Security:** User ki location aur personal data atyant surakshit (secure) honi chahiye.
+
+---
+
+### ## Low Level Design (Data Models)
+
+* **Users Table (SQL ya NoSQL - Document DB):**
+    * `UserID` (PK), `Name`, `Age`, `Gender`, `Bio`
+    * `Photos`: [URL1, URL2, ...] (JSON Array)
+    * `LastLocation_Lat`, `LastLocation_Lon`: User ki aakhri location (geospatial queries ke liye indexed).
+    * `Preferences`: { `minAge`, `maxAge`, `genderPreference`, `maxDistance` } (JSON Object).
+    * `DesirabilityScore`: Ek internal score jo recommendation engine use karta hai.
+
+* **Swipes Table (Write-heavy - NoSQL jaise Cassandra/DynamoDB):**
+    * `SwiperID` (Partition Key)
+    * `SwipedID` (Clustering Key)
+    * `SwipeType`: (LIKE / PASS)
+    * `Timestamp`
+    * Yeh table behad badi hogi, isliye high write throughput wala NoSQL database iske liye perfect hai.
+
+* **Matches Table (SQL ya NoSQL):**
+    * `MatchID` (PK)
+    * `User1_ID`, `User2_ID` (sorted to create a unique key, e.g., (smaller_id, larger_id))
+    * `Timestamp`
+
+* **Chat Messages Table (NoSQL jaise Cassandra):**
+    * `MatchID` (Partition Key)
+    * `MessageID` (Timestamp-based UUID, Clustering Key)
+    * `SenderID`, `MessageText`
+
+---
+
+### ## Architecture and Components (System Ka Naksha)
+
+Tinder ka system **Microservices Architecture** par chalta hai.
+
+#### Key Microservices
+1.  **User Service:** User profiles (CRUD operations) ko manage karta hai.
+2.  **Recommendation Service (System ka "Dimaag"):** Har user ke liye personalized profile deck generate karta hai.
+3.  **Swipe Service:** User ke swipes ko record karne wala ek high-throughput service.
+4.  **Match Service:** Mutual likes ko detect karke match create karta hai.
+5.  **Chat Service:** Matched users ke beech real-time chat ko power karta hai (WebSockets ka istemal karke).
+
+### Core Workflow 1: Profile Deck Generate Karna (Recommendations)
+
+Yeh sabse zaroori aur computationally intensive kaam hai. Ek live DB query ("mere 10km ke daayre mein 25-30 saal ke sabhi users dikhao jinhe maine swipe nahi kiya hai") bahut dheemi hogi. Isliye, yeh process **asynchronously (background mein)** hota hai.
+
+1.  **Offline Pre-computation:** Ek **background worker** har active user ke liye recommendations ko pehle se hi compute karke ek **Cache (jaise Redis)** mein store kar deta hai.
+    * **Key:** `UserID`
+    * **Value:** A list of recommended `UserID`s [ID_X, ID_Y, ID_Z, ...]
+
+2.  **Yeh Worker Kaam Kaise Karta Hai?**
+    * **Step A (Geo-Spatial Query):** Sabse pehle, yeh ek specialized database (jismein geospatial index ho, jaise PostGIS ya Elasticsearch) se user ke `maxDistance` ke andar aane waale sabhi users ko nikalta hai.
+    * **Step B (Filtering):** Is list ko user ki `Preferences` (age, gender) ke aadhar par filter kiya jaata hai. Un logon ko bhi hata diya jaata hai jin par user pehle hi swipe kar chuka hai.
+    * **Step C (Ranking):** Bachi hui profiles ko kai factors ke aadhar par **rank** kiya jaata hai—jaise `DesirabilityScore`, user ki activity, common interests, etc.
+    * **Step D (Caching):** Top N (e.g., 200) ranked profiles ki ID ko Redis mein store kar diya jaata hai.
+
+3.  **Serving the Deck:** Jab user app kholta hai, to client **Recommendation Service** se deck maangta hai. Service ko bas **Redis se pre-computed list** nikalni hoti hai, jo behad tez hai. Fir woh list mein se pehle 10-20 profiles ki poori details `User Service` se mangwa kar client ko bhej deti hai.
+
+### Core Workflow 2: Swiping aur Real-Time Matching
+
+1.  User A, User B ki profile par **right swipe** karta hai. App `(Swiper: A, Swiped: B, Type: LIKE)` ka event **Swipe Service** ko bhejta hai.
+
+2.  Swipe Service do kaam karti hai:
+    a. Is swipe ko `Swipes` database mein likhti hai (persistence ke liye).
+    b. Saath hi, is event ko ek **Message Queue (jaise Kafka ya SQS)** mein publish karti hai.
+
+3.  **Match Service** is Message Queue ko sun rahi hoti hai. Use `A -> LIKE -> B` ka event milta hai.
+
+4.  **The Magic Check:** Match Service turant `Swipes` database mein ek ulta (reverse) lookup karti hai: **"Kya B ne kabhi A ko LIKE kiya hai?"** (`SELECT 1 FROM Swipes WHERE SwiperID='B' AND SwipedID='A' AND SwipeType='LIKE'`). Yeh query behad fast hoti hai kyunki database iske liye optimized hota hai.
+
+5.  **Scenario 1: No Match:** Agar B ne A ko like nahi kiya hai, to kuch nahi hota. Process yahin khatm ho jaata hai.
+
+6.  **Scenario 2: It's a Match!**
+    * Agar B ne A ko pehle hi like kiya hua hai, to yeh ek match hai!
+    * **Match Service**, `Matches` table mein ek nayi entry create karti hai.
+    * Iske baad, woh ek **Notification Service** (jaise Firebase Cloud Messaging) ko bolti hai ki User A aur User B dono ke devices par push notification bheje: **"It's a Match!"**.
+    * Yeh poora process kuch hi milliseconds mein ho jaata hai, jisse user ko instant experience milta hai.
+
+---
