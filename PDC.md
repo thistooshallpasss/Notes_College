@@ -110,14 +110,14 @@ Yeh ek **cycle** hai. Performance theek karte waqt ho sakta hai aap koi naya bug
 ### Q: Sequential aur Parallel Algorithm mein kya fark hai?
 
 **Answer**:
-[cite_start]Ek **sequential algorithm** ek recipe jaisa hai jo batata hai ki ek serial computer (single processor) par problem ko solve karne ke liye steps ka sequence kya hoga[cite: 427]. [cite_start]Wahin, ek **parallel algorithm** batata hai ki ek hi problem ko multiple processors ka istemal karke kaise solve kiya jaaye[cite: 428]. [cite_start]Ismein sirf steps hi nahi, balki yeh bhi batana zaroori hota hai ki kaun se steps ek saath (concurrently) chal sakte hain[cite: 430].
+Ek **sequential algorithm** ek recipe jaisa hai jo batata hai ki ek serial computer (single processor) par problem ko solve karne ke liye steps ka sequence kya hoga Wahin, ek **parallel algorithm** batata hai ki ek hi problem ko multiple processors ka istemal karke kaise solve kiya jaaye Ismein sirf steps hi nahi, balki yeh bhi batana zaroori hota hai ki kaun se steps ek saath (concurrently) chal sakte hain
 
 Ek parallel algorithm design karne mein aam taur par yeh shaamil hota hai:
-* [cite_start]Kaam ke un hisson ko pehchan'na jo ek saath ho sakte hain[cite: 433].
-* [cite_start]Un concurrent hisson ko alag-alag processes par **map** karna[cite: 434].
-* [cite_start]Input, output, aur intermediate data ko distribute karna[cite: 435].
-* [cite_start]Shared data ke access ko manage karna[cite: 436].
-* [cite_start]Processors ko execution ke alag-alag stages par **synchronize** karna[cite: 437].
+* Kaam ke un hisson ko pehchan'na jo ek saath ho sakte hain
+* Un concurrent hisson ko alag-alag processes par **map** karna
+* Input, output, aur intermediate data ko distribute karna
+* Shared data ke access ko manage karna
+* Processors ko execution ke alag-alag stages par **synchronize** karna
 
 ---
 
@@ -126,13 +126,13 @@ Ek parallel algorithm design karne mein aam taur par yeh shaamil hota hai:
 ### Q: Decomposition kya hai? Tasks aur Task-Dependency Graph se aap kya samajhte hain?
 
 **Answer**:
-* [cite_start]**Decomposition**: Yeh ek process hai jismein ek badi computation ko chhote-chhote hisson mein baanta jaata hai, jinhein **tasks** kehte hain[cite: 453, 454]. [cite_start]In tasks ko aage aur nahi toda jaa sakta[cite: 456]. [cite_start]Ek saath kai tasks ko execute karne se hi problem solve karne ka time kam hota hai[cite: 455].
-* [cite_start]**Tasks**: Yeh computation ki programmer-defined units hain[cite: 454]. [cite_start]Inka size chhota ya bada ho sakta hai[cite: 457]. [cite_start]Jaise, matrix-vector multiplication mein, product vector ke har element ki calculation ek alag task ho sakti hai[cite: 462].
-* [cite_start]**Task-Dependency Graph**: Yeh ek directed graph hota hai jo tasks ke beech dependencies (nirbharta) dikhata hai[cite: 476].
-    * [cite_start]**Nodes** tasks ko represent karte hain[cite: 476].
-    * [cite_start]**Directed edges** (teer) dikhate hain ki ek task doosre par nirbhar hai[cite: 476].
-    * [cite_start]Koi bhi task tabhi execute ho sakta hai jab uski saari incoming dependencies (jin tasks ke teer uski taraf aa rahe hain) poori ho chuki hon[cite: 477].
-    * [cite_start]**Example**: Database query mein, "Civic" aur "2001" model cars ki tables banane ke baad hi unka intersection (2001 Civics) nikalne wala task shuru ho sakta hai[cite: 499].
+* **Decomposition**: Yeh ek process hai jismein ek badi computation ko chhote-chhote hisson mein baanta jaata hai, jinhein **tasks** kehte hain. In tasks ko aage aur nahi toda jaa sakta Ek saath kai tasks ko execute karne se hi problem solve karne ka time kam hota hai
+* **Tasks**: Yeh computation ki programmer-defined units hain Inka size chhota ya bada ho sakta hai Jaise, matrix-vector multiplication mein, product vector ke har element ki calculation ek alag task ho sakti hai
+* **Task-Dependency Graph**: Yeh ek directed graph hota hai jo tasks ke beech dependencies (nirbharta) dikhata hai
+    * **Nodes** tasks ko represent karte hain
+    * **Directed edges** (teer) dikhate hain ki ek task doosre par nirbhar hai
+    * Koi bhi task tabhi execute ho sakta hai jab uski saari incoming dependencies (jin tasks ke teer uski taraf aa rahe hain) poori ho chuki hon
+    * **Example**: Database query mein, "Civic" aur "2001" model cars ki tables banane ke baad hi unka intersection (2001 Civics) nikalne wala task shuru ho sakta hai
 
 
 ---
@@ -142,20 +142,20 @@ Ek parallel algorithm design karne mein aam taur par yeh shaamil hota hai:
 ### Q: Granularity aur Degree of Concurrency ka kya matlab hai?
 
 **Answer**:
-* [cite_start]**Granularity**: Yeh batata hai ki problem ko kitne aur kis size ke tasks mein toda gaya hai[cite: 566].
-    * [cite_start]**Fine-grained**: Jab problem ko bahut saare chhote-chhote tasks mein toda jaata hai[cite: 567].
-    * [cite_start]**Coarse-grained**: Jab problem ko kam sankhya mein bade-bade tasks mein toda jaata hai[cite: 567].
+* **Granularity**: Yeh batata hai ki problem ko kitne aur kis size ke tasks mein toda gaya hai
+    * **Fine-grained**: Jab problem ko bahut saare chhote-chhote tasks mein toda jaata hai
+    * **Coarse-grained**: Jab problem ko kam sankhya mein bade-bade tasks mein toda jaata hai
 * **Degree of Concurrency**: Yeh batata hai ki kisi bhi samay par kitne tasks ek saath chal sakte hain.
-    * [cite_start]**Maximum Degree of Concurrency**: Kisi bhi samay par ek saath chal sakne wale tasks ki adhiktam (maximum) sankhya[cite: 583].
-    * [cite_start]**Average Degree of Concurrency**: Poore program ke execution ke dauran, average kitne tasks concurrently chal sakte hain[cite: 588]. [cite_start]Finer granularity se aam taur par concurrency badhti hai[cite: 589].
+    * **Maximum Degree of Concurrency**: Kisi bhi samay par ek saath chal sakne wale tasks ki adhiktam (maximum) sankhya
+    * **Average Degree of Concurrency**: Poore program ke execution ke dauran, average kitne tasks concurrently chal sakte hain Finer granularity se aam taur par concurrency badhti hai
 
 ### Q: Critical Path kya hota hai aur iska kya mahatva hai?
 
 **Answer**:
-[cite_start]Ek task-dependency graph mein, **critical path** kisi bhi start node (jiska koi incoming edge na ho) se kisi bhi finish node (jiska koi outgoing edge na ho) tak ka sabse lamba directed path hota hai[cite: 625, 626].
+Ek task-dependency graph mein, **critical path** kisi bhi start node (jiska koi incoming edge na ho) se kisi bhi finish node (jiska koi outgoing edge na ho) tak ka sabse lamba directed path hota hai.
 
-* [cite_start]**Critical Path Length**: Is path par aane wale sabhi tasks ke kaam (weight) ka jod (sum) hota hai[cite: 627].
-* **Mahatva (Importance)**: Yeh parallel execution mein lagne wale minimum time ko tay karta hai. [cite_start]Critical path jitna chhota hoga, average degree of concurrency utni hi zyada hogi[cite: 628, 629]. [cite_start]Average degree of concurrency ka formula hai: (Total work) / (Critical path length)[cite: 628].
+* **Critical Path Length**: Is path par aane wale sabhi tasks ke kaam (weight) ka jod (sum) hota hai
+* **Mahatva (Importance)**: Yeh parallel execution mein lagne wale minimum time ko tay karta hai. Critical path jitna chhota hoga, average degree of concurrency utni hi zyada hogi. Average degree of concurrency ka formula hai: (Total work) / (Critical path length)
 
 ---
 
@@ -164,21 +164,21 @@ Ek parallel algorithm design karne mein aam taur par yeh shaamil hota hai:
 ### Q: Task-Interaction Graph kya hota hai?
 
 **Answer**:
-[cite_start]Yeh graph dikhata hai ki kaun se tasks aapas mein interact karte hain (data share karte hain)[cite: 644].
-* [cite_start]Ismein bhi **nodes** tasks ko represent karte hain[cite: 645].
-* [cite_start]**Edges** un tasks ko jodte hain jo aapas mein interact karte hain[cite: 645].
-* [cite_start]Task-interaction graph ka edge-set aam taur par task-dependency graph ke edge-set ka **superset** hota hai[cite: 648]. [cite_start]Aisa isliye kyunki jo tasks ek doosre par nirbhar nahi hain, woh bhi data share kar sakte hain[cite: 641, 642].
+Yeh graph dikhata hai ki kaun se tasks aapas mein interact karte hain (data share karte hain)
+* Ismein bhi **nodes** tasks ko represent karte hain
+* **Edges** un tasks ko jodte hain jo aapas mein interact karte hain
+* Task-interaction graph ka edge-set aam taur par task-dependency graph ke edge-set ka **superset** hota hai Aisa isliye kyunki jo tasks ek doosre par nirbhar nahi hain, woh bhi data share kar sakte hain.
 
 ### Q: Mapping kya hai aur Process aur Processor mein kya antar hai?
 
 **Answer**:
-* [cite_start]**Mapping**: Yeh woh tarika hai jisse tasks ko execution ke liye processes ko assign kiya jaata hai[cite: 694]. [cite_start]Ek achhi mapping ke teen mukhya lakshya (goals) hote hain[cite: 698]:
+* **Mapping**: Yeh woh tarika hai jisse tasks ko execution ke liye processes ko assign kiya jaata hai Ek achhi mapping ke teen mukhya lakshya (goals) hote hain
     1.  Independent tasks ko alag-alag processes par map karke **concurrency ko badhana**.
     2.  Processes ke beech **interaction ko kam karna**.
     3.  Critical path par maujood tasks ko jaldi se jaldi execute karke **total completion time ko kam karna**.
 * **Processes vs. Processors**:
-    * [cite_start]**Processors** physical hardware units hote hain jo asal mein computation karte hain[cite: 756].
-    * [cite_start]**Processes** logical computing agents hote hain jo tasks ko perform karte hain[cite: 755]. [cite_start]Aam taur par, hum ek process ko ek processor ke barabar maan sakte hain, lekin alag-alag sochna aasan rehta hai, khaas kar complex algorithms ke liye[cite: 757, 759].
+    * **Processors** physical hardware units hote hain jo asal mein computation karte hain
+    * **Processes** logical computing agents hote hain jo tasks ko perform karte hain Aam taur par, hum ek process ko ek processor ke barabar maan sakte hain, lekin alag-alag sochna aasan rehta hai, khaas kar complex algorithms ke liye.
 
 ---
 
@@ -190,30 +190,30 @@ Ek parallel algorithm design karne mein aam taur par yeh shaamil hota hai:
 Chaar mukhya decomposition techniques hain:
 
 1.  **Recursive Decomposition**:
-    * [cite_start]Yeh "divide-and-conquer" strategy par aadharit problems ke liye use hoti hai[cite: 782].
-    * [cite_start]Problem ko independent subproblems mein toda jaata hai, aur unhe recursively solve kiya jaata hai[cite: 783, 784].
-    * [cite_start]**Example**: Quicksort algorithm, jismein ek list ko pivot ke aadhar par do choti lists mein baanta jaata hai aur fir unhe alag-alag sort kiya jaata hai[cite: 787, 788].
+    * Yeh "divide-and-conquer" strategy par aadharit problems ke liye use hoti hai
+    * Problem ko independent subproblems mein toda jaata hai, aur unhe recursively solve kiya jaata hai.
+    * **Example**: Quicksort algorithm, jismein ek list ko pivot ke aadhar par do choti lists mein baanta jaata hai aur fir unhe alag-alag sort kiya jaata hai.
 
 2.  **Data Decomposition**:
-    * [cite_start]Yeh technique bade data structures par kaam karne wale algorithms ke liye bahut powerful hai[cite: 892].
-    * [cite_start]Ismein pehle data ko partition kiya jaata hai, aur fir us data partition ke aadhar par computations ko tasks mein baanta jaata hai[cite: 894].
-    * [cite_start]Data partition karne ke kai tarike ho sakte hain[cite: 898]:
-        * **Output Data Partitioning**: Har task output data ke ek hisse ko compute karne ke liye responsible hota hai. [cite_start]Jaise matrix multiplication mein, output matrix C ke har block ko ek alag task calculate kar sakta hai[cite: 899, 903, 905].
-        * [cite_start]**Input Data Partitioning**: Jab output ko partition karna aasan na ho (jaise kisi list ka minimum element dhundhna), tab input data ko partition kiya jaata hai[cite: 1003].
-        * [cite_start]**Intermediate Data Partitioning**: Kai baar, input ya output ke bajaye algorithm ke kisi beech ke stage mein banne wale data ko partition karke zyada concurrency mil sakti hai[cite: 1109, 1110].
+    * Yeh technique bade data structures par kaam karne wale algorithms ke liye bahut powerful hai
+    * Ismein pehle data ko partition kiya jaata hai, aur fir us data partition ke aadhar par computations ko tasks mein baanta jaata hai
+    * Data partition karne ke kai tarike ho sakte hain
+        * **Output Data Partitioning**: Har task output data ke ek hisse ko compute karne ke liye responsible hota hai. Jaise matrix multiplication mein, output matrix C ke har block ko ek alag task calculate kar sakta hai.
+        * **Input Data Partitioning**: Jab output ko partition karna aasan na ho (jaise kisi list ka minimum element dhundhna), tab input data ko partition kiya jaata hai.
+        * **Intermediate Data Partitioning**: Kai baar, input ya output ke bajaye algorithm ke kisi beech ke stage mein banne wale data ko partition karke zyada concurrency mil sakti hai.
 
 3.  **Exploratory Decomposition**:
-    * [cite_start]Yeh un problems ke liye istemal hoti hai jahan solution ek search space mein dhundhna hota hai[cite: 1161].
-    * [cite_start]Ismein search space ko chhote-chhote hisson mein baant kar har hisse ko concurrently search kiya jaata hai[cite: 1162].
-    * [cite_start]**Example**: 15-puzzle problem, jahan initial state se alag-alag possible moves ko alag-alag tasks explore karte hain jab tak solution na mil jaye[cite: 1163, 1201]. [cite_start]Jaise hi ek task ko solution milta hai, woh baaki tasks ko rok sakta hai[cite: 1202].
+    * Yeh un problems ke liye istemal hoti hai jahan solution ek search space mein dhundhna hota hai.
+    * Ismein search space ko chhote-chhote hisson mein baant kar har hisse ko concurrently search kiya jaata hai.
+    * **Example**: 15-puzzle problem, jahan initial state se alag-alag possible moves ko alag-alag tasks explore karte hain jab tak solution na mil jaye. Jaise hi ek task ko solution milta hai, woh baaki tasks ko rok sakta hai.
 
 4.  **Speculative Decomposition**:
-    * [cite_start]Yeh un situations mein use hota hai jahan program ka agla step pichle computation ke result par nirbhar karta hai[cite: 1312].
-    * [cite_start]Ismein, result aane se pehle hi, program ke possible future branches (raaston) ko parallel mein execute karna shuru kar diya jaata hai[cite: 1313].
-    * [cite_start]Jab aakhir mein sahi branch ka pata chalta hai, toh us branch ke result ko use kar liya jaata hai aur baaki branches ke kaam ko discard kar diya jaata hai[cite: 1317]. [cite_start]Isse kuch computation waste zaroor hoti hai[cite: 1319].
-    * [cite_start]**Example**: Discrete event simulation[cite: 1324].
+    * Yeh un situations mein use hota hai jahan program ka agla step pichle computation ke result par nirbhar karta hai.
+    * Ismein, result aane se pehle hi, program ke possible future branches (raaston) ko parallel mein execute karna shuru kar diya jaata hai.
+    * Jab aakhir mein sahi branch ka pata chalta hai, toh us branch ke result ko use kar liya jaata hai aur baaki branches ke kaam ko discard kar diya jaata hai. Isse kuch computation waste zaroor hoti hai.
+    * **Example**: Discrete event simulation.
 
-[cite_start]In techniques ko akele ya ek saath (hybrid decomposition) bhi istemal kiya jaa sakta hai[cite: 1360, 1361].
+In techniques ko akele ya ek saath (hybrid decomposition) bhi istemal kiya jaa sakta hai.
 
 ---
 
@@ -222,21 +222,21 @@ Chaar mukhya decomposition techniques hain:
 ### Q: Static aur Dynamic Mapping mein kya antar hai?
 
 **Answer**:
-[cite_start]Mapping ka mukhya uddeshya (objective) processes par kaam ka bojh (workload) balance karna hai taaki koi process idle na baithe[cite: 1530]. Iske liye do tarah ki mapping hoti hai:
+Mapping ka mukhya uddeshya (objective) processes par kaam ka bojh (workload) balance karna hai taaki koi process idle na baithe. Iske liye do tarah ki mapping hoti hai:
 
 * **Static Mapping**:
-    * [cite_start]Ismein tasks ko algorithm ke execution se **pehle** hi processes par distribute kar diya jaata hai[cite: 1584].
-    * [cite_start]Yeh tabhi aacha kaam karti hai jab tasks pehle se pata hon (statically generated) aur unka size bhi anumaanit ho[cite: 1397, 1418].
+    * Ismein tasks ko algorithm ke execution se **pehle** hi processes par distribute kar diya jaata hai.
+    * Yeh tabhi aacha kaam karti hai jab tasks pehle se pata hon (statically generated) aur unka size bhi anumaanit ho.
     * **Schemes**:
-        * [cite_start]**Array Distribution**: Block, Cyclic, Block-Cyclic, aur Randomized block distributions[cite: 1611, 1703, 1860].
-        * [cite_start]**Graph Partitioning**: Mesh jaise irregular data structures ko is tarah partition karna ki har process ko lagbhag barabar kaam mile aur communication kam se kam ho[cite: 1924, 1925].
+        * **Array Distribution**: Block, Cyclic, Block-Cyclic, aur Randomized block distributions.
+        * **Graph Partitioning**: Mesh jaise irregular data structures ko is tarah partition karna ki har process ko lagbhag barabar kaam mile aur communication kam se kam ho.
 
 * **Dynamic Mapping (Dynamic Load Balancing)**:
-    * [cite_start]Ismein kaam ko algorithm ke execution ke **dauran** (at runtime) processes mein baanta jaata hai[cite: 1590].
-    * [cite_start]Yeh tab zaroori hai jab tasks dynamically generate hote hain ya unka size anumaanit nahi hota[cite: 1591, 1592].
+    * Ismein kaam ko algorithm ke execution ke **dauran** (at runtime) processes mein baanta jaata hai.
+    * Yeh tab zaroori hai jab tasks dynamically generate hote hain ya unka size anumaanit nahi hota.
     * **Schemes**:
-        * [cite_start]**Centralized**: Ek master process kaam ka pool maintain karta hai aur idle slave processes ko kaam deta hai[cite: 2036, 2037].
-        * [cite_start]**Distributed**: Sabhi processes aapas mein kaam exchange karke workload balance karte hain[cite: 2062].
+        * **Centralized**: Ek master process kaam ka pool maintain karta hai aur idle slave processes ko kaam deta hai.
+        * **Distributed**: Sabhi processes aapas mein kaam exchange karke workload balance karte hain.
 
 ---
 
@@ -245,13 +245,13 @@ Chaar mukhya decomposition techniques hain:
 ### Q: Processes ke beech interaction overheads ko kaise kam kiya jaa sakta hai?
 
 **Answer**:
-[cite_start]Interaction overheads ko kam karna ek aache parallel program ke liye bahut zaroori hai[cite: 2087]. Iske kuch pramukh (main) tarike hain:
+Interaction overheads ko kam karna ek aache parallel program ke liye bahut zaroori hai. Iske kuch pramukh (main) tarike hain:
 
-1.  [cite_start]**Maximizing Data Locality**: Jitna ho sake, local data ka istemal karein taaki nonlocal data ko access karne ki zaroorat kam pade[cite: 2097, 2102]. [cite_start]Isse data exchange ka volume kam hota hai[cite: 2100].
-2.  [cite_start]**Minimizing Contention and Hot Spots**: Aisi situations se bachein jahan kai processes ek hi samay par ek hi resource (jaise memory block) ko access karne ki koshish karein[cite: 2128, 2129].
-3.  [cite_start]**Overlapping Computations with Interactions**: Jab ek process data ka intezaar kar raha ho, us waiting time mein koi aur useful computation kar le[cite: 2151]. [cite_start]Iske liye non-blocking communication ya hardware prefetching ki zaroorat pad sakti hai[cite: 2165, 2169].
-4.  [cite_start]**Replicating Data or Computations**: Agar kai processes ko ek hi read-only data ki baar-baar zaroorat padti hai, toh us data ki ek copy har process par replicate kar dena behtar ho sakta hai[cite: 2176, 2177].
-5.  [cite_start]**Using Optimized Collective Interaction Operations**: Broadcast ya reduction jaise common communication patterns ke liye pehle se optimized library functions (jaise MPI mein) ka istemal karein[cite: 2197, 2202].
+1.  **Maximizing Data Locality**: Jitna ho sake, local data ka istemal karein taaki nonlocal data ko access karne ki zaroorat kam pade. Isse data exchange ka volume kam hota hai.
+2.  **Minimizing Contention and Hot Spots**: Aisi situations se bachein jahan kai processes ek hi samay par ek hi resource (jaise memory block) ko access karne ki koshish karein .
+3.  **Overlapping Computations with Interactions**: Jab ek process data ka intezaar kar raha ho, us waiting time mein koi aur useful computation kar le. Iske liye non-blocking communication ya hardware prefetching ki zaroorat pad sakti hai.
+4.  **Replicating Data or Computations**: Agar kai processes ko ek hi read-only data ki baar-baar zaroorat padti hai, toh us data ki ek copy har process par replicate kar dena behtar ho sakta hai.
+5.  **Using Optimized Collective Interaction Operations**: Broadcast ya reduction jaise common communication patterns ke liye pehle se optimized library functions (jaise MPI mein) ka istemal karein.
 
 ---
 
