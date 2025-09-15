@@ -1362,6 +1362,140 @@ Bytes Transferred = $(8 \times 10^9 \text{ bytes/s}) \times (100 \times 10^{-9} 
 **Conclusion**: 100 nanoseconds ke latency period mein, is channel se **800 bytes** data transfer ho sakta tha. Yeh darshata hai ki chhote data transfers ke liye latency ek bada factor hai.
 
 ---
+## **Basic Revison opemMP**
+### 1. `#pragma omp for`
+
+* **Kya hai?**
+  Loop iterations ko multiple threads mein divide karne ke liye use hota hai.
+
+* **Kab use karte hain?**
+  Jab aap chahte ho ki ek loop ki iterations parallel run ho, har thread ko kuch iterations mil jayein.
+
+* **Kaise use karte hain?**
+
+  ```cpp
+  #pragma omp for
+  for (int i = 0; i < N; i++) {
+      // loop body
+  }
+  ```
+
+  * Yeh directive **sirf parallel region ke andar hi** use karte hain.
+  * Loop ke iterations automatically threads mein divide ho jaate hain.
+
+---
+
+### 2. `omp_get_thread_num()`
+
+* **Kya hai?**
+  Yeh function current thread ka ID number return karta hai.
+
+* **Use case:**
+  Agar tumhe pata karna hai ki kaunsa thread kaam kar raha hai, ya debugging/printing ke liye.
+
+* **Example:**
+
+  ```cpp
+  int tid = omp_get_thread_num();
+  printf("Thread %d\n", tid);
+  ```
+
+---
+
+### 3. `#pragma omp parallel num_threads(4)`
+
+* **Kya hai?**
+  Yeh ek **parallel region** start karta hai jisme 4 threads run karenge.
+
+* **Use:**
+
+  ```cpp
+  #pragma omp parallel num_threads(4)
+  {
+      // Yeh code 4 threads se parallel execute hoga
+  }
+  ```
+
+---
+
+### 4. `#pragma omp parallel for num_threads(4) reduction(+:total_sum)`
+
+* **Kya hai?**
+
+  * Yeh **parallel region** aur **for loop parallelization** dono ko combine karta hai.
+  * `num_threads(4)` matlab 4 threads banenge.
+  * `reduction(+:total_sum)` matlab `total_sum` variable ko safely har thread ke partial sum ko add karne ke liye use karo, taaki race condition na ho.
+
+* **Example:**
+
+  ```cpp
+  int total_sum = 0;
+  #pragma omp parallel for num_threads(4) reduction(+:total_sum)
+  for (int i = 0; i < N; i++) {
+      total_sum += i;
+  }
+  ```
+
+  * Har thread apna partial `total_sum` rakhega.
+  * Loop ke baad ye values safely combine ho jayengi.
+
+---
+
+### 5. `#pragma omp critical`
+
+* **Kya hai?**
+  Critical section declare karta hai — matlab jo code block uske andar hai, woh **ek time pe sirf ek thread execute karega**.
+
+* **Kab use karna chahiye?**
+  Jab shared resource ko update karna ho without race condition.
+
+* **Kaise use karna hai?**
+
+  ```cpp
+  #pragma omp critical
+  {
+      // Yeh block ek time pe sirf ek thread execute karega
+      shared_var++;
+  }
+  ```
+
+---
+
+### 6. `#pragma omp atomic`
+
+* **Kya hai?**
+  Atomic directive se ek **simple update operation** ko atomic banaya jata hai (jaise increment).
+
+* **Kab use karein?**
+  Jab ek chhota sa statement (like increment, addition) safe karna ho without full critical section overhead.
+
+* **Kaise use karein?**
+
+  ```cpp
+  #pragma omp atomic
+  shared_var++;
+  ```
+
+* **Note:** Atomic sirf simple statements ke liye hota hai, complex operations ke liye `critical` chahiye.
+
+---
+
+### Summary Table for Quick Reference:
+
+| Directive/Function                                         | Use Case / Meaning                                    |
+| ---------------------------------------------------------- | ----------------------------------------------------- |
+| `#pragma omp for`                                          | Loop iterations ko threads mein divide karna          |
+| `omp_get_thread_num()`                                     | Current thread ID lena                                |
+| `#pragma omp parallel num_threads(4)`                      | 4 threads ka parallel region start karna              |
+| `#pragma omp parallel for num_threads(4) reduction(+:var)` | Parallel for with 4 threads + safe variable reduction |
+| `#pragma omp critical`                                     | Critical section for exclusive access                 |
+| `#pragma omp atomic`                                       | Atomic operation (e.g., increment)                    |
+
+---
+
+
+
+
 **1. Two threads update shared counter without synchronization → issue.**
 
 ```cpp
@@ -1405,6 +1539,61 @@ int main() {
     return 0;
 }
 ```
+
+
+```cpp
+
+//updated code where now mutex is also used
+#include <iostream>
+#include <pthread.h>
+
+#define NUM_THREADS 2
+#define LOOPS 1000000
+
+int counter = 0;
+pthread_mutex_t lock;  // Mutex declaration
+
+void* worker(void* arg) {
+    for (int i = 0; i < LOOPS; i++) {
+        pthread_mutex_lock(&lock);   // Lock before updating counter
+        counter++;
+        pthread_mutex_unlock(&lock); // Unlock after updating counter
+    }
+    return NULL;
+}
+
+int main() {
+    pthread_t threads[NUM_THREADS];
+
+    pthread_mutex_init(&lock, NULL);  // Initialize mutex
+
+    for (int i = 0; i < NUM_THREADS; i++) {
+        pthread_create(&threads[i], NULL, worker, NULL);
+    }
+
+    for (int i = 0; i < NUM_THREADS; i++) {
+        pthread_join(threads[i], NULL);
+    }
+
+    pthread_mutex_destroy(&lock);  // Destroy mutex
+
+    std::cout << "Expected counter value: " << NUM_THREADS * LOOPS << std::endl;
+    std::cout << "Actual counter value:   " << counter << std::endl;
+
+    return 0;
+}
+
+```
+
+### `pthread_mutex_t lock;` - **Mutex variable declare karta hai jo lock/unlock ke liye use hoga.**
+
+### `pthread_mutex_init(&lock, NULL);` - **Mutex ko initialize karta hai, ready kar deta hai use karne ke liye.**
+
+### `pthread_mutex_lock(&lock);` - **Lock lagata hai — dusre threads ko rokta hai jab tak current thread kaam khatam nahi karta.**
+
+### `pthread_mutex_unlock(&lock);` - **Lock hata deta hai — dusre threads ko access dene ke liye.**
+
+### `pthread_mutex_destroy(&lock);` - **Mutex ko clean-up karta hai, use free kar deta hai program ke end mein.**
 
 **Expected Conclusion:**
 Program ka output har baar alag-alag aa sakta hai, aur `Actual counter value` hamesha `Expected counter value` (2,000,000) se kam hoga. Yeh **Race Condition** ke kaaran hota hai, jahan threads ke read-modify-write operations aapas mein galat tarike se interleave ho jaate hain, jisse kuch increments "lost" ho jaate hain.
