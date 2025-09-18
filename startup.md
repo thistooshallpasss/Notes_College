@@ -569,7 +569,8 @@ Yeh analysis aapko challenges ke liye taiyaar rehne aur maukon ka fayda uthane m
 4.  **Vishwas Banayein (Build Trust):** Yeh sabse zaroori hai. Log tabhi paisa denge jab unhe aap par aur aapke project par bharosa hoga. Isliye transparency bahut zaroori hai.
 
 **Q10. Crowdfunding aur Venture Capital (VC) funding mein kya sambandh hai?**
-**Ans.** Ek safal crowdfunding campaign **Venture Capitalists (VCs)** ka dhyaan kheench sakti hai. Jab koi project crowdfunding ke zariye laakhon logon se paisa utha leta hai, toh yeh is baat ka **"proof of concept"** ban jaata hai ki market mein uss product ki demand hai. Yeh dekhkar, VCs jaise bade investors uss company mein bada nivesh (investment) karne ke liye aakarshit ho sakte hain.
+**Ans.** 
+* Ek safal crowdfunding campaign **Venture Capitalists (VCs)** ka dhyaan kheench sakti hai. Jab koi project crowdfunding ke zariye laakhon logon se paisa utha leta hai, toh yeh is baat ka **"proof of concept"** ban jaata hai ki market mein uss product ki demand hai. Yeh dekhkar, VCs jaise bade investors uss company mein bada nivesh (investment) karne ke liye aakarshit ho sakte hain.
 ---
 ### **Concept of Company: Lecture Notes**
 
@@ -641,7 +642,7 @@ Ismein Shareholders **Principal (Maalik)** hote hain aur Board of Directors unke
 * **Memorandum of Association (MoA):** Yeh company ka **samvidhan (constitution)** hota hai. Ismein company ka naam, uddeshya (objectives), capital, aur scope likha hota hai.
 * **Articles of Association (AoA):** Ismein company ke **aantrik prabandhan (internal management)** ke niyam likhe hote hain.
 
-Jab ROC sabhi documents se santusht ho jaata hai, toh woh **Certificate of Incorporation** jaari karta hai. Ek Private company iske baad अपना kaam shuru kar sakti hai. Jabki ek Public company ko iske baad public se paisa uthana hota hai aur phir **Certificate of Commencement of Business** milne ke baad hi woh apna kaam shuru kar sakti hai.
+* Jab ROC sabhi documents se santusht ho jaata hai, toh woh **Certificate of Incorporation** jaari karta hai. Ek Private company iske baad अपना kaam shuru kar sakti hai. Jabki ek Public company ko iske baad public se paisa uthana hota hai aur phir **Certificate of Commencement of Business** milne ke baad hi woh apna kaam shuru kar sakti hai.
 ---
 
 
@@ -1025,7 +1026,7 @@ Is scenario mein, university ek **incubator** aur **support network** ki bhoomik
 Yeh question humse ek company mein voting power ke aadhar ko samajhne ke liye keh raha hai. Iska uddeshya corporate democracy ke mool siddhant 'one share, one vote' ki hamari jaankari ko parakhna hai.
 
 **Ans.**
-**Shareholder B** ke vote ka weight zyada hoga. Aisa isliye hai kyunki corporate democracy ka buniyadi siddhant **"one share, one vote"** hai, na ki "one person, one vote". Kyunki Shareholder B ke paas Shareholder A se 1000 guna zyada shares hain, isliye directors ke chunaav ya kisi anya prastav par unke vote ki taakat bhi 1000 guna zyada hogi.
+* **Shareholder B** ke vote ka weight zyada hoga. Aisa isliye hai kyunki corporate democracy ka buniyadi siddhant **"one share, one vote"** hai, na ki "one person, one vote". Kyunki Shareholder B ke paas Shareholder A se 1000 guna zyada shares hain, isliye directors ke chunaav ya kisi anya prastav par unke vote ki taakat bhi 1000 guna zyada hogi.
 ---
 
 
