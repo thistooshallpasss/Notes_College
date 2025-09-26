@@ -1,887 +1,1491 @@
-Differentiate between the Inline and the Block elements in HTML.
-What are Semantic elements in HTML?
-What is HTML?
-What is a list in HTML? Explain the different types of lists available in HTML.
-What is the difference between <div> and <span>?
-What is the DOCTYPE declaration?
-What is the purpose of the <iframe> tag?
-What is the difference between <b> and <strong> tags in HTML?
-What are meta tags in HTML?
-Explain tags in HTML.
-What is CSS?
-Explain selectors in CSS.
-What is the difference between visibility: hidden and display: none properties in CSS?
-What is the difference between CSS Grid and Flexbox?
-What is the use of the float property?
-What is JavaScript?
-What is the difference between let, var, and const?
- What is the DOM?
- Difference between null and undefined in JS.
-What is React?
-Explain the building blocks of React.
+## 1. Foundational Web Technologies
 
-Key Features of React
-Component-Based Architecture
-Virtual DOM (DOM)
-JSX (JavaScript XML)
-One-Way Data Binding
-Single Page Application (SPA)
-State Management
-What is virtual DOM in React?
-What is JSX React?
-What are the components In React?
-What is Angular?
-What is Lazy Loading in Angular?
-What is Git?
-What are the advantages of using Git?
-Explain the difference between Git and GitHub.
-What is localStorage?
-What is sessionStorage?
-How to create a table In HTML?
-Difference between the GET and the POST methods in HTML forms.
-What are the attributes in HTML?
-What are void elements in HTML?
-What is z-index in CSS?
-What is the Box Model in CSS?
-What is the flexbox?
-How can we include the CSS in the webpage?
-What is the CSS preprocessor?
-What is hoisting in JavaScript?
-Difference between Implicit and Explicit Conversion in JavaScript?
-What is Implicit Type Coercion in JavaScript?
-What are the closures?
-What is the use of 'this' keyword in JS?
-How do browsers read JSX in React?
-What is a react router?
-what is Babel?
-What are Hooks in React?
-What are Custom Hooks in React?
-What are the lifecycle methods in the React?
-three main phases of the Component Lifecycle
-What is an anchor tag in HTML?
-How to create scrolling text or images on a webpage?
-How can you apply JS in your HTML?
-How you can merge the rows and columns of a HTML table?
-What is the purpose of using <figure> and <figcaption> elements in HTML5?
-What are pseudo classes and pseudo elements in CSS?
-What is Media Queries in CSS?
-How to create responsive designs?
-What is the meaning of ‘Cascading’ in Cascading Style Sheet?
-How you can optimize the loading of CSS files in browser?
-What is Redux in React?
-what is the context API?
-what is prop drilling
-Difference between the Redux and the Context API.
-What is Debouncing in JavaScript?
-What is the differences between Java and JavaScript?
- What is a template literal in JavaScript?
-What is a higher-order function in React.js?
-What is the Temporal Dead Zone (TDZ) in JavaScript?
-What is the difference between call() and apply() methods ?
+This section covers the absolute basics of building a webpage: HTML for structure and CSS for styling.
 
+### HTML (HyperText Markup Language)
 
+* **Core Concepts**
+    * **What is HTML?**
+    * **What is the DOCTYPE declaration?**
+    * **Explain tags in HTML.**
+    * **What are the attributes in HTML?**
+    * **Differentiate between the Inline and the Block elements in HTML.**
+    * **What are void elements in HTML?** (Also known as empty tags)
+    * **What is the difference between `<div>` and `<span>`?**
+    * **What is the difference between the `<b>` and `<strong>` tags in HTML?**
+    * **What are `meta` tags in HTML?**
+    * **Explain the differences between HTML and XHTML.**
+    * **What is semantic HTML?**
+    * **What is the purpose of using `<figure>` and `<figcaption>` elements in HTML5?**
+    * **What do you mean by manifest file in HTML5?**
 
-**Basic JavaScript Interview Questions:**
+* **Working with Content**
+    * **What is an anchor tag in HTML?**
+    * **How to open a hyperlink in another window or tab in HTML?**
+    * **How to create a table In HTML?**
+    * **How you can merge the rows and columns of a HTML table?**
+    * **Difference between cell padding and cell spacing.**
+    * **How to create scrolling text or images on a webpage?** (Using the `<marquee>` tag)
+    * **What is a list in HTML? Explain the different types of lists available in HTML.**
+    * **In an image tag, what is the benefit of the `srcset` attribute?**
+    * **What is SVG in HTML?**
+    * **How to add Scalable Vector Graphics to your web page?**
+
+* **Advanced & Structural**
+    * **What is the purpose of the `<iframe>` tag?**
+    * **How do you Create Nested Web Pages in HTML?**
+    * **Difference between the GET and the POST methods in HTML forms.**
+    * **Explain Web Worker in HTML.**
+    * **Why did we utilize the `data-` attribute in HTML and why it is now advised not to use?**
+
+---
+
+### CSS (Cascading Style Sheets)
+
+* **Core Concepts**
+    * **What is CSS?**
+    * **What is the meaning of ‘Cascading’ in Cascading Style Sheet?**
+    * **How can we include CSS in the webpage?** (Inline, Internal, External)
+    * **Explain selectors in CSS.**
+    * **Mention the different types of CSS Selectors.**
+    * **What is the difference between `class` and `id` attributes?**
+    * **Can you explain CSS specificity and how it works?**
+    * **What is the Box Model in CSS?**
+    * **What is `z-index` in CSS?**
+    * **What is the difference between visibility: `hidden` and display: `none` properties in CSS?**
+    * **What does `display:inline-block` do?**
+
+* **Layout & Positioning**
+    * **What is the use of the `float` property?**
+    * **What is the flexbox?**
+    * **How do you create a flexbox layout?**
+    * **What is the difference between CSS Grid and Flexbox?**
+    * **What are the various positioning properties in CSS?**
+    * **What is the difference between the `em` and `rem` units?**
+
+* **Advanced Topics & Techniques**
+    * **What are pseudo-classes and pseudo-elements in CSS?**
+    * **What are Media Queries in CSS?**
+    * **How to create responsive designs?**
+    * **Explain the difference between responsive and adaptive design.**
+    * **What are CSS image sprites and why is it used?**
+    * **What is a CSS preprocessor?** (e.g., Sass, Less)
+    * **What are Sass, Less, and Stylus?**
+    * **What are the pitfalls of using a CSS Preprocessor like Sass?**
+    * **How you can optimize the loading of CSS files in the browser?**
+    * **How would you implement critical CSS to improve the perceived load time?**
+    * **Suggest some ways on how to fix browser-specific styling issues.**
+
+---
+
+## 2. JavaScript Core Concepts
+
+This section focuses on the JavaScript language itself—its syntax, features, and fundamental behaviors.
+
+* **Fundamentals**
+    * **What is JavaScript?**
+    * **What is the difference between `let`, `var`, and `const`?**
+    * **What is scope in JavaScript?**
+    * **What is hoisting in JavaScript?**
+    * **What are the closures?**
+    * **What is the use of the 'this' keyword in JS?**
+    * **What is the difference between `==` and `===`?**
+    * **Explain the Difference Between `null`, `undefined`, Undeclared.**
+    * **What is `NaN`?**
+    * **Why do we utilize the “use strict”; statement? What are its disadvantages?**
+
+* **Data Types & Structures**
+    * **Difference between Implicit and Explicit Conversion in JavaScript?**
+    * **What is Implicit Type Coercion in JavaScript?**
+    * **What is the difference between an attribute and a property?**
+    * **What are the difference between native and host objects?**
+    * **What is a template literal in JavaScript?**
+    * **Explain `map()`, `filter()` and `reduce()` methods in javascript.**
+
+* **Functions**
+    * **What’s the difference between a Function Declaration and a Function Expression?**
+    * **Difference between arrow function and functional declaration.**
+    * **Define the Anonymous function in JS?**
+    * **What is a higher-order function?**
+    * **What is the difference between `call()` and `apply()` methods?**
+
+* **Asynchronous JavaScript**
+    * **What is a PROMISE in Javascript?**
+    * **What is `async/await` in Javascript?**
+    * **Explain the event loop in javascript.**
+    * **Explain `setTimeOut` and `setInterval`.**
+    * **What is callback hell?**
+    * **What are the different ways to handle asynchronous operations in JavaScript?**
+
+* **Advanced Concepts**
+    * **What is the Temporal Dead Zone (TDZ) in JavaScript?**
+    * **What is event delegation?**
+    * **Describe the distinction between Class and Prototypal inheritance in Javascript?**
+    * **What is Debouncing in JavaScript?**
+    * **What is the differences between Java and JavaScript?**
+
+---
+
+## 3. Frontend Development
+
+This section covers topics related to building user interfaces in the browser, including DOM manipulation, frameworks, and performance.
+
+### DOM & Web APIs
+
+* **What is the DOM?**
+* **How can you apply JS in your HTML?**
+* **Why is it preferred to use external JS and CSS than in-line?**
+* **What do you understand by an event in JavaScript?**
+* **How do you add an event listener to an element?**
+* **What is `localStorage`?**
+* **What is `sessionStorage`?**
+* **Differentiate between a cookie, cache, local storage and session storage.**
+* **What is AJAX? Give some disadvantages of using AJAX.**
+* **What are service workers, and what are they used for?**
+* **What is the Same-Origin Policy in web development?**
+
+### React.js
+
+* **Core Concepts**
+    * **What is React?**
+    * **Explain the building blocks of React.** (Components, State, Props)
+    * **What are the components In React?**
+    * **Differentiate between controlled and uncontrolled components.**
+    * **Differentiate between the Container component and Presentational component.**
+    * **What are pure components and stateless components?**
+    * **What is JSX in React? How do browsers read JSX?**
+    * **What is the Virtual DOM in React and its significance?**
+    * **Explain the reconciliation algorithm in React.**
+    * **What is a State in React? How do you implement it?**
+    * **What is the `key` prop in React and its benefit?**
+    * **What are synthetic events in React?**
+
+* **Lifecycle & Hooks**
+    * **What is the React component lifecycle?**
+    * **What are the three main phases of the Component Lifecycle?**
+    * **What are Hooks in React and why were they introduced?**
+    * **Explain `useCallback`, `useEffect`, `useMemo`, `useLayoutEffect`, and `useRef`.**
+    * **What are Custom Hooks in React?**
+
+* **State Management & Data Flow**
+    * **What is prop drilling?**
+    * **What is the Context API? Why do we need it?**
+    * **What is Redux?**
+    * **What do actions, reducers and store do in Redux?**
+    * **Difference between Redux and the Context API.**
+    * **How do you handle state management in single-page applications?**
+
+* **Advanced Topics & Ecosystem**
+    * **What is a Higher Order Component (HOC) in React?**
+    * **What is a react router? How to add routing in React applications?**
+    * **What is React Fiber and its benefits?**
+    * **What are React Portals?**
+    * **What do Babel and Webpack do? Why do we need to transpile React code?**
+    * **What is lazy loading in React and how do you add it?**
+    * **What is code splitting in React?**
+    * **What is the strict mode component and How to use it?**
+
+* **Performance & Optimization**
+    * **How to improve React application performance?**
+    * **How to avoid re-rendering in a React component?**
+    * **How to improve the SEO of a React application?**
+
+### Angular
+
+* **What is Angular?**
+    * **What is Lazy Loading in Angular?**
+    * **What is AoT (Ahead-of-Time) Compilation? How is it different from JiT (Just-in-Time)?**
+    * **What are Form Control and Form Groups?**
+
+### General Frontend Concepts
+
+* **Performance & Optimization**
+    * **Mention three ways to decrease page load time.**
+    * **How can you optimize a website for performance?**
+    * **How do you optimize website assets for better loading times?**
+    * **What is Progressive Rendering?**
+    * **How to optimize a website's accessibility and SEO?**
+
+* **Architecture & Design**
+    * **What is CSR (Client-Side Rendering)?**
+    * **What is SSR (Server-Side Rendering)?**
+    * **Explain user-centered design.**
+    * **What are the pros and cons of using a component-based architecture?**
+    * **How do you approach structuring a large-scale frontend application?**
+
+* **Tools & Ecosystem**
+    * **What is Bootstrap, and what are its benefits?**
+    * **What is the main difference between JavaScript and jQuery?**
+    * **Tell me when and why should I make use of Webpack?**
+    * **What is tree shaking, and how does it help with performance?**
+    * **What is Next.js?**
+    * **What is SSR, ISG, and SSG in the context of Next.js?**
+    * **What are `getInitialProps` and `getStaticProps`?**
+
+---
+
+## 4. Backend Development
+
+This section covers server-side logic, APIs, databases, and system architecture.
+
+### APIs & Web Services
+
+* **What is an API?**
+* **What is a REST API? What are RESTful web services?**
+* **Describe the advantages of REST web services.**
+* **What is the difference between REST and SOAP?**
+* **Name the major HTTP requests.** (GET, POST, PUT, DELETE, etc.)
+* **What is an idempotent API request?**
+* **How to build or integrate an API with front-end applications?**
+* **How to fetch data using an API in the front-end? Explain `axios` and `fetch`.**
+* **What is GraphQL, and how does it compare to REST?**
+
+### Databases
+
+* **What is a database?**
+* **What is the difference between SQL and NoSQL databases?**
+* **Mention the difference between MySQL and MongoDB.**
+* **What is CRUD (Create, Read, Update, Delete)?**
+* **What is database indexing? How does it improve performance?**
+* **What is database sharding?**
+* **Explain the difference between ACID and BASE properties in databases.**
+* **How would you prevent SQL injection in a backend system?**
+
+### Architecture & System Design
+
+* **Explain the difference between monolithic, microservices, and serverless architectures.**
+* **What is CSR (Client-Side Rendering) vs. SSR (Server-Side Rendering)?**
+* **What is a web server?**
+* **What is load balancing?**
+* **What is caching? What is a distributed cache?**
+* **What is the CAP theorem?**
+* **How would you design a scalable system like Twitter?**
+* **What are web sockets?**
+
+### Security
+
+* **What is the difference between Authentication and Authorization?**
+* **What do you mean by JWT (JSON Web Token)?**
+* **What is SQL injection?**
+* **What is ClickJacking?**
+* **What is Content Security Policy (CSP)?**
+* **What is CORS (Cross-Origin Resource Sharing)?**
+
+---
+
+## 5. Version Control (Git)
+
+This section is dedicated to Git, the most popular version control system.
+
+* **Fundamentals**
+    * **What is Git?**
+    * **What are the advantages of using Git?**
+    * **Explain the difference between Git and GitHub.**
+    * **Name a few Git Commands and their Functions.** (`git config`, `git init`, `git add`, `git diff`, `git commit`, `git status`, `git push`, `git pull`, `git reset`, `git merge`)
+
+* **Branching & Merging**
+    * **Explain the Difference Between `git pull` and `git fetch`.**
+    * **Differentiate Between `git merge` and `git rebase`.**
+    * **What is a Merge Conflict in Git, and how can it be resolved?**
+
+* **Advanced Concepts**
+    * **What is `git stash`?**
+
+---
+
+## 6. General Development & Full-Stack Concepts
+
+This section includes topics that span across the stack, including principles, tooling, and workflows.
+
+* **Development Principles**
+    * **Explain the essence of DRY (Don't Repeat Yourself) and DIE principles.**
+    * **What does the KISS (Keep It Simple, Stupid) principle state?**
+    * **What do you mean by the SOLID principle in front-end development?**
+
+* **Browser & Web Mechanics**
+    * **How browsers render the UI? / How does a browser render a website?**
+    * **How does the server handle a page in which content is present in several languages?**
+    * **What is DNS and how does it work?**
+    * **Difference between HTTP and HTTPS.**
+
+* **Testing & Debugging**
+    * **How will you approach debugging a cross-browser compatibility issue?**
+    * **What are some common debugging techniques and tools for frontend applications?**
+
+* **Tools & Languages**
+    * **What is Typescript? What are the Advantages of TypeScript Over JavaScript?**
+    * **What is CoffeeScript? Mention its benefits over JavaScript.**
+    * **What is stringify?** (Likely referring to `JSON.stringify`)
+    * **What is a templating language?**
+
+---
+
+## 7. JavaScript Coding Challenges
+
+These questions test your ability to write code to solve specific problems.
+
+### Basic JavaScript Questions
+
 * Write a JavaScript function to calculate the sum of two numbers.
 * Write a JavaScript program to find the maximum number in an array.
-* Write a JavaScript function to check if a given string is a palindrome (reads the same forwards and backwards).
+* Write a JavaScript function to check if a given string is a palindrome.
 * Write a JavaScript program to reverse a given string.
 * Write a JavaScript function that takes an array of numbers and returns a new array with only the even numbers.
 * Write a JavaScript program to calculate the factorial of a given number.
 * Write a JavaScript function to check if a given number is prime.
 * Write a JavaScript program to find the largest element in a nested array.
 * Write a JavaScript function that returns the Fibonacci sequence up to a given number of terms.
-* Write a JavaScript program to convert a string to title case (capitalize the first letter of each word).
+* Write a JavaScript program to convert a string to title case.
 
-**Advanced JavaScript Interview Questions:**
-* **Debounce Function:** Implement a debounce function to limit how often a function can be called within a specific time.
-* **Sort Array of Objects:** Write a function to sort an array of objects by a given key in ascending order.
-* **Deep Clone Function:** Create a function to make a complete copy of a nested object or array without any references to the original.
+### Advanced JavaScript Questions
+
+* **Debounce Function:** Implement a debounce function.
+* **Sort Array of Objects:** Write a function to sort an array of objects by a given key.
+* **Deep Clone Function:** Create a function to make a complete copy of a nested object or array.
 * **Recursive Factorial:** Write a recursive function to calculate the factorial of a number.
-* **Merge Sorted Arrays:** Implement a function to merge two sorted arrays into one sorted array without using built-in sorting functions.
-* **Palindrome Check:** Write a function to check if a string is a palindrome, considering only alphanumeric characters and ignoring case.
+* **Merge Sorted Arrays:** Implement a function to merge two sorted arrays into one sorted array.
+* **Palindrome Check (Advanced):** Write a function to check if a string is a palindrome, considering only alphanumeric characters and ignoring case.
 * **Linked List Class:** Create a JavaScript class for a linked list with methods for inserting and deleting nodes.
 * **Flatten Nested Array:** Implement a function to convert a nested array into a single-level array.
 * **Anagram Check:** Write a function to determine if two strings are anagrams of each other.
 
+-----
 
+### **HTML kya hai?**
 
+**HTML** ka poora naam **HyperText Markup Language** hai. Yeh web pages banane ke liye standard language hai. Ise website ka **structure** ya "dhancha" (skeleton) banane ke liye use kiya jaata hai.
 
+Aap ise aise samajh sakte hain: jaise ek building ka structure sariya aur cement se banta hai, waise hi ek webpage ka structure HTML se banta hai.
 
-* What is ClickJacking?
-* Define HTML meta tags.
-* Describe the advantages of REST web services?
-* How browsers render the UI?
-* Describe the distinction between Class and Prototypal inheritance in Javascript?
-* Explain user-centered design?
-* Tell me when and why should I make use of Webpack?
-* Mention three ways to decrease page load time?
-* How does the server hanger the page in which content is present in several languages?
-* Why did we utilize the data- the attribute in HTML and why it is now advised not to use?
-* Mention the benefits of CoffeeScript over JavaScript?
-* Why do we utilize the “use strict”; statement?
-* Mention the difference between MySQL and MongoDB?
-* Define the Anonymous function in JS?
-* What do you know about the CSS image sprites and why it is utilized?
-* Suggest some ways on how to fix the browser-specific styling issue?
-* Mention the pitfalls for using a CSS Preprocessor like Sass?
-* Suggest how can we optimize our front-end page.
-* What is the difference between attribute and property?
-* State the difference between == and ===?
-* In an image tag, what is the benefit of the srcset attribute?
-* Name the major HTTP requests
-* What is stringify?
-* State all the elements of the CSS Box Model.
-* What is Progressive Rendering?
+HTML mein **elements** hote hain, jo browser ko batate hain ki content ko kaise display karna hai. For example, hum HTML ka use karke headings, paragraphs, images, links, tables, aur forms bana sakte hain. Bina HTML ke, ek web page par sirf plain text hi dikhega, koi structure nahi.
 
+-----
 
+### **DOCTYPE declaration kya hai?**
 
-What is React lifecycle?
-Explain Virtual DOM in React and its significance
-What is the key prop in React and its benefit?
-What is CSR(client-side rendering)
-What is Higher Order Component in React
-What is React Context API and why do we need it?
-How to improve React application performance?
-How to avoid re-rendering in react component
-What are pure components and stateless components
-Explain code splitting in React
-What are Hooks and why they are introduced
-What are controlled and uncontrolled components
-What are the Container component and Presentational component
-What is Redux
-What is actions, reducers and store does in Redux
-What is SSR(server-side rendering)
-What are useCallback, useEffect, useMemo and useLayoutEffect
-what is useRef in React
-Explain the difference between var, let and const in javascript
-What is async/await in Javascript
-What is a PROMISE in Javascript
-Define indexOf and includes a method in javascript
-What is map(), filter() and reduce() methods in javascript
-Explain event loop in javascript
-Explain setTimeOut and setInterval
-Explain closures and hoisting in Javascript
-Difference between arrow function and functional declaration
-What is Next JS
-What is SSR, ISG and SSG?
-What are getInitialProps and getStaticProps?
-Explain dynamic importing in React
-How to add routing in React applications
-How to add pagination in React application
-How to handle responsiveness in React application
-How to improve SEO of React application
-Explain React Fiber and its benefits
-What do Babel and Webpack do
-Why do we need to transpile React code?
-What is the strict mode component and How to use it?
-What is lazy loading and how to add it?
-What are synthetic events in react
-What is React Portal
-What is the reconciliation algorithm in React?
-What is REST API
-How to fetch data using API in the front, explain axios and fetch module
-How to access the Window object in React application
- Explain the difference between responsive and adaptive design.
- As a front-end developer, how can you optimize a website for performance?
- Explain the differences between HTML and XHTML.
- How will you approach debugging a cross-browser compatibility issue?
- Why do we need media queries in CSS?
- What do you understand by an event in JavaScript?
- What do you mean by RESTful web services?
- What do you mean by scope in JavaScript?
- What is the process for creating a responsive website?
- What do you mean by Lazy Loading?
- What is  Content Security Policy?
- How are JavaScript and jQuery different?
- What is scope in JavaScript?
- What is load balancing?
- Why do we need sass as a front-end developer?
- How to optimize a website's accessibility and SEO?
- How to build or integrate an API with front-end applications?
- What do you mean by cookies in JavaScript?
- what do you mean by JWT
- What is Bootstrap, and what are its benefits?
- What is the difference between undefined and null?
-What is NaN?
-What are the disadvantages of ‘use strict’;.
- What is the type coercion in JS?
- Why is it preferred to use external JS and CSS than in-line?
- What is SQL injection
- What is Sass?
- Differentiate between a cookie,cache, local storage and session storage?
- What do you mean by Progressive Rendering?
- Why do we use the srcset attribute in an image tag?
- What do you mean by templating language?
- What is a CSS float?
- What do you mean by semantic HTML?
- What are CSS image sprites, and why is it used?
- Differentiate between class and id attributes?
- Suggest a method on how we can fix the browser-specific styling issue?
- What is the difference between .call and .apply?
- What is event delegation?
- What is the difference between native and host objects?
- What is AJAX?
- Give some disadvantages of using AJAX.
- State the major HTTP requests.
- What does the KISS principle state?
- What is the main difference between JavaScript and jQuery?
- What do you mean by the SOLID principle in front-end development?
- How do you add an event listener to an element?
-How does the browser render a website?
-What is the difference between the em and rem units?
-How do you create a flexbox layout?
-Can you explain CSS specificity and how it works?
-How do you optimize website assets for better loading times?
-What are service workers, and what are they used for?
-What is the Same-Origin Policy in web development?
-How would you implement critical CSS to improve the perceived load time of your web pages?
-How does the event loop work in JavaScript?
-What are the different ways to handle asynchronous operations in JavaScript?
-How do you handle state management in single-page applications?
-What is server-side rendering, and when might you use it?
-How do you analyze and improve the performance of a web application?
-What is Content Security Policy (CSP), and how does it improve the security of web applications?
-What is tree shaking, and how does it help with the performance of a web application?
-How do you approach structuring a large-scale frontend application?
-What are the pros and cons of using a component based architecture in frontend development?
-What are the difference between React, Angular, and Vue.js in terms of architecture and use cases?
-How do you decide which framework or library to use for a new project?
-Explain the concept of a virtual DOM and its significance in modern frontend frameworks.
-What are the different state management solutions available in frontend development, and how do you choose among them?
-What are some common security concerns in frontend development, and how do you mitigate them?
-What are some common debugging techniques and tools for frontend applications?
- How do you measure and monitor the performance of a frontend application?
- What techniques do you use to optimize the performance of a frontend application?
- What are the different state management solutions available in frontend development, and how do you choose among them?
- What is a Progressive Web App (PWA), and what are its key characteristics?
- What build tools and task runners do you commonly use in frontend development?
- What practices do you follow to ensure code quality and maintainability in a frontend project?
- What is User-Centered Design?
- What is callback hell?
- Explain the Difference Between Git Pull and Git Fetch
+`<!DOCTYPE html>` ek **instruction** hai, HTML tag nahi. Yeh hamesha HTML file ki sabse pehli line hoti hai.
 
- Name a few Git Commands and Functions
-Git Config - Configure the username and email address
-Git init - Initialize a local Git repository
-Git Add - Add one or more files to the staging area
-Git Diff - View the changes made to the file
-Git Commit - Commit changes to the head but not to the remote repository
-Git reset - Undo local changes to the state of a Git repo
-Git Status - Displays the state of the working directory and staging area
-Git Merge - Merge a branch into an active branch
-Git Push - Upload content from the local repository to a remote repository
-Git Pull - Fetch and download content from a remote repository
+Iska main kaam browser ko yeh batana hai ki yeh document **HTML5** mein likha gaya hai. Jab browser yeh declaration dekhta hai, toh woh page ko "standards mode" mein render karta hai.
 
-What is a Merge Conflict in Git, and how can it be resolved?
-What is Git Stash?
-Differentiate Between Git Merge and Git Rebase
-How do you display a Table on an HTML Webpage?
-What is SVG in HTML?
-In HTML, how do you separate a section of text?
-How do you Create Nested Web Pages in HTML?
-Mention the different types of CSS Selectors
-What are Sass, Less, and Stylus?
-What does ‘Important’ in CSS mean?
-What are CSS Sprites?
-Which Property is used to underline, strike through, and overline Text?
- What’s the difference between a Function Declaration and a Function Expression?
- What is the difference between Undefined, Undeclared, and Null in JavaScript?
- What is the best way to remove Duplicates from a JavaScript Array?
- What is an Event in React? How do you create one?
- What is a State in React? How do you implement it?
- What are Higher Order and Pure Components in React?
- How do you implement React Routing?
- What is Typescript? 
- What is AoT Compilation? How is it different from JiT? 
- What is Eager and Lazy Loading?
- What are Form Control and Form Groups?
- What are the Advantages of TypeScript Over JavaScript?
- How is a Web Developer different from a Web Designer?
- How would you increase Page Performance?
+**"Standards mode" ka fayda:** Is mode mein browser web standards ko theek se follow karta hai, jisse aapka code sabhi modern browsers (Chrome, Firefox, etc.) par ek jaisa aur correctly display hota hai. Agar aap yeh declaration nahi use karte, toh browser "quirks mode" mein ja sakta hai, jisse layout aur styling mein unexpected issues aa sakte hain.
 
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Web Page</title>
+</head>
+<body>
+    <h1>Hello, World!</h1>
+</body>
+</html>
+```
 
+-----
 
+### **HTML mein tags kya hote hain?**
+
+HTML tags woh keywords hain jo **angle brackets (`< >`)** ke andar likhe jaate hain. Yeh browser ko batate hain ki unke beech ke content ko kaise format aur display karna hai.
+
+HTML tags do tarah ke hote hain:
+
+1.  **Paired Tags:** Inka ek **opening tag** (`<p>`) aur ek **closing tag** (`</p>`) hota hai. Content in dono ke beech mein likha jaata hai.
+
+      * Examples: `<h1>`, `<p>`, `<div>`, `<a>`
+
+2.  **Unpaired/Void Tags:** Inka sirf opening tag hota hai, closing tag nahi hota. Inhe self-closing tags bhi kehte hain.
+
+      * Examples: `<br>`, `<hr>`, `<img>`, `<input>`
+
+**Code Example:**
+
+```html
+<p>Yeh ek paragraph hai.</p>
+
+Yeh pehli line hai.<br>Yeh doosri line hai.
+```
+
+-----
+
+### **HTML mein attributes kya hote hain?**
+
+Attributes HTML elements ko **extra information** ya functionality dete hain. Yeh hamesha element ke **opening tag** ke andar likhe jaate hain aur `name="value"` pair format mein hote hain.
+
+Aap attributes ko element ki properties samajh sakte hain.
+
+  * **`href` attribute:** `<a>` tag mein yeh batata hai ki link kis URL par jayega.
+  * **`src` attribute:** `<img>` tag mein yeh image ka source (path) batata hai.
+  * **`class` aur `id` attributes:** Elements ko ek unique identifier dete hain, jisse unhe CSS se style karna aur JavaScript se manipulate karna aasan ho jaata hai.
+  * **`alt` attribute:** `<img>` tag mein yeh alternative text provide karta hai, jo tab dikhta hai jab image load nahi ho paati. Yeh accessibility (screen readers) aur SEO ke liye bahut important hai.
+
+**Code Example:**
+
+```html
+<a href="https://www.google.com">Google par jao</a>
+<img src="logo.png" alt="Company ka logo" width="100">
+<div class="container" id="main-section"> ... </div>
+```
+
+-----
+
+### **Inline aur Block elements mein kya difference hai?**
+
+Yeh ek bahut important concept hai.
+
+| Feature              | Block-level Elements                                      | Inline Elements                                                       |
+| :------------------- | :-------------------------------------------------------- | :-------------------------------------------------------------------- |
+| **New Line**         | Hamesha ek nayi line se start hote hain.                  | Nayi line se start nahi hote, content ke flow mein rehte hain.        |
+| **Width**            | By default poori available width le lete hain.            | Sirf utni width lete hain jitni unke content ko zaroorat hai.         |
+| **Height & Width**   | Inpar `height` aur `width` set kar sakte hain.            | Inpar `height` aur `width` directly set nahi kar sakte.               |
+| **Margin & Padding** | Top, bottom, left, right sab kaam karte hain.             | Sirf left aur right margin/padding kaam karti hai. Top/bottom nahi.   |
+| **Nesting**          | Inke andar dusre block aur inline elements aa sakte hain. | Inke andar generally sirf data ya dusre inline elements hi aate hain. |
+| **Examples**         | `<div>`, `<p>`, `<h1>`-`<h6>`, `<ul>`, `<li>`, `<form>`   | `<span>`, `<a>`, `<img>`, `<b>`, `<strong>`, `<i>`, `<button>`        |
+
+**Code Example:**
+
+```html
+<div style="background-color: lightblue;">Yeh ek block-level div hai. Yeh puri width lega.</div>
+<p style="background-color: lightgreen;">Yeh bhi ek block-level paragraph hai.</p>
+
+<span style="background-color: yellow;">Yeh inline span hai,</span>
+<a href="#" style="background-color: pink;">aur yeh inline link hai. Dono ek hi line mein hain.</a>
+```
+
+-----
+
+### **HTML mein void elements kya hote hain?**
+
+Void elements (ya empty tags) woh HTML elements hote hain jinka **koi closing tag nahi hota** aur na hi woh apne andar koi content rakh sakte hain.
+
+Inka kaam ek specific, single action perform karna hota hai. For example, `<img>` tag ka kaam sirf ek image display karna hai, uske andar koi text ya dusra element nahi aa sakta. Isi tarah `<br>` ka kaam sirf ek line break dena hai.
+
+**Common Void Elements:**
+
+  * `<br>` (line break)
+  * `<hr>` (horizontal rule)
+  * `<img>` (image)
+  * `<input>` (form input field)
+  * `<link>` (stylesheet link)
+  * `<meta>` (metadata)
+
+-----
+
+### **`<div>` aur `<span>` mein kya difference hai?**
+
+Dono hi tags content ko group karne ke liye use hote hain, lekin inka fundamental difference **block vs. inline** ka hai.
+
+  * **`<div>` (Division Element)**
+
+      * Yeh ek **block-level** element hai.
+      * Isko page ke **bade sections** ko group karne ke liye use kiya jaata hai. Yeh ek generic container hai.
+      * **Use Case:** Page layout banane ke liye, jaise header, footer, content-area, sidebar, etc.
+
+  * **`<span>`**
+
+      * Yeh ek **inline** element hai.
+      * Isko text ke **chote hisse (a part of text)** ya dusre inline elements ko group karne ke liye use kiya jaata hai.
+      * **Use Case:** Jab aapko ek paragraph ke andar kisi ek word ya sentence par special styling (jaise color) ya JavaScript apply karni ho.
+
+**Code Example:**
+
+```html
+<div style="border: 1px solid black; padding: 10px;">
+  <h2>Yeh poora ek Division hai</h2>
+  <p>
+    Is paragraph mein, hum sirf 
+    <span style="color: red; font-weight: bold;">in shabdon</span> 
+    ko alag se style karna chahte hain.
+  </p>
+</div>
+```
+
+-----
+
+### **`<b>` aur `<strong>` tags mein kya difference hai?**
+
+Yeh difference **visual styling** aur **semantic meaning** ka hai.
+
+  * **`<b>` (Bold) Tag**
+
+      * Yeh ek **presentational tag** hai.
+      * Iska ek hi kaam hai: text ko visually **bold** dikhana.
+      * Yeh text ko koi extra importance ya meaning nahi deta. Sirf look change karta hai.
+
+  * **`<strong>` Tag**
+
+      * Yeh ek **semantic tag** hai.
+      * Yeh browser ko batata hai ki iske andar ka content **important**, **serious**, ya **urgent** hai.
+      * Visually, browsers ise bhi bold hi dikhate hain, lekin iska semantic meaning bhi hota hai.
+      * **Fayda:**
+          * **Accessibility:** Screen readers is text par extra zor dekar padhte hain.
+          * **SEO:** Search engines is text ko zyada importance dete hain.
+
+**Best Practice:** Agar aap content ko important batana chahte hain, toh hamesha `<strong>` use karein. Agar sirf styling ke liye bold karna hai, toh `<b>` ki jagah CSS mein `font-weight: bold;` use karna behtar hai.
+
+-----
+
+### **HTML mein `meta` tags kya hote hain?**
+
+Meta tags woh HTML tags hote hain jo aapke web page ke baare mein **metadata** (data about data) provide karte hain.
+
+  * Yeh hamesha `<head>` section ke andar rakhe jaate hain.
+  * Yeh data page par user ko dikhta nahi hai, lekin yeh **browsers**, **search engines (SEO)**, aur **social media sites** ke liye bahut important hota hai.
+
+**Common Meta Tags:**
+
+  * `meta charset="UTF-8"`: Page ka character encoding set karta hai.
+  * `meta name="description" content="..."`: Page ka description, jo Google search results mein dikhta hai.
+  * `meta name="keywords" content="..."`: Page ke keywords batata hai (ab SEO mein utna relevant nahi).
+  * `meta name="author" content="..."`: Page ke author ka naam.
+  * `meta name="viewport" content="width=device-width, initial-scale=1.0"`: Yeh responsive design ke liye sabse important meta tag hai. Yeh mobile devices par page ko aache se display karne mein help karta hai.
+
+-----
+
+### **HTML aur XHTML mein kya differences hain?**
+
+  * **HTML (HyperText Markup Language):** Yeh SGML par based hai. Iski syntax **forgiving** (loose) hai. Agar aap koi tag close karna bhool gaye ya tags ko uppercase mein likh diya (`<P>`), toh bhi browser use aam taur par aache se render kar deta hai.
+  * **XHTML (eXtensible HyperText Markup Language):** Yeh XML par based hai. Iski syntax bahut **strict** hai.
+      * Saare tags lowercase mein hone chahiye.
+      * Har tag ka closing tag hona zaroori hai.
+      * Void elements ko self-close karna padta hai (jaise `<br />`).
+      * Agar ek bhi error hui, toh page render hi nahi hoga.
+
+**Conclusion:** Aaj ke time mein **HTML5** hi standard hai. HTML5 ne dono ke best features ko le liya hai aur yeh powerful hone ke saath-saath forgiving bhi hai. Ab web development mein XHTML ka use na ke barabar hai.
+
+-----
+
+### **Semantic HTML kya hai?**
+
+Semantic HTML ka matlab hai aise HTML tags ka use karna jo apne andar ke content ke **meaning (arth)** ko clearly define karte hain.
+
+  * **Non-Semantic Tags:** `<div>` aur `<span>`. Yeh browser ya developer ko nahi batate ki inke andar kis tarah ka content hai.
+  * **Semantic Tags:** `<header>`, `<footer>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<aside>`. In tags ke naam se hi pata chal jaata hai ki inka purpose kya hai.
+
+**Fayde (Benefits):**
+
+1.  **Accessibility:** Screen readers in tags ko samajh kar visually impaired users ke liye page navigation ko aasan bana dete hain.
+2.  **SEO:** Search engines aapke content ke structure ko behtar samajh paate hain, jisse ranking improve hoti hai.
+3.  **Readability & Maintainability:** Code saaf-suthra aur easy-to-understand hota hai. Ek naya developer `div id="main-nav"` ke bajaye seedha `<nav>` dekh kar samajh jaayega.
+
+**Code Example:**
+
+```html
+<body>
+    <header>
+        <h1>Website ka Title</h1>
+        <nav>
+            <ul>...</ul>
+        </nav>
+    </header>
+
+    <main>
+        <article>
+            <h2>Article ka Title</h2>
+            <p>Article ka content...</p>
+        </article>
+    </main>
+
+    <footer>
+        <p>Copyright &copy; 2025</p>
+    </footer>
+</body>
+```
+
+-----
+
+### **`<figure>` aur `<figcaption>` elements ka kya purpose hai?**
+
+Yeh dono tags self-contained content aur uske caption ko semantically group karne ke liye use hote hain.
+
+  * **`<figure>`:** Is tag ko aise content ko wrap karne ke liye use karte hain jo document ke main flow se related ho, lekin use wahan se hata kar kahin aur bhi rakha jaa sake. Jaise ki images, diagrams, code snippets, ya charts.
+  * **`<figcaption>`:** Yeh `<figure>` element ke andar uske content ka **caption (description)** dene ke liye use hota hai.
+
+**Fayda:** Yeh image aur uske caption ke beech ek strong semantic link banata hai. SEO aur accessibility ke liye yeh `<img>` ke neeche ek normal `<p>` tag use karne se kahin behtar hai.
+
+**Code Example:**
+
+```html
+<figure>
+    <img src="taj-mahal.jpg" alt="The Taj Mahal in Agra, India">
+    <figcaption>Fig. 1 - The Taj Mahal, ek UNESCO World Heritage Site hai.</figcaption>
+</figure>
+```
+
+-----
+
+### **HTML5 mein manifest file ka kya matlab hai?**
+
+Web App Manifest ek simple **JSON file** hoti hai. Yeh **Progressive Web Apps (PWAs)** ka ek core component hai.
+
+Iska main purpose browser ko aapki web application ke baare mein batana hai, taaki user use ek native app ki tarah apni mobile home screen ya desktop par **"install"** kar sake.
+
+Yeh manifest file control karti hai:
+
+  * **App ka naam** (`name`, `short_name`)
+  * **App ka icon** (`icons`)
+  * **Start URL** (`start_url`): Jab user icon par click karega to app kahan se shuru hogi.
+  * **Display mode** (`display: 'standalone'`): App ko full-screen, bina browser ke address bar ke dikhati hai, jisse native app jaisi feel aati hai.
+  * **Theme aur background color** (`theme_color`, `background_color`)
+
+Aap ise apni HTML file ke `<head>` mein ek `<link>` tag se jodte hain:
+
+```html
+<link rel="manifest" href="/manifest.json">
+```
 
 ---
-### Frontend JavaScript Questions
 
-These questions are focused on building user interfaces and interacting with the browser.
 
-* **UI Components:**
-    * Build a **Counter** that increments on button click.
-    * Create an **Accordion** component.
-    * Build a list of **Progress Bars** that fill up on load.
-    * Design a **Mortgage Calculator**.
-    * Implement a **Star Rating** component.
-    * Create a **Todo List**.
-    * Build a **Traffic Light**.
-    * Design a **Digital Clock**.
-    * Build a **Tic-tac-toe** game.
-    * Create an **Image Carousel**.
+### **HTML mein anchor tag kya hai?**
 
-* **DOM Manipulation & Hooks:**
-    * Implement `getElementsByClassName`.
-    * Implement a `useBoolean` hook.
-    * Implement a `useCounter` hook and an optimized `useCounter II`.
-    * Implement a `useClickAnywhere` hook.
-    * Implement a `useCycle` hook.
-    * Implement a `useInputControl` hook.
-    * Implement a `useMediaQuery` hook.
-    * Implement a `useMediatedState` hook.
-    * Implement a `useQuery` hook to manage promises.
+Anchor tag, ya `<a>` tag, HTML ka sabse zaroori tag hai. Iska istemaal **hyperlinks** banane ke liye hota hai, jisse aap ek page ko doosre page se ya ek hi page ke alag section se jod sakte hain.
+
+Iska sabse important attribute `href` (hypertext reference) hai, jismein aap us page ka URL ya address daalte hain jahan link ko jaana hai.
+
+**Code Example:**
+
+```html
+<a href="https://www.google.com">Google par jaein</a>
+
+<a href="/about.html">About Us page par jaein</a>
+```
+
+-----
+
+### **HTML mein ek hyperlink ko doosre window ya tab mein kaise kholein?**
+
+Ek hyperlink ko naye tab ya window mein kholne ke liye, aap `<a>` tag ke andar **`target="_blank"`** attribute ka istemaal karte hain.
+
+`target` attribute browser ko batata hai ki link kiye gaye document ko kahan kholna hai. `_blank` value ka matlab hai "ek naya, be-naam tab ya window".
+
+**Security Tip:** Jab bhi aap `target="_blank"` ka istemaal karte hain, toh suraksha ke liye hamesha **`rel="noopener noreferrer"`** bhi jodein.
+
+**Code Example:**
+
+```html
+<a href="https://www.wikipedia.org" target="_blank" rel="noopener noreferrer">
+  Wikipedia ko naye tab mein kholein
+</a>
+```
+
+-----
+
+### **HTML mein table kaise banayein?**
+
+HTML mein table banane ke liye aap in tags ka istemaal karte hain:
+
+  * **`<table>`**: Yeh poore table ke liye container ka kaam karta hai.
+  * **`<tr>`** (Table Row): Yeh table mein ek row banata hai.
+  * **`<th>`** (Table Header): Yeh header cell banata hai. Iska text by default **bold** aur center mein hota hai.
+  * **`<td>`** (Table Data): Yeh ek standard data cell banata hai.
+
+**Code Example:**
+
+```html
+<table>
+  <tr>
+    <th>Naam</th>
+    <th>Sheher</th>
+  </tr>
+  <tr>
+    <td>Rohan</td>
+    <td>Delhi</td>
+  </tr>
+  <tr>
+    <td>Priya</td>
+    <td>Mumbai</td>
+  </tr>
+</table>
+```
+
+-----
+
+### **Aap HTML table ke rows aur columns ko kaise merge kar sakte hain?**
+
+Aap table ke cells ko merge karne ke liye `colspan` aur `rowspan` attributes ka istemaal kar sakte hain.
+
+1.  **`colspan`**: Yeh attribute **horizontally** (dayein se bayein) columns ko merge karta hai. Aap iski value mein batate hain ki kitne columns ko milana hai.
+2.  **`rowspan`**: Yeh attribute **vertically** (upar se neeche) rows ko merge karta hai. Aap iski value mein batate hain ki kitni rows ko milana hai.
+
+**Code Example:**
+
+```html
+<table>
+  <tr>
+    <th>Naam</th>
+    <th colspan="2">Contact</th> </tr>
+  <tr>
+    <td>Aman Sharma</td>
+    <td>9876543210</td>
+    <td>aman@example.com</td>
+  </tr>
+  <tr>
+    <td rowspan="2">Office Staff</td> <td>Sonia</td>
+    <td>sonia@example.com</td>
+  </tr>
+  <tr>
+    <td>Vikram</td>
+    <td>vikram@example.com</td>
+  </tr>
+</table>
+```
+
+-----
+
+### **Cell padding aur cell spacing mein kya fark hai?**
+
+Yeh dono table ke puraane attributes hain, jinhein ab CSS se control karna behtar maana jaata hai.
+
+  * **`cellpadding`**: Yeh cell ke **border aur uske andar ke content ke beech ki jagah** ko control karta hai. Aasan shabdon mein, yeh cell ke andar ki padding hai.
+  * **`cellspacing`**: Yeh table ke **alag-alag cells ke beech ki jagah** ko control karta hai. Aasan shabdon mein, yeh cells ke beech ka gap hai.
+
+**Code Example:**
+
+```html
+<table border="1" cellpadding="10" cellspacing="5">
+  <tr>
+    <td>Cell 1</td>
+    <td>Cell 2</td>
+  </tr>
+  <tr>
+    <td>Cell 3</td>
+    <td>Cell 4</td>
+  </tr>
+</table>
+```
+
+-----
+
+### **Ek webpage par scrolling text ya images kaise banayein?**
+
+Scrolling text ya images banane ke liye puraane zamaane mein `<marquee>` tag ka istemaal hota tha.
+
+**Zaroori Soochana:** `<marquee>` tag ab **deprecated (obsolete)** ho chuka hai. Iska matlab hai ki ise modern web development mein istemaal **nahi karna chahiye**. Iski jagah, behtar aur smooth scrolling effects ke liye **CSS Animations** ya JavaScript ka istemaal karna best practice hai.
+
+Sirf jaankari ke liye, yeh aise kaam karta tha:
+
+```html
+<marquee>Hello World!</marquee>
+```
+
+-----
+
+### **HTML mein list kya hai? Iske alag-alag types batayein.**
+
+HTML mein list ka istemaal related items ko ek saath group karne ke liye kiya jaata hai. Yeh content ko structured aur padhne mein aasan banata hai.
+
+HTML mein 3 tarah ki lists hoti hain:
+
+1.  **Unordered List (`<ul>`)**: Ismein items bullets (•) ke saath dikhaye jaate hain. Ise tab istemaal karte hain jab items ka order zaroori na ho. Har item ko `<li>` (list item) tag mein likha jaata hai.
+2.  **Ordered List (`<ol>`)**: Ismein items numbers (1, 2, 3...) ya letters (A, B, C...) ke saath dikhaye jaate hain. Ise tab istemaal karte hain jab items ka order zaroori ho (jaise- recipe ke steps). Har item ko `<li>` tag mein likha jaata hai.
+3.  **Description List (`<dl>`)**: Ismein terms aur unke descriptions ki list hoti hai, jaise dictionary mein. Ismein 3 tags hote hain: `<dl>` (list container), `<dt>` (term), aur `<dd>` (term ka description).
+
+**Code Example:**
+
+```html
+<ul>
+  <li>Chai</li>
+  <li>Coffee</li>
+</ul>
+
+<ol>
+  <li>Paani ubaalein</li>
+  <li>Chai patti daalein</li>
+</ol>
+
+<dl>
+  <dt>HTML</dt>
+  <dd>HyperText Markup Language</dd>
+  <dt>CSS</dt>
+  <dd>Cascading Style Sheets</dd>
+</dl>
+```
+
+-----
+
+### **Image tag mein `srcset` attribute ka kya fayda hai?**
+
+`srcset` attribute **responsive images** ke liye istemaal hota hai. Iska sabse bada fayda **performance aur user experience** ko behtar banana hai.
+
+Yeh aapko browser ko alag-alag size ya resolution ki ek hi image ke kayi versions dene ki suvidha deta hai. Browser phir user ki device ke hisaab se (jaise screen size, resolution, network speed) sabse best image khud chun leta hai.
+
+**Fayde:**
+
+  * **Faster Loading:** Ek mobile user ko bade desktop-size ki image download nahi karni padti, jisse page jaldi load hota hai aur data bachta hai.
+  * **Better Quality:** High-resolution (Retina) screen waale users ko ek sharp aur high-quality image dikhti hai.
+
+**Code Example:**
+
+```html
+<img src="photo-small.jpg"
+     srcset="photo-small.jpg 500w, 
+             photo-medium.jpg 1000w, 
+             photo-large.jpg 1500w"
+     alt="Ek sundar photo">
+```
+
+-----
+
+### **HTML mein SVG kya hai?**
+
+SVG ka poora naam **Scalable Vector Graphics** hai.
+
+Yeh ek vector-based image format hai, jo XML (text) ka istemaal karke 2D graphics banata hai. Yeh JPEG ya PNG ki tarah pixel-based nahi hota.
+
+Iska sabse bada fayda yeh hai ki SVG images **scalable** hoti hain. Aap unhein kitna bhi bada ya chhota karein, unki quality kabhi kharaab nahi hoti aur woh kabhi "phatti" (pixelated) nahi hain. Isliye, yeh logos, icons, aur illustrations ke liye perfect hoti hain.
+
+-----
+
+### **Aap webpage par Scalable Vector Graphics (SVG) kaise add kar sakte hain?**
+
+SVG ko webpage par add karne ke do aam tareeke hain:
+
+1.  **`<img>` tag ka istemaal karke**:
+    Yeh sabse aasan tareeka hai. Aap `.svg` file ko bilkul `.jpg` ya `.png` file ki tarah `src` attribute mein daal sakte hain. Is tareeke se aap SVG ke andar ke hisson ko CSS se style nahi kar sakte.
+
+    ```html
+    <img src="logo.svg" alt="Company Logo" width="150">
+    ```
+
+2.  **Inline SVG**:
+    Is tareeke mein aap poora SVG code (jo ki XML hota hai) seedhe apne HTML document ke andar paste kar dete hain.
+
+    **Fayda**: Isse aapko poora control milta hai. Aap SVG ke har hisse (jaise `<path>`, `<circle>`) ko CSS se alag-alag style kar sakte hain aur JavaScript se usmein animation bhi daal sakte hain.
+
+    ```html
+    <body>
+      <svg width="100" height="100">
+        <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" />
+      </svg>
+    </body>
+    ```
+---
+
+
+
+### **`<iframe>` tag ka kya purpose hai?**
+
+`<iframe>` (Inline Frame) ka main purpose ek webpage ke andar **doosra webpage embed karna ya dikhana** hai.
+
+Aap ise aise samajh sakte hain ki yeh aapke webpage par ek choti si khidki (window) bana deta hai, jiske andar aap koi bhi doosri website ya online content dikha sakte hain. Yeh content aam taur par aapke main page se bilkul alag aur azaad (independent) hota hai.
+
+**Aam istemaal (Common Use Cases):**
+
+  * YouTube videos ko apni site par dikhana.
+  * Google Maps ko embed karna.
+  * Doosri websites se advertisements dikhana.
+  * Social media feeds (jaise Twitter) ko embed karna.
+
+**Code Example:**
+
+```html
+<h2>Yahan ek YouTube Video hai:</h2>
+<iframe 
+    width="560" 
+    height="315" 
+    src="https://www.youtube.com/embed/your_video_id" 
+    title="YouTube video player" 
+    allowfullscreen>
+</iframe>
+```
+
+**Note:** `title` attribute accessibility ke liye bahut zaroori hai.
+
+-----
+
+### **Aap HTML mein Nested Web Pages kaise banate hain?**
+
+HTML mein "Nested Web Page" (ek page ke andar doosra page) banane ka standard tareeka **`<iframe>` tag ka istemaal karna** hi hai.
+
+Jab aap `<iframe>` istemaal karte hain, toh aap asal mein ek HTML document ko doosre HTML document ke andar nest kar rahe hote hain. Browser `<iframe>` ke `src` attribute mein diye gaye URL se content fetch karta hai aur use aapke main page ke us frame ke andar render kar deta hai.
+
+Toh, agar aapse interview mein nested webpage banane ke baare mein poocha jaaye, toh iska seedha jawaab `<iframe>` hai.
+
+**Code Example:**
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Main Page</title>
+</head>
+<body>
+    <h1>Yeh Mera Main Page Hai</h1>
+    <p>Neeche diye gaye frame mein ek alag website nested hai.</p>
+    
+    <iframe src="https://www.wikipedia.org" width="800" height="500" title="Wikipedia Page"></iframe>
+</body>
+</html>
+```
+
+-----
+
+### **HTML forms mein GET aur POST methods mein kya fark hai?**
+
+Yeh ek bahut hi aam aur zaroori sawaal hai. GET aur POST, dono hi form data ko server par bhejne ke tareeke hain, lekin inmein zameen-aasmaan ka fark hai.
+
+| Feature                   | GET Method                                                                                               | POST Method                                                                                |
+| :------------------------ | :------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------- |
+| **Data Kahan Bhejta Hai** | Data ko URL mein bhejta hai (e.g., `.../search?q=mobile`)                                                | Data ko HTTP request ki **body** ke andar bhejta hai.                                      |
+| **Visibility**            | Data URL mein saaf-saaf **dikhta hai**.                                                                  | Data URL mein **nahi dikhta**, isliye zyada secure hai.                                    |
+| **Data Limit**            | Data bhejne ki ek limit hoti hai (URL ki length par depend karta hai).                                   | Data bhejne ki **koi limit nahi** hoti.                                                    |
+| **Security**              | Kam secure hai. Passwords ya personal info jaisi **sensitive data ke liye istemaal nahi karna chahiye**. | Zyada secure hai. **Sensitive data** ke liye isi ka istemaal hota hai.                     |
+| **Bookmark/Cache**        | Is request ko bookmark ya cache kiya jaa sakta hai.                                                      | Ise bookmark ya cache **nahi kiya jaa sakta**.                                             |
+| **Use Case**              | Data fetch karne ke liye (jaise search query, page number).                                              | Server par data create ya update karne ke liye (jaise user registration, form submission). |
+
+**Code Example (GET):**
+
+```html
+<form action="/search" method="get">
+  <input type="text" name="q">
+  <button type="submit">Search</button>
+</form>
+```
+
+**Code Example (POST):**
+
+```html
+<form action="/login" method="post">
+  <input type="text" name="username">
+  <input type="password" name="password">
+  <button type="submit">Login</button>
+</form>
+```
+
+-----
+
+### **HTML mein Web Worker kya hai?**
+
+Web Worker ek HTML5 API hai jo aapko **JavaScript code ko background thread mein chalane** ki suvidha deta hai.
+
+**Problem kya thi?** JavaScript by default single-threaded hai. Iska matlab hai ki agar aap koi bahut bhaari ya time-consuming script chalate hain (jaise complex calculations ya badi data processing), toh aapka webpage (UI) **freeze** ho jaata hai. User scroll nahi kar sakta, buttons par click nahi kar sakta, jab tak script poori na ho jaaye.
+
+**Solution kya hai?** Web Worker is script ko ek alag, background thread mein chala deta hai. Isse aapka main page **responsive** bana rehta hai, aur user aaram se page ke saath interact kar sakta hai jabki bhaari kaam parde ke peeche (background mein) chalta rehta hai.
+
+**Zaroori Baatein:**
+
+  * Main page aur worker thread aapas mein `postMessage()` method se baat (communicate) karte hain.
+  * Web Workers ka DOM (Document Object Model) par koi access nahi hota. Yani, woh seedhe HTML elements ko nahi badal sakte.
+
+-----
+
+### **Hum `data-` attribute ka istemaal kyun karte the, aur ab iska istemaal na karne ki salah kyun di jaati hai?**
+
+Is sawaal mein ek choti si galatfehmi hai. Asal mein, **`data-` attributes ka istemaal na karne ki salah nahi di jaati, balki yeh HTML5 ka ek standard aur bahut hi upyogi feature hai.**
+
+**Part 1: Hum `data-` attribute ka istemaal kyun karte hain?**
+
+`data-` attributes ka istemaal HTML elements par **custom data store karne ke liye** kiya jaata hai. Yeh data page ya application ke liye private hota hai. Iska fayda yeh hai ki hum JavaScript se is data ko aasaani se access aur manipulate kar sakte hain, bina kisi non-standard attribute ke.
+
+Jaise, aapko ek button ke saath uski product ID store karni hai:
+
+```html
+<button class="add-to-cart" data-product-id="12345">Add to Cart</button>
+```
+
+Ab aap JavaScript se is `product-id` ko aasaani se padh sakte hain:
+
+```javascript
+const myButton = document.querySelector('.add-to-cart');
+const productId = myButton.dataset.productId; // "12345"
+console.log(productId);
+```
+
+**Part 2: "Istemal na karne ki salah" wali galatfehmi**
+
+Yeh galatfehmi shayad isliye hai kyunki HTML5 se pehle, developers non-standard attributes bana lete the (jaise `<div my-custom-info="xyz">`). Yeh galat practice thi.
+
+HTML5 ne is problem ko solve karne ke liye **`data-*`** attributes ko introduce kiya. Yeh ek standard tareeka hai custom data store karne ka. Toh, `data-` attributes puraane nahi hain, balki **modern aur sahi tareeka** hain. Inka istemaal bilkul karna chahiye.
+---
+
+
+-----
+
+-----
+
+### **CSS kya hai?**
+
+CSS ka poora naam **Cascading Style Sheets** hai. Yeh ek designing language hai jiska istemaal HTML elements ko **style karne** ke liye kiya jaata hai.
+
+Aasan shabdon mein, agar HTML kisi webpage ka **dhancha (skeleton)** hai, toh CSS uske **kapde, rang aur makeup** hai. CSS hi decide karta hai ki webpage par text ka color kya hoga, font kaun sa hoga, elements ke beech mein kitni jagah hogi, aur poora layout kaisa dikhega.
+
+Iska sabse bada fayda yeh hai ki yeh **content (HTML) ko presentation (CSS) se alag** rakhta hai, jisse code saaf-suthra aur manage karne mein aasan ho jaata hai.
+
+-----
+
+### **Cascading Style Sheet mein ‘Cascading’ ka kya matlab hai?**
+
+'Cascading' ka matlab ek **priority system** ya niyamon ka ek set hai. Yeh system decide karta hai ki agar ek hi HTML element par ek se zyada CSS rules lagaye gaye hain, toh kaun sa rule aakhir mein **apply hoga**.
+
+Yeh cascade (yaani jharna) upar se neeche ek specific order mein chalta hai:
+
+1.  **Importance**: Jis rule ke aage `!important` likha ho, uski priority sabse zyada hoti hai.
+2.  **Specificity**: Zyada specific selector kam specific selector ko hara deta hai. Jaise, ek **ID selector (`#header`)** ek class selector (`.main`) se zyada specific maana jaata hai.
+3.  **Source Order**: Agar do rules ki specificity barabar hai, toh jo rule CSS file mein **baad mein (neeche)** likha gaya hai, wahi jeetega.
+
+-----
+
+### **Hum webpage mein CSS kaise include kar sakte hain?**
+
+Webpage mein CSS ko jodne ke 3 tareeke hain:
+
+1.  **Inline CSS**:
+    Ismein `style` attribute ka istemaal karke seedhe HTML element ke andar hi CSS likhi jaati hai. Yeh sirf usi ek element par apply hoti hai.
+
+    ```html
+    <p style="color: blue; font-size: 16px;">Yeh ek neela paragraph hai.</p>
+    ```
+
+2.  **Internal CSS (Embedded CSS)**:
+    Ismein `<style>` tag ka istemaal karke HTML file ke `<head>` section ke andar CSS likhi jaati hai. Yeh CSS sirf usi ek HTML page ke liye kaam karti hai.
+
+    ```html
+    <head>
+      <style>
+        p {
+          color: blue;
+          font-size: 16px;
+        }
+      </style>
+    </head>
+    ```
+
+3.  **External CSS**:
+    Yeh sabse behtar aur recommended tareeka hai. Ismein hum ek alag file banate hain jiska extension `.css` hota hai (jaise `style.css`) aur usmein saari CSS likhte hain. Phir is file ko `<link>` tag ka istemaal karke HTML file ke `<head>` section mein jod dete hain.
+
+    ```html
+    <head>
+      <link rel="stylesheet" href="style.css">
+    </head>
+    ```
+
+-----
+
+### **CSS mein selectors kya hote hain?**
+
+CSS selectors woh **patterns** hote hain jinka istemaal hum un **HTML elements ko chunne (select karne)** ke liye karte hain jinhein hum style karna chahte hain.
+
+Selector hi CSS aur HTML ke beech ka pul (bridge) hai. Yeh CSS rule ka woh hissa hai jo curly braces `{}` se pehle aata hai. Jaise, `p { color: red; }` mein, `p` ek selector hai jo page ke saare `<p>` elements ko select kar raha hai.
+
+-----
+
+### **CSS Selectors ke alag-alag types batayein.**
+
+CSS mein kayi tarah ke selectors hote hain. Kuch zaroori types yeh hain:
+
+  * **Element/Type Selector**: Yeh kisi HTML tag ke naam se select karta hai.
+      * `p` (saare `<p>` elements ko select karega)
+  * **Class Selector**: Yeh `.` (dot) se shuru hota hai aur uss class waale saare elements ko select karta hai.
+      * `.button` (saare elements jinpar `class="button"` laga hai)
+  * **ID Selector**: Yeh `#` (hash) se shuru hota hai aur uss unique ID waale element ko select karta hai. Ek ID page par sirf ek baar hi use ho sakti hai.
+      * `#header` (woh element jispar `id="header"` laga hai)
+  * **Attribute Selector**: Yeh attribute ke आधार par select karta hai.
+      * `input[type="text"]` (saare text input fields)
+  * **Grouping Selector**: Yeh `,` (comma) ka istemaal karke ek saath kayi selectors par ek hi style apply karta hai.
+      * `h1, h2, p { color: grey; }`
+  * **Descendant Selector (space)**: Yeh kisi element ke andar maujood doosre element ko select karta hai.
+      * `div p` (saare `<p>` jo kisi `<div>` ke andar hain)
+  * **Pseudo-class Selector**: Yeh element ki ek khaas state ko select karta hai.
+      * `a:hover` (jab mouse link ke upar aata hai)
+
+-----
+
+### **`class` aur `id` attributes mein kya fark hai?**
+
+| Feature          | `id`                                                                                     | `class`                                                                                    |
+| :--------------- | :--------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------- |
+| **Uniqueness**   | Ek page par **unique** hona chahiye. Ek naam ka ID sirf ek hi element par lag sakta hai. | Ek hi class ka naam **kayi (multiple)** elements par lag sakta hai.                        |
+| **CSS Selector** | Hash (`#`) se select kiya jaata hai. Jaise: `#header`.                                   | Dot (`.`) se select kiya jaata hai. Jaise: `.btn-primary`.                                 |
+| **Use Case**     | Kisi ek anokhe element ki pehchan ke liye, jaise page ka main header ya footer.          | Ek jaise style ko kayi elements par lagane ke liye, jaise buttons, cards, ya alerts.       |
+| **JavaScript**   | `document.getElementById()` se seedhe access kiya jaa sakta hai.                         | `document.getElementsByClassName()` se access kiya jaata hai, jo ek list return karta hai. |
+
+-----
+
+### **Aap CSS specificity samjha sakte hain aur yeh kaise kaam karti hai?**
+
+Specificity ek **scoring system** hai jiska istemaal browser yeh tay karne ke liye karta hai ki agar ek element par kayi CSS rules lag rahe hain, toh kaun sa rule sabse zyada zaroori hai aur apply kiya jaana chahiye.
+
+**Jiska score sabse zyada hota hai, wahi jeet'ta hai.**
+
+Specificity ka hierarchy (sabse zyada se sabse kam tak):
+
+1.  **Inline Styles**: `style` attribute ka istemaal karke lagaya gaya style (Score: 1000). Yeh sabse powerful hota hai.
+    ```html
+    <p style="color: red;">...</p>
+    ```
+2.  **ID Selectors**: `#` se select kiye gaye rules (Score: 100).
+    ```css
+    #main-nav { color: blue; }
+    ```
+3.  **Class, Attribute, aur Pseudo-class Selectors**: `.`, `[]`, aur `:hover` jaise selectors (Score: 10).
+    ```css
+    .btn, [type="submit"], a:hover { color: green; }
+    ```
+4.  **Element aur Pseudo-element Selectors**: HTML tag aur `::before` jaise selectors (Score: 1).
+    ```css
+    p, h1, p::first-line { color: grey; }
+    ```
+
+**Note**: `!important` rule specificity ke saare niyamon ko tod deta hai aur sabse upar maana jaata hai, lekin iska istemaal kam se kam karna chahiye.
+
+-----
+
+### **CSS mein Box Model kya hai?**
+
+CSS Box Model ek concept hai jo kehta hai ki web layout mein har HTML element ek **rectangular box** hai. Yeh box chaar hisson se milkar banta hai.
+
+Yeh hisse andar se bahar ki taraf is prakaar hain:
+
+1.  **Content**: Box ka asli content, jaise text, image, ya video. Iski `width` aur `height` yahan hoti hai.
+2.  **Padding**: Content aur border ke beech ki **andarooni jagah**.
+3.  **Border**: Padding ke चारों taraf ki **line**.
+4.  **Margin**: Border ke **bahar ki jagah**, jo is box ko doosre elements se door rakhti hai.
+
+By default, jab aap `width` set karte hain, toh woh sirf content area par lagta hai. Isse bachne ke liye `box-sizing: border-box;` ka istemaal kiya jaata hai, jisse `width` mein padding aur border bhi shaamil ho jaate hain.
+
+-----
+
+### **CSS mein `z-index` kya hai?**
+
+`z-index` property yeh control karti hai ki **positioned elements** (jinki `position` property `static` ke alawa kuch aur hai, jaise `relative`, `absolute`, ya `fixed`) ek doosre ke upar kaise stack honge.
+
+Aasan shabdon mein, agar do elements ek doosre ke upar aa rahe hain, toh `z-index` yeh batata hai ki kaun sa element **upar dikhega** aur kaun sa **neeche**.
+
+  * Jis element ka `z-index` value **zyada** hoga, woh upar aayega.
+  * Jis element ka `z-index` value **kam** hoga, woh neeche chala jaayega.
+  * Yeh property sirf **positioned elements** par hi kaam karti hai.
+
+-----
+
+### **`visibility: hidden` aur `display: none` properties mein kya fark hai?**
+
+Yeh ek bahut zaroori sawaal hai.
+
+  * **`display: none;`**:
+
+      * Yeh element ko page se poori tarah **hata deta hai**.
+      * Element layout mein **koi jagah nahi leta**. Aisa lagta hai jaise woh HTML mein tha hi nahi.
+      * User use dekh nahi sakta aur usse interact bhi nahi kar sakta.
+
+  * **`visibility: hidden;`**:
+
+      * Yeh element ko sirf **chhipa deta hai (invisible kar deta hai)**.
+      * Element layout mein apni **jagah par bana rehta hai**. Aapko uski jagah par ek khaali space dikhega.
+      * User use dekh nahi sakta, lekin uski jagah wahan maujood rehti hai.
+
+**Analogy**: `display: none` building ko todne jaisa hai, jabki `visibility: hidden` building ko ek adrishya chadar se dhakne jaisa hai—building hai, par dikh nahi rahi.
+
+-----
+
+### **`display: inline-block` kya karta hai?**
+
+`display: inline-block` ek element ko `inline` aur `block` dono ki properties deta hai. Yeh dono ka best combination hai.
+
+  * **`inline` ki tarah**: Element ek **nayi line se shuru nahi hota**. Woh text ya doosre inline elements ke saath ek hi line mein rehta hai.
+  * **`block` ki tarah**: Aap is element par **`width` aur `height` set kar sakte hain**. Iske alawa, aap ispar chaaron taraf (`top`, `bottom`, `left`, `right`) `margin` aur `padding` bhi de sakte hain, jo poori tarah kaam karti hai.
+
+Yeh navigation links, buttons, ya chhote cards banane ke liye bahut upyogi hai jinhein aapko ek line mein rakhna hai aur unki height-width bhi control karni hai.
 
 ---
-### General / Backend JavaScript Questions
 
-These questions test core JavaScript knowledge, data structures, and algorithms, which are applicable to both frontend and backend development.
 
-* **Core Functions & Prototypes:**
-    * Implement `Function.prototype.call()`.
-    * Implement `Array.prototype.reduce()`.
-    * Implement a `debounce` function.
-    * Implement a `curry` function.
-    * Create a `deepClone` function.
-    * Implement a `deepEqual` function.
-    * Implement a `deepOmit` function to remove keys from objects.
-    * Implement `mapAsyncLimit` for concurrent async operations.
+-----
 
-* **Data Structures & Algorithms:**
-    * **Sorting:** Selection Sort, Bubble Sort, Insertion Sort, Heap Sort.
-    * **Data Structures:** Implement a Stack, Binary Search Tree, Binary Tree.
-    * **Arrays:** Find the mean, find duplicates, find a missing number, find pair sum, array product excluding current, binary search, find smallest in rotated array, find element in rotated array, maximum sum in contiguous array.
-    * **Strings:** Check for anagrams, check for palindromes, find balanced brackets.
-    * **Trees:** Find max depth, flip nodes, check for equality, check for subtree, level order traversal.
-    * **Linked Lists:** Reverse a list, detect a cycle, combine two sorted lists.
-    * **Graphs:** Breadth-first Search (BFS), Depth-first Search (DFS), check if a graph is a tree, Topological Sort.
-    * **Bit Manipulation:** Count set bits, bit counting, bit reversal.
-    * **Other:** Staircase climbing combinations, optimal stock trading, meeting calendar.
+-----
 
-* **Utility Functions:**
-    * Implement `makeCounter` that returns a function for increasing values.
-    * Implement `minBy` to find a minimum element based on criteria.
-    * Implement `type-utilities` to determine variable types.
-    * Implement `cycle` to create a function that cycles through values.
-    * Implement `countBy` to count values based on a function.
+### **`float` property ka kya use hai?**
 
+`float` property ka mool (original) use kisi element, jaise ki image, ko page par left ya right mein rakhna tha taaki text uske chaaron taraf wrap ho sake, bilkul ek akhbaar ya magazine ki tarah.
 
+Puraane dino mein, jab Flexbox aur Grid nahi the, developers iska istemaal poore web page ka layout banane ke liye karte the (jaise sidebar aur content area banana).
 
-I've extracted and categorized the JavaScript questions from the link you provided. Since the questions are from a "Front End Interview" resource, none of them are purely backend or database questions. They fall into two main categories: **Frontend** (which includes general JavaScript knowledge, DOM manipulation, and UI) and questions that touch upon concepts often handled by the **Backend** (like data manipulation logic).
+**Zaroori Soochana**: Aaj ke modern web development mein, layout banane ke liye `float` ka istemaal **nahi karna chahiye**. Iski jagah **Flexbox aur Grid** ka istemaal karna best practice hai, kyunki woh zyada powerful aur aasan hain. `float` ke saath layouts manage karna mushkil hota hai aur isse `clear` property se judi samasyaein bhi aati hain.
 
-***
+-----
 
-### Frontend Questions
+### **Flexbox kya hai?**
 
-These questions are about building user interfaces, handling browser events, and core JavaScript concepts crucial for client-side development.
+Flexbox (ya Flexible Box Layout) CSS mein ek **one-dimensional (ek-dishayeeya)** layout model hai.
 
-* **JavaScript Functions & Concepts:**
-    * Implement `Debounce` and `Throttle`.
-    * Implement `Array.prototype.reduce()`.
-    * Conditionally join CSS class names (`classnames`).
-    * Recursively `Flatten` an array.
-    * Implement `Promise.all()`, `Promise.any()`, and `Promisify`.
-    * Implement `Deep Clone`, `Deep Equal`, and `Deep Omit`.
-    * Create a memoized function (`Memoize`).
-    * Implement `Function.prototype.call()`.
-    * Implement type checking utilities.
-    * Explain the difference between a cookie, `sessionStorage`, and `localStorage`.
-    * Explain the difference between `<script>`, `<script async>`, and `<script defer>`.
-    * Explain "hoisting", "closures", event bubbling, and event delegation.
-    * What are the differences between `let`, `var`, and `const`?
-    * What's the difference between `null`, `undefined`, and undeclared?
-    * Explain the difference between CommonJS and ES modules.
-    * What is the event loop?
-    * What are the pros and cons of Promises over callbacks?
-    * Implement `Curry`.
+Iska mool uddeshya ek container ke andar items ko aasaani se **align karna, distribute karna, aur unke beech space manage karna** hai. Yeh tab bhi behtareen kaam karta hai jab items ka size fix na ho.
 
-* **User Interface (UI) Coding:**
-    * Build a Todo List, Contact Form, Holy Grail Layout, Tabs, Job Board, Accordion, Star Rating, Image Carousel, Progress Bars, Like Button, Traffic Light, Digital Clock, Stopwatch, File Explorer, Tic-tac-toe game, Transfer List, Nested Checkboxes, Modal Dialog, and a Data Table.
+**Mukhya Concept**: Flexbox ya toh ek **row (kataar)** mein kaam karta hai ya ek **column** mein. Yeh ek baar mein ek hi dimension mein layout ko control karta hai. Ismein do mukhya bhaag hote hain:
 
-* **DOM Manipulation:**
-    * Implement `getElementsByStyle` to get DOM elements with a specific style.
-    * Implement `getElementsByClassName`.
+  * **Flex Container**: Parent element jispar `display: flex;` lagaya jaata hai.
+  * **Flex Items**: Container ke theek andar ke bachhe (direct children).
 
-***
+Yeh navigation bars, buttons ko ek line mein laane, ya kisi cheez ko vertically aur horizontally center karne jaise chhote-scale layouts ke liye perfect hai.
 
-### Backend-Adjacent / Data Logic Questions
+-----
 
-These questions involve data manipulation and system design concepts that, in a real application, would often be handled by or closely interact with a backend server. However, they are framed here as JavaScript logic problems.
+### **Aap ek flexbox layout kaise banate hain?**
 
-* **Data Manipulation:**
-    * Implement a function to merge rows of data from the same user.
-    * Implement a function that maps an array with an asynchronous function while limiting concurrency (`Map Async Limit`).
-    * Implement a function to squash an object into a single level of depth.
-    * Implement an `HTML Serializer` and `JSON.stringify`.
+Flexbox layout banana aasan hai. Sabse pehle aapko ek container banana hota hai.
 
-* **System Design & Architecture:**
-    * Design a News Feed (like Facebook).
-    * Design an Autocomplete component.
-    * Implement an `Event Emitter` class.
+1.  **Flex Container Banayein**:
+    Ek parent element (jaise ek `<div>`) lein aur uspar CSS mein `display: flex;` laga dein. Aisa karte hi, woh parent element ek **flex container** ban jaata hai aur uske saare direct children **flex items** ban jaate hain.
 
+    ```css
+    .container {
+      display: flex;
+    }
+    ```
 
+2.  **Properties se Layout Control Karein**:
+    Container banane ke baad, aap in properties ka istemaal karke items ko arrange kar sakte hain:
 
+      * **`flex-direction`**: Items ko `row` (default) ya `column` mein arrange karta hai.
+      * **`justify-content`**: Items ko main axis par align karta hai (`center`, `space-between`, `flex-start`, `flex-end`).
+      * **`align-items`**: Items ko cross axis par align karta hai (`center`, `stretch`, `flex-start`, `flex-end`).
+      * **`flex-wrap`**: Batata hai ki items ek line mein fit na hone par agli line mein jaane chahiye ya nahi (`wrap` ya `nowrap`).
 
+**Code Example**:
 
+```html
+<div class="container">
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <div>Item 3</div>
+</div>
+```
 
+```css
+.container {
+  display: flex;
+  justify-content: space-around; /* Items ke beech barabar space dega */
+  align-items: center;          /* Items ko vertically center karega */
+  background-color: lightblue;
+  height: 100px;
+}
+```
 
+-----
 
+### **CSS Grid aur Flexbox mein kya fark hai?**
 
+Yeh dono modern CSS layout ke liye hain, lekin inka use alag-alag hai.
 
+| Feature           | Flexbox                                                                     | CSS Grid                                                                                            |
+| :---------------- | :-------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------- |
+| **Dimension**     | **One-dimensional** (ya toh row ya column mein layout control karta hai).   | **Two-dimensional** (row aur column, dono mein ek saath layout control karta hai).                  |
+| **Approach**      | **Content-first**. Layout content ke size ke hisaab se adjust hota hai.     | **Layout-first**. Pehle aap grid ka structure banate hain, phir usmein items ko rakhte hain.        |
+| **Control**       | Items ko ek line mein distribute karne aur align karne mein behtar hai.     | Poore page ka layout banane mein behtar hai, jahan aapko rows aur columns dono par control chahiye. |
+| **Best Use Case** | Chhote components jaise Navbars, button groups, cards ke andar ke elements. | Poore page ka mukhya layout jaise Header, Sidebar, Main Content, aur Footer.                        |
 
+**Analogy**: Flexbox ek **queue (line)** mein logon ko arrange karne jaisa hai. Grid ek **cinema hall** mein logon ko unki seat (row aur column) par baithane jaisa hai.
 
+-----
 
+### **CSS mein various positioning properties kaun si hain?**
 
+CSS mein `position` property batati hai ki ek element page par kaise position kiya jaayega. Iske 5 mukhya values hain:
 
+1.  **`static`**: Yeh **default** value hai. Element page ke normal flow mein rehta hai. Is par `top`, `bottom`, `left`, `right` properties kaam nahi karti.
 
+2.  **`relative`**: Element apni **normal position ke sapeksh (relative)** mein position hota hai. Aap ise `top`, `left` etc. se move kar sakte hain, lekin uski original jagah layout mein khaali rehti hai.
 
+3.  **`absolute`**: Element normal flow se **bahar nikal jaata hai**. Yeh apne **sabse nazdeeki positioned purvaj (nearest positioned ancestor)** ke sapeksh mein position hota hai. Agar koi positioned ancestor nahi hai, toh yeh `<html>` ke hisaab se position hota hai.
 
+4.  **`fixed`**: Yeh bhi normal flow se bahar nikal jaata hai, lekin yeh **viewport (browser window)** ke sapeksh mein position hota hai. Page scroll karne par bhi yeh apni jagah par **fix rehta hai**. Jaise ki, "chat now" button jo neeche kone mein hamesha dikhta hai.
 
+5.  **`sticky`**: Yeh `relative` aur `fixed` ka mixture hai. Yeh tab tak `relative` ki tarah behave karta hai jab tak aap scroll karke ek certain point tak nahi pahunch jaate. Us point par pahunchne ke baad, yeh `fixed` ki tarah "chipak" jaata hai.
 
+-----
 
+### **`em` aur `rem` units mein kya fark hai?**
 
+`em` aur `rem` dono **relative units** hain, jinka size doosre font size par nirbhar karta hai.
 
+  * **`em` unit**:
+    Yeh apne **sabse nazdeeki parent element ke font-size** ke relative hota hai.
 
+      * **Samasya**: Agar aap nested elements (ek ke andar ek) mein `em` ka istemaal karte hain, toh font size ka **compounding effect** ho sakta hai, jisse size ka anumaan lagana mushkil ho jaata hai. Agar parent ka font-size `1.2em` hai aur child ka bhi `1.2em`, toh child ka actual size 1.44 guna ho jaayega.
 
+  * **`rem` (Root EM) unit**:
+    Yeh **sirf aur sirf root element (`<html>`) ke font-size** ke relative hota hai.
 
+      * **Fayda**: Isse compounding ki samasya khatm ho jaati hai. Page mein kahin bhi `1rem` ka matlab hamesha `<html>` ke font-size ke barabar hoga. Yeh poori website mein sizing ko **predictable aur aasan** bana deta hai.
 
+**Nishkarsh (Conclusion)**: Modern CSS mein, poori website mein consistent spacing aur font-sizing ke liye `rem` ka istemaal karna `em` se behtar maana jaata hai.
 
+---
 
 
+-----
 
-backend Interview Questions
-Here are the questions from the provided link, categorized by difficulty:
-
-**Beginner**
-* Explain what an API endpoint is.
-* Can you explain the difference between SQL and NoSQL databases?
-* What is a RESTful API, and what are its core principles?
-* Can you describe a typical HTTP request/response cycle?
-* How would you handle file uploads in a web application?
-* What kind of tests would you write for a new API endpoint?
-* Describe how session management works in web applications.
-* How do you approach API versioning in your projects?
-* How do you protect a server from SQL injection attacks?
-* Explain the concept of statelessness in HTTP and how it impacts backend services.
-* What is containerization, and how does it benefit backend development?
-* What measures would you take to secure a newly developed API?
-* How would you handle session state in a load-balanced application environment?
-
-**Advanced Level**
-* What is database replication, and how can it be used for fault tolerance?
-* Describe the use of blue-green deployment strategy in backend services.
-* Can you explain the consistency models in distributed databases (e.g., CAP theorem)?
-* What are correlation IDs, and how can they be used for tracing requests across services?
-* Explain the difference between optimistic and pessimistic locking and when to use each.
-* What methods would you use to prevent deadlocks in database transactions?
-* How would you secure inter-service communication in a microservices architecture?
-* Discuss techniques for preventing and detecting data anomalies in large-scale systems.
-
-Here is a list of backend interview questions extracted from the provided link:
-
-1.  What is a backend in web development?
-2.  Explain the difference between frontend and backend.
-3.  What is an API?
-4.  What is the difference between REST and SOAP?
-5.  What is CRUD?
-6.  What is a database?
-7.  Explain the difference between SQL and NoSQL databases.
-8.  What is the purpose of caching in backend development?
-9.  What is an HTTP request?
-10. What are HTTP methods? Name a few.
-11. What is the difference between GET and POST methods?
-12. What is JSON?
-13. What is a middleware in backend frameworks?
-14. What is authentication vs authorization?
-15. Explain the purpose of an ORM (Object-Relational Mapping).
-16. What is a session in web applications?
-17. What is a cookie?
-What is token-based authentication?
-What is a status code in HTTP? Name a few common ones.
-What is a load balancer?
- Explain the concept of MVC architecture.
-What is a monolithic application vs a microservices architecture?
-What is the purpose of environment variables in backend development?
-18. What is an idempotent API request?
-19. What are eventual consistency and strong consistency in databases?
-What is the difference between synchronous and asynchronous programming?
-
-
-How do you secure an API?
-Authentication & Authorization – Use OAuth2, JWT, API keys to verify users.
-Rate Limiting & Throttling – Prevent DDoS attacks by limiting requests.
-Input Validation & Sanitization – Prevent SQL Injection, XSS attacks.
-HTTPS (SSL/TLS) – Encrypt data transmission.
-CORS Policy – Restrict API access to trusted domains.
-Logging & Monitoring – Track suspicious activities.
-
-What are web sockets?
-what is polling
-What is database indexing? How does it improve performance?
-What is OAuth, and how does it work?
-What is the difference between horizontal and vertical scaling?
-Explain how JWT (JSON Web Token) works.
-What is an event-driven architecture?
-Explain connection pooling in databases.
-How Connection Pooling Works:
-Benefits of Connection Pooling:
-What is a race condition in concurrent programming?
-3 classical algoithm 
-reader wring problems
-consumer producer problems(bounded and unbounded)
-dining philosopher problem
-
-
-How to Prevent Race Conditions?
-Locks & Mutexes: Ensure only one thread accesses the critical section at a time.
-Atomic Operations: Use atomic variables to prevent data inconsistency.
-Transactions: Implement database transactions to ensure safe updates.
-
-What is the CAP theorem?
-CAP Theorem Trade-offs:
-What are the different types of database replication?
-Explain optimistic and pessimistic locking in databases.
-What is rate limiting, and why is it important?
-How does a reverse proxy work?
-Nginx as a Reverse Proxy
-What is GraphQL, and how does it compare to REST?
-What is database sharding?
-Types of Sharding:
-What are webhooks, and how do they work?
-Webhook in Node.js
-How does Redis improve backend performance?
-different Ways Redis Improves Performance:
-
-What are background jobs, and why are they needed?
-Why Are Background Jobs Needed?
-Handles time-consuming tasks (e.g., email notifications, report generation).
-Improves application performance by offloading heavy processing.
-Enhances user experience by keeping the app responsive.
-
-What is an idempotent API request?
-Idempotent vs. Non-Idempotent Requests
-Why Idempotency Matters?
-Why Use Dependency Injection?
-What is dependency injection, and why is it useful?
-Explain the difference between monolithic, microservices, and serverless architectures.
-
-
-How would you design a scalable system like Twitter?
-Key Design Considerations:
-Load Balancing – Distribute traffic using reverse proxies (e.g., Nginx, AWS ALB).
-Database Scaling
-Sharding: Distribute user data across multiple databases.
-Replication: Read replicas to reduce database load.
-Caching – Use Redis or Memcached to cache frequently accessed tweets.
-Asynchronous Processing – Use message queues (Kafka, RabbitMQ) for tweet delivery.
-Microservices Architecture – Separate services for user management, tweets, notifications, etc.
-Content Delivery Network (CDN) – Serve media (images/videos) via CDNs like Cloudflare.
-Example System Flow:
-User posts a tweet → Data stored in distributed databases.
-Fan-out mechanism → Tweets distributed to followers via event-driven systems.
-Caching Layer → Recent tweets stored in Redis for quick retrieval.
-
-What are eventual consistency and strong consistency in databases?
-Explain the difference between ACID and BASE properties in databases.
-
- What are leader-election algorithms in distributed systems?
-Common Algorithms:
-Bully Algorithm – The highest-ID node becomes the leader.
-Raft Algorithm – Uses consensus among nodes to elect a leader.
-Paxos Algorithm – A more complex but robust consensus mechanism.
-
-How does Kubernetes help in backend development?
-Explain CQRS (Command Query Responsibility Segregation).
-What is the difference between gRPC and REST APIs?
-
-What is Zero Downtime Deployment?
-Methods:
-Rolling Deployment – Replace instances gradually.
-Blue-Green Deployment – Deploy a new version alongside the old one, then switch traffic.
-Canary Deployment – Release updates to a small percentage of users before full rollout.
-
-
-How do you optimize database queries for high-performance applications?
-Optimization Techniques:
-Indexing – Use indexes on frequently queried columns.
-**Avoid SELECT *** – Fetch only necessary fields.
-Use Joins Efficiently – Minimize unnecessary joins.
-Partitioning & Sharding – Split large tables for better performance.
-Connection Pooling – Reuse database connections to reduce overhead.
-
-Explain the different types of database partitioning.
-What is circuit breaking in microservices architecture?
-What is the two-phase commit protocol in distributed systems?
-Explain how Kafka works and why it is used.
-
-What are sagas in microservices?
-Types of Sagas:
-Choreography – Each service calls the next (good for small systems).
-Orchestration – A central coordinator manages transactions (better for complex systems).
-
-How does the Raft consensus algorithm work?
-What are Bloom filters, and how do they help in backend performance?
-What is the difference between horizontal scaling and sharding?
-
-How would you prevent SQL injection in a backend system?
-Use ORM (e.g., SQLAlchemy, Hibernate) – Avoid raw SQL queries.
-Input Validation – Sanitize and validate user inputs.
-Least Privilege Access – Limit database permissions for application users.
-Web Application Firewalls (WAF) – Detect and block SQL injection attempts.
-
-What is a distributed cache, and how does it work?
-
-Q72. How do you ensure data consistency in a distributed system?
-Maintaining data consistency across multiple nodes is critical in distributed systems.
-Techniques:
-Strong Consistency (Synchronous Replication) – Writes are instantly reflected across all nodes.
-Eventual Consistency (Asynchronous Replication) – Updates propagate over time.
-Consensus Algorithms (Raft, Paxos) – Ensures agreement on data updates.
-Quorum-based Reads/Writes – Requires a majority of nodes to acknowledge changes.
-Idempotent Operations – Repeated operations produce the same result.
-
-
-Q73. What is eventual consistency, and how does it affect distributed databases?
-Eventual Consistency means that in a distributed system, all copies of data will become consistent over time, but not immediately.
-How It Affects Databases:
-Fast Reads/Writes – Prioritizes availability over immediate consistency.
-Temporary Inconsistencies – Some nodes may have outdated data until they sync.
-Used in AP Systems (CAP Theorem) – Prioritizes Availability & Partition Tolerance.
-
-Explain how to handle high concurrency in backend systems.
-Handling high concurrency means efficiently processing many simultaneous requests without performance degradation.
-Techniques:
-Connection Pooling – Reuse database connections to prevent overload.
-Load Balancing – Distribute traffic across multiple servers.
-Asynchronous Processing – Use message queues (Kafka, RabbitMQ) to handle tasks in the background.
-Optimized Database Queries – Use indexes, caching, and avoid N+1 query problems.
-Rate Limiting & Throttling – Prevent API abuse and maintain stability.
-
-
- How do you debug a performance bottleneck in a large-scale system?
-Performance bottlenecks slow down a system. Debugging them requires a systematic approach.
-Steps to Identify & Fix Bottlenecks:
-Monitor System Metrics – Use Prometheus, Grafana to analyze CPU, memory, and network usage.
-Profile Code Execution – Identify slow functions with Flamegraphs, APM tools (New Relic, Datadog).
-Analyze Database Performance – Use EXPLAIN ANALYZE to detect slow queries.
-Check for Thread Contention & Locks – Identify deadlocks in multi-threaded environments.
-Optimize Resource Allocation – Increase server capacity, add caching, or improve indexing.
-
-
-
-Explain the purpose of the backend?
-What is a typical workflow for implementing a new feature on the backend?
-Explain the essence of DRY and DIE principles?
-What is a web server?
-What is the difference between a GET and a POST request?
-What is an example of when you would use caching?
-How would you select a cache strategy (e.g., LRU, FIFO)?
-What are some common issues with ORMs?
-When should you use asynchronous programming?
-What is the difference between promises and callbacks?
-What is closure?
-What is the difference between a Class and an Interface in Java?
-What is continuous integration?
-What is a software development kit (SDK)?
-What are the tradeoffs of client-side rendering vs. server-side rendering?
-What are high-order functions? Why are they useful?
-What is a microservice?
-How would you design an API?
-What is the difference between a RESTful and a SOAP API?
-How do you handle errors when making API calls?
-What is a database?
-How would you handle optimizing an existing database?
-What is the difference between a relational and a non-relational database?
-How would you query data from a MongoDB database?
-What are some benefits of using a NoSQL database?
-How would you normalize data in a relational database?
-What are some common scalability issues? How can they be addressed?
-Scale-out vs. scale-up: how are they different? When to apply one, when the other?
-What are some common security risks when building a web application?
-How would you implement authentication and authorization on a new project?
-How would you unit test a new feature?
-How would you integrate tests into your workflow?
-What are some performance testing steps?
-How would you deploy a new version of an application?
-How would you roll back a failed deployment?
-
-
-**General Questions:**
-
-* Explain the purpose of the backend.
-* What is a typical workflow for implementing a new feature on the backend?
-* Explain the essence of DRY and DIE principles.
-* What is a web server?
-* What is the difference between a GET and a POST request?
-* What is an example of when you would use caching?
-* How would you select a cache strategy (e.g., LRU, FIFO)?
-* What are some common issues with ORMs?
-* When should you use asynchronous programming?
-* What is the difference between promises and callbacks?
-* What is a closure?
-
-**Technical Questions:**
-
-* **Databases:**
-    * What is the difference between SQL and NoSQL databases?
-    * How do you implement and manage database transactions? What are ACID properties?
-    * What is database sharding and when would you implement it?
-    * What are database indexes and how do you decide which columns to index?
-    * What is the difference between horizontal and vertical scaling?
-    * What is database normalization and denormalization?
-* **APIs:**
-    * How do you typically structure a RESTful API?
-    * How do you implement rate limiting in your APIs?
-    * What is the difference between authentication and authorization? How do you implement both?
-    * What is idempotency and how do you ensure it in your APIs?
-* **System Design & Architecture:**
-    * What's the difference between monolithic and microservices architectures? When would you use each?
-    * What is the CAP theorem, and how does it apply to distributed systems?
-    * How do you handle distributed transactions across multiple services?
-
-
-How do you ensure your code is maintainable and scalable?
-How do you typically structure a RESTful API?
-How do you approach testing in backend development?
-You discover a data breach affecting user information. What do you do immediately?
- Product asks you to deliver a feature in half the originally planned time. How would you approach this?
- You notice performance degradation in the API during peak hours. What steps do you take?
- How do you design and secure Restful APIs?
- How do you handle database optimization for high-traffic applications?
- What’s your approach to CI/CD in backend projects?
- How do you monitor and maintain system health after deployment?
-
-
-
- Here are the questions extracted from the provided link:
-
-**Beginner Node.js Interview Questions:**
-
-* What is Node.js and how does it work?
-* What tools can be used to assure consistent code style?
-* What is a first class function in Javascript?
-* How do you manage packages in your node.js project?
-* How is Node.js better than other frameworks most popularly used?
-* Explain the steps how “Control Flow” controls the functions calls?
-* What are some commonly used timing features of Node.js?
-* What are the advantages of using promises instead of callbacks?
-* What is fork in node JS?
-* Why is Node.js single-threaded?
-* How do you create a simple server in Node.js that returns Hello World?
-* How many types of API functions are there in Node.js?
-* What is REPL?
-* List down the two arguments that async.queue takes as input?
-* What is the purpose of module.exports?
-
-**Intermediate Node.js Interview Questions:**
-
-* Explain the concept of stub in Node.js?
-* Describe the exit codes of Node.js?
-* For Node.js, why Google uses V8 engine?
-* Why should you separate Express app and server?
-* Explain what a Reactor Pattern in Node.js is.
-* What is middleware?
-* What are node.js buffers?
-* What are node.js streams?
-* How can we use async await in node.js?
-* How does Node.js overcome the problem of blocking of I/O operations?
-* Differentiate between process.nextTick() and setImmediate()?
-* If Node.js is single threaded then how does it handle concurrency?
-* What is an event-loop in Node JS?
-* What do you understand by callback hell?
-
-**Advanced Node.js Interview Questions:**
-
-* What is an Event Emitter in Node.js?
-* Enhancing Node.js performance through clustering.
-* What is a thread pool and which library handles it in Node.
-* What is WASI and why is it being introduced?
-* How are worker threads different from clusters?
-* How to measure the duration of async operations?
-* How to measure the performance of async operations?
-
-
-Here is a list of full-stack developer interview questions and answers, categorized for your convenience.
-
-### Beginner Level
-
-* What is MERN Stack?
-* How MERN Stack Works?
-* What is DNS?
-* How Does DNS Work?
-Explain the Restful API and write its usage.
-* What is the difference between HTTP and HTTPS?
-* Explain the difference between client-side and server-side programming.
-* What do you mean by CORS (Cross-Origin Resource Sharing)?
-* What is the difference between the previous version of HTML and HTML 5?
-* Explain the event loop in Node.js.
-* What is a Promise and explain its states?
-* State the difference between GET and POST?
-* What is the difference between PUT and PATCH method?
-* Describe the concept of MVC architecture.
-* What is the difference between Relational and Non-Relational Databases?
-* What is the difference between Authentication and Authorization?
-* State the difference between normalization and denormalization.
-* What are WebSockets, and how do they differ from HTTP requests?
-* How do you use Postman for testing APIs?
-* How do you debug an issue that occurs in both the frontend and back-end?
-* What are the various heading tags and their importance?
-What is event bubbling and capturing in JavaScript?
-Explain the meaning of multithreading?
-How would you handle user authentication in a web application?
-What is the purpose of package.json in a Node.js project?
-What do you mean by Temporal Dead Zone in ES6?
-What are WebSockets, and how do they differ from HTTP requests?
-How do you debug an issue that occurs in both the frontend and back-end?
-How to redirect to a particular section of a page using HTML?
-
-
-### MERN Stack Interview Questions
-
-* Who is a Mern Stack Developer?
-* What is ReactJS?
-* Explain the MVC architecture.
-* What is the purpose of MongoDB?
-* What is REPL In Node JS?
-* What is meant by “Callback” in Node JS?
-* What are forms in React?
-* What is React Router?
-* Explain the building blocks of React.
-* What is the purpose of ExpressJS?
-* What are pure components in MERN Stack?
-* What are the components of Redux?
-* Why do we need to React Router?
-* What in React are Higher-Order Components (HOC)?
-* What distinguishes a class component from a functional component?
-* What are some features of MongoDB?
-* How do you manage packages in your node. js project?
-* What is middleware in Node.js and how is it used?
-* Why use Express.js over Node.js?
-* What is a Collection in MongoDB?
-* How can you use the like operator to query MongoDB?
-* Name a few techniques to optimize React app performance.
-* How to handle routing in Express JS?
-* What are node JS streams?
-What is the use of the isNaN function?
-Which is faster in JavaScript and ASP script?
-What is negative infinity?
-Is it possible to break JavaScript Code into several lines?
-Write a JavaScript code for adding new elements dynamically. 
-What is a prompt box?
-Explain the working of timers in JavaScript. Also explain the drawbacks of using the timer, if any.
-Explain BSON and Its Significance in MongoDB.
-What is Express.Js?
-Why use Express.Js?
-What are void elements?
-How Container tag is different from the Empty tag in HTML?
-What are logical and physical tags in HTML?
-What are the various positioning properties in CSS?
-What is CSS overflow?
- What does the CSS float property do?
-What does display:inline-block do?
-How to create scrolling text or images on a webpage?
- <marquee> tag 
- What do you mean by manifest file in HTML5?
- How to open a hyperlink in another window or tab in HTML?
-Explain Web Worker in HTML
-How to add Scalable Vector Graphics to your web page?
-Difference between cell padding and cell spacing
+-----
+
+### **CSS mein pseudo-classes aur pseudo-elements kya hote hain?**
+
+Yeh dono selectors ke special keywords hain jo aapko normal element, class, ya id se aage jaakar styling karne ki power dete hain.
+
+  * **Pseudo-classes (`:`)**:
+    Yeh ek selector mein joda jaata hai taaki aap kisi element ki ek **khaas state (avastha)** ko style kar sakein. Yeh poore element ko uski state ke आधार par select karta hai. Yeh single colon (`:`) se shuru hota hai.
+
+      * **`a:hover`**: Jab aap mouse ko link ke upar le jaate hain.
+      * **`input:focus`**: Jab aap ek input field par click karte hain.
+      * **`:first-child`**: Us element ko select karta hai jo apne parent ka pehla bachha ho.
+      * **`:last-child`**: Us element ko select karta hai jo apne parent ka aakhri bachha ho.
+
+  * **Pseudo-elements (`::`)**:
+    Yeh ek selector mein joda jaata hai taaki aap kisi element ke ek **khaas hisse (part)** ko style kar sakein. Yeh double colon (`::`) se shuru hote hain.
+
+      * **`p::first-letter`**: Ek paragraph ke pehle akshar ko style karne ke liye.
+      * **`p::first-line`**: Ek paragraph ki pehli line ko style karne ke liye.
+      * **`::before` aur `::after`**: Kisi element ke content se theek pehle ya baad mein CSS ke through content add karne ke liye (jaise icons ya decorative shapes).
+
+**Code Example:**
+
+```css
+/* Pseudo-class: Jab button par hover karein, toh background badal jaaye */
+button:hover {
+  background-color: darkblue;
+}
+
+/* Pseudo-element: Har h2 se pehle ek emoji add karein */
+h2::before {
+  content: "🚀 ";
+}
+```
+
+-----
+
+### **CSS mein Media Queries kya hain?**
+
+Media Queries CSS3 ka ek feature hai jo aapko alag-alag devices ya screen sizes ke liye alag-alag CSS rules apply karne ki anumati deta hai. Yeh **Responsive Web Design** ki neev (foundation) hai.
+
+Iska istemaal karke aap browser ko bata sakte hain ki, "Agar screen ki width 600px se kam hai, toh yeh CSS apply karo, aur agar isse zyada hai, toh doosri CSS apply karo."
+
+Media Query `@media` rule ka istemaal karke likhi jaati hai.
+
+**Code Example:**
+
+```css
+/* Default style: Badi screens ke liye */
+body {
+  background-color: lightblue;
+}
+
+/* Jab screen ki width 600px ya usse kam ho, toh yeh style apply hoga */
+@media (max-width: 600px) {
+  body {
+    background-color: lightgreen;
+  }
+}
+```
+
+-----
+
+### **Responsive designs kaise banayein?**
+
+Responsive design banane ka matlab hai ek aisi website banana jo har device (mobile, tablet, desktop) par acchi dikhe aur aasaani se use ki jaa sake. Iske mukhya techniques hain:
+
+1.  **Fluid Grids**: Fixed units jaise `pixels` ki jagah, layout banane ke liye relative units jaise **percentages (`%`)** ya **viewport units (`vw`, `vh`)** ka istemaal karein. Isse layout screen ke size ke saath-saath stretch ya shrink hota hai.
+
+2.  **Flexible Images**: Images par `max-width: 100%;` aur `height: auto;` set karein. Isse image apne container se bahar nahi jaayegi aur screen choti hone par aasaani se scale down ho jaayegi.
+
+3.  **Media Queries**: `@media` rules ka istemaal karke alag-alag **breakpoints** (jaise mobile ke liye 480px, tablet ke liye 768px) par CSS styles ko badlein. Aap layout, font size, ya elements ko hide/show kar sakte hain.
+
+4.  **Mobile-First Approach**: Pehle sabse chhoti screen (mobile) ke liye design karein, phir media queries ka istemaal karke badi screens (tablet, desktop) ke liye styles add karte jaaein. Yeh ek best practice hai.
+
+-----
+
+### **Responsive aur Adaptive design mein kya fark hai?**
+
+| Feature          | Responsive Design                                                                | Adaptive Design                                                                                             |
+| :--------------- | :------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------- |
+| **Approach**     | **Fluid (तरल)**. Layout screen ke har size par aasaani se adjust hota hai.       | **Fixed (निश्चित)**. Ismein alag-alag screen sizes ke liye pehle se banaye gaye kayi static layouts hote hain. |
+| **How it Works** | Yeh percentages aur media queries ka istemaal karke continuously adapt hota hai. | Yeh device ki screen width ko detect karke uske liye sabse suitable fixed-width layout ko serve karta hai.  |
+| **Flexibility**  | Bahut zyada flexible hai.                                                        | Sirf kuch pre-defined breakpoints par hi "adapt" hota hai. Beech ke sizes mein layout same rehta hai.       |
+| **Analogy**      | **Paani ki tarah**, jo kisi bhi container ka shape le leta hai.                  | **Alag-alag size ki T-shirts ki tarah**, jismein se aap apne liye best fit waali chunte hain.               |
+
+-----
+
+### **CSS image sprites kya hain aur inka istemaal kyun hota hai?**
+
+**Image Sprite** ek badi image file hoti hai jiske andar website par istemaal hone waali kayi chhoti-chhoti images (aam taur par icons) ko ek saath rakha jaata hai.
+
+**Kaam kaise karta hai**: Hum CSS ki `background-image`, `background-position`, aur `width`/`height` properties ka istemaal karke us badi image ka sirf wahi hissa dikhate hain jiski humein zaroorat hoti hai.
+
+**Istemal kyun hota hai**: **Performance ke liye.** Jab ek webpage load hota hai, toh har image ke liye browser ko server par ek alag **HTTP request** bhejni padti hai. Agar page par 20 icons hain, toh 20 requests jaayengi, jisse page slow ho jaata hai.
+
+Image sprite ka istemaal karke, browser ko sirf **ek HTTP request** bhejni padti hai, jisse saare icons ek saath download ho jaate hain. Isse server par load kam hota hai aur webpage **tez load** hota hai.
+
+-----
+
+### **CSS preprocessor kya hai?**
+
+Ek CSS Preprocessor ek tool ya scripting language hai jo normal CSS ki capabilities ko badha deta hai. Aap preprocessor ki special syntax mein code likhte hain, aur phir ek compiler us code ko regular, browser-compatible CSS file mein badal deta hai.
+
+Inka mool uddeshya CSS code ko zyada **powerful, maintainable, aur organized** banana hai.
+
+Yeh humein aisi suvidhayein dete hain jo normal CSS mein nahi hoti, jaise:
+
+  * **Variables**: Colors ya font-sizes jaise values ko store karne ke liye.
+  * **Nesting**: HTML ki tarah nested structure mein CSS likhna.
+  * **Mixins**: Styles ke reusable blocks banana.
+  * **Functions**: Mathematical operations karne ke liye.
+  * **Imports**: CSS ko chhoti-chhoti manageable files mein todne ke liye.
+
+-----
+
+### **Sass, Less, aur Stylus kya hain?**
+
+Yeh teen sabse popular **CSS preprocessors** hain.
+
+  * **Sass (Syntactically Awesome Style Sheets)**: Yeh sabse zyada popular aur feature-rich preprocessor hai. Iski do syntax aati hain: **SCSS** (jo bilkul CSS jaisi dikhti hai) aur **Sass** (jo indentation ka istemaal karti hai).
+  * **Less (Leaner Style Sheets)**: Yeh bhi Sass jaisa hi hai aur iski syntax SCSS ke kaafi kareeb hai. Yeh shuruaat mein isliye popular hua tha kyunki isse browser mein bhi compile kiya jaa sakta tha.
+  * **Stylus**: Yeh syntax ke maamle mein sabse zyada flexible hai. Ismein aap braces `{}` ya semicolons `;` ke bina bhi code likh sakte hain.
+
+Teeno hi lagbhag ek jaisi samasyaon ko solve karte hain, lekin aaj ke samay mein Sass ka community support aur ecosystem sabse bada hai.
+
+-----
+
+### **Sass jaise CSS Preprocessor istemaal karne ke kya nuksaan hain?**
+
+Fayde hone ke bawajood, iske kuch nuksaan (pitfalls) bhi hain:
+
+1.  **Compilation Zaroori**: Aapko apne `.scss` ya `.less` code ko normal `.css` mein badalne ke liye ek compiler ya build tool (jaise Webpack) ki zaroorat padti hai. Yeh setup ko thoda complex bana deta hai.
+2.  **Debugging Mushkil**: Agar compiled CSS mein koi error aati hai, toh use original Sass file mein trace karna thoda mushkil ho sakta hai (bina source maps ke).
+3.  **Over-nesting ka Khatra**: Nesting feature bahut accha hai, lekin agar aap 5-6 levels se zyada nesting kar dete hain, toh isse bahut lambe aur highly specific selectors ban jaate hain jo performance ke liye kharaab hain.
+4.  **Learning Curve**: Ek naye developer ko iski alag syntax aur features ko seekhna padta hai.
+
+-----
+
+### **Aap browser mein CSS files ki loading ko kaise optimize kar sakte hain?**
+
+CSS loading ko tez karne ke kuch behtareen tareeke hain:
+
+1.  **Minification**: CSS file se saare faaltu characters jaise spaces, comments, aur new lines ko hata dena, taaki file ka size chhota ho jaaye.
+2.  **Concatenation (Bundling)**: Bahut saari alag-alag CSS files ko milakar ek single file bana dena. Isse browser ko kam HTTP requests bhejni padti hain.
+3.  **Compression**: Server par Gzip jaise compression ko enable karna. Server file ko compress karke bhejta hai aur browser use uncompress kar leta hai. Isse file size bahut kam ho jaata hai.
+4.  **CDN (Content Delivery Network) ka istemaal**: Apni CSS file ko CDN par host karein. CDN user ke sabse nazdeeki server se file serve karta hai, jisse loading time kam ho jaata hai.
+5.  **Critical CSS ka istemaal**: Page ke "above-the-fold" content ko style karne waali zaroori CSS ko inline karke baaki CSS ko baad mein load karna.
+
+-----
+
+### **Perceived load time ko behtar banane ke liye aap critical CSS kaise implement karenge?**
+
+**Perceived load time** woh samay hai jo user ko lagta hai ki page load ho gaya hai, bhale hi poora content background mein load ho raha ho. Critical CSS isko behtar banane ki ek technique hai.
+
+**Steps:**
+
+1.  **Critical CSS ko Pehchanein**: Sabse pehle, us CSS ko identify karein jo page ke **"above-the-fold"** hisse ko (bina scroll kiye dikhne waala hissa) style karne ke liye zaroori hai. Yeh bahut thodi si CSS hoti hai.
+2.  **Critical CSS ko Inline Karein**: Is chhoti si CSS ko lekar HTML file ke `<head>` section ke andar ek `<style>` tag mein seedhe daal dein.
+3.  **Baaki CSS ko Asynchronously Load Karein**: Poori (non-critical) stylesheet ko `async` ya `defer` tareeke se load karein taaki woh page ke shuruaati rendering ko block na kare.
+
+**Fayda**: Isse browser ko poori CSS file download karne ka intezaar nahi karna padta. Woh inline critical CSS ka istemaal karke page ke upari hisse ko turant render kar deta hai. User ko lagta hai ki site bahut tezi se khul gayi, jabki baaki styles aaram se background mein load hote rehte hain.
+
+-----
+
+### **Browser-specific styling issues ko theek karne ke kuch tareeke bataein.**
+
+Cross-browser compatibility issues ko theek karne ke yeh kuch tareeke hain:
+
+1.  **CSS Reset ya Normalize.css ka istemaal**: Apne project ki shuruaat mein in files ka istemaal karein. Yeh sabhi browsers (Chrome, Firefox, Safari) ke default styles mein jo fark hota hai, use kam kar deti hain aur ek consistent base deti hain.
+2.  **Vendor Prefixes**: Kuch nayi CSS properties ko browsers support karne ke liye prefixes ki maang karte hain (jaise `-webkit-` Chrome/Safari ke liye, `-moz-` Firefox ke liye). Inhe manually likhne ki jagah, **Autoprefixer** jaise tools ka istemaal karein jo build process ke dauraan yeh prefixes khud-ba-khud laga dete hain.
+3.  **Feature Queries (`@supports`)**: Is rule ka istemaal karke check karein ki browser kisi property ko support karta hai ya nahi. Agar karta hai toh ek style dein, nahi toh ek fallback style dein.
+4.  **Browser Developer Tools**: Sabhi modern browsers ke DevTools (Inspect Element) ka istemaal karke check karein ki kaun si styles apply ho rahi hain aur kyun. Yeh debugging ka sabse zaroori tool hai.
+5.  **Website `caniuse.com`**: Koi bhi nayi CSS property istemaal karne se pehle, is website par check kar lein ki woh kaun-kaun se browsers mein supported hai.
+
+----
