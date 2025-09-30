@@ -1,4 +1,3 @@
-
 Updating
 componentDidUpdate (prevProps, prevState, snapshot)	Use setState() here, but remember to compare props
 shouldComponentUpdate (newProps, newState)	Skips render() if returns false

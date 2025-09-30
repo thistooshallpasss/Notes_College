@@ -1,3 +1,1463 @@
+## **Object-Oriented Programming (OOPs) Kya Hai?**
+
+OOP ek programming style hai jo "objects" par based hai. Ismein hum real-world cheezon (jaise car, person, bank account) ko code mein objects ke roop mein represent karte hain. Har object ke paas apna data (properties/attributes) aur behavior (methods/functions) hota hai.
+
+**Analogy**: Ek car ke baare mein sochiye.
+
+  * **Data/Properties**: Uska color, model, speed, fuel level.
+  * **Behavior/Methods**: `start()`, `stop()`, `accelerate()`, `brake()`.
+
+OOP in cheezon ko code mein manage karna aasan banata hai. Iske chaar main pillars (stambh) hain.
+
+-----
+
+## **1. Classes and Objects (Class aur Object)**
+
+Yeh OOPs ke sabse basic building blocks hain.
+
+### **Class**
+
+Ek **class** object ke liye ek **blueprint** ya template hota hai. Yeh batata hai ki us type ke object mein kya-kya properties (variables) aur behaviors (methods) honge. Yeh memory mein jagah nahi leta.
+
+**Analogy**: Ghar ka naksha (blueprint). Naksha sirf design batata hai, woh khud ek ghar nahi hai.
+
+### **Object**
+
+Ek **object** class ka ek **instance** hota hai. Yeh ek real entity hai jiske paas state (data) aur behavior (methods) hote hain. Jab aap ek object banate hain, tab memory allocate hoti hai.
+
+**Analogy**: Blueprint (class) ko dekh kar banaya gaya asli ghar (object). Aap ek hi naksh-e se kai ghar bana sakte hain.
+
+### **Java Code Example**
+
+```java
+// Yeh ek class hai - ek blueprint
+class Dog {
+    // Properties (Data)
+    String breed;
+    int age;
+    String color;
+
+    // Behavior (Method)
+    void bark() {
+        System.out.println("Woof Woof!");
+    }
+
+    void sleep() {
+        System.out.println("Dog is sleeping...");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // 'myDog' naam ka ek Dog object banaya gaya
+        Dog myDog = new Dog(); // Class ka instance (Object)
+
+        // Object ki properties set ki
+        myDog.breed = "German Shepherd";
+        myDog.age = 5;
+        myDog.color = "Black";
+
+        // Object ke methods ko call kiya
+        System.out.println("My dog's age is: " + myDog.age);
+        myDog.bark(); // Output: Woof Woof!
+    }
+}
+```
+
+-----
+
+## **2. Constructors (Nirmaata)**
+
+Constructor ek special method hai jo object banate samay automatically call hota hai. Iska kaam object ki initial values (state) set karna hota hai.
+
+  * Constructor ka naam hamesha class ke naam jaisa hota hai.
+  * Iska koi return type nahi hota, `void` bhi nahi.
+
+### **Constructor Overloading**
+
+Ek hi class mein ek se zyada constructor ho sakte hain, bas unke parameters alag-alag hone chahiye. Ise **Constructor Overloading** kehte hain.
+
+### **Java Code Example**
+
+```java
+class Person {
+    String name;
+    int age;
+
+    // 1. No-argument constructor
+    Person() {
+        this.name = "Unknown";
+        this.age = 0;
+        System.out.println("Ek Person object bina naam aur age ke banaya gaya.");
+    }
+
+    // 2. Parameterized constructor (Overloading)
+    Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+        System.out.println("Ek Person object naam aur age ke saath banaya gaya.");
+    }
+
+    void introduce() {
+        System.out.println("Hello, my name is " + this.name + " and I am " + this.age + " years old.");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Pehla constructor call hoga
+        Person person1 = new Person();
+        person1.introduce(); // Output: Hello, my name is Unknown...
+
+        System.out.println("---");
+
+        // Doosra constructor call hoga
+        Person person2 = new Person("Anjali", 25);
+        person2.introduce(); // Output: Hello, my name is Anjali...
+    }
+}
+```
+
+**Note**: Java mein C++ ki tarah destructors nahi hote. Java mein **Garbage Collector** hota hai jo un-used objects ko memory se automatically hata deta hai.
+
+-----
+
+## **3. Encapsulation (Data Bandhan)**
+
+Encapsulation ka matlab hai data (variables) aur us data par kaam karne wale methods ko ek saath ek single unit (class) mein baandh dena. Ismein data ko `private` banakar hide kiya jaata hai aur use sirf `public` methods (getters and setters) ke zariye hi access karne ki anumati di jaati hai.
+
+**Kyun Zaroori Hai?**: Isse data par control rehta hai aur bahar ka koi bhi code use direct change nahi kar sakta. Ise **Data Hiding** bhi kehte hain.
+
+**Analogy**: Ek medical capsule. Dawa (data) capsule ke andar safe rehti hai (`private`). Aapko use khane ke liye poora capsule (public methods) istemal karna padta hai. Aap direct dawa ko nahi chhedte.
+
+### **Java Code Example**
+
+```java
+class BankAccount {
+    // Data ko private rakha gaya hai
+    private double balance;
+
+    // Public method to deposit money
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            System.out.println("Deposit successful. New balance: " + balance);
+        } else {
+            System.out.println("Invalid amount.");
+        }
+    }
+
+    // Public method to get balance (Getter)
+    public double getBalance() {
+        return balance;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        BankAccount myAccount = new BankAccount();
+        // myAccount.balance = -1000; // Error! Kyunki balance private hai. Direct access nahi kar sakte.
+
+        myAccount.deposit(5000); // Sahi tarika
+        System.out.println("Current Balance: " + myAccount.getBalance());
+    }
+}
+```
+
+-----
+
+## **4. Abstraction (Vivaran Chhipana)**
+
+Abstraction ka matlab hai zaroori cheezein dikhana aur unki implementation details (woh kaam kaise kar rahi hain) ko chhipana. Yeh complexity ko kam karta hai.
+
+**Kyun Zaroori Hai?**: User ko sirf yeh jaanna hota hai ki *kya karna hai*, yeh nahi ki *kaise karna hai*.
+
+**Analogy**: TV ka remote. Aap volume badhane ke liye `Volume+` button dabate hain. Aapko ye jaanne ki zaroorat nahi ki button dabane se andar kaunsa circuit kaam karta hai. Aapko sirf functionality se matlab hai.
+
+Java mein abstraction **Abstract Classes** aur **Interfaces** ke through achieve kiya jaata hai.
+
+### **Java Code Example (Using Abstract Class)**
+
+```java
+// Abstract class - iska object nahi ban sakta
+abstract class Shape {
+    // Abstract method - iski body nahi hoti
+    abstract void draw();
+
+    // Concrete method - iski body hoti hai
+    void description() {
+        System.out.println("This is a shape.");
+    }
+}
+
+class Circle extends Shape {
+    // Abstract method ko implement karna zaroori hai
+    void draw() {
+        System.out.println("Drawing a circle.");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Shape s = new Shape(); // Error! Abstract class ka object nahi ban sakta.
+        Shape myCircle = new Circle(); // Sahi hai
+        myCircle.draw();
+        myCircle.description();
+    }
+}
+```
+
+-----
+
+## **5. Inheritance (Viraasat)**
+
+Inheritance ek mechanism hai jismein ek class (jise **child** ya **subclass** kehte hain) doosri class (jise **parent** ya **superclass** kehte hain) ki properties aur methods ko prapt (acquire) karti hai.
+
+**Kyun Zaroori Hai?**: Isse **code reusability** badhti hai. Aapko baar-baar same code likhne ki zaroorat nahi padti. Yeh "IS-A" relationship batata hai (e.g., "A Car IS-A Vehicle").
+
+**Analogy**: Parents aur bachhe. Bachhon ko apne parents se kuch gun (properties jaise eye color) viraasat mein milte hain. Iske alawa, unke apne kuch unique gun bhi hote hain.
+
+### **Java Code Example**
+
+```java
+// Parent / Superclass
+class Vehicle {
+    String brand = "Ford";
+    void honk() {
+        System.out.println("Tuut, tuut!");
+    }
+}
+
+// Child / Subclass
+// 'Car' Vehicle ki saari properties aur methods inherit karegi
+class Car extends Vehicle {
+    String modelName = "Mustang";
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Car myCar = new Car();
+        myCar.honk(); // Parent class ka method use kiya
+        System.out.println(myCar.brand + " " + myCar.modelName);
+    }
+}
+```
+
+-----
+
+## **6. Polymorphism (Bahuroopata)**
+
+Polymorphism ka matlab hai "ek naam, anek roop". Yeh ek task ko alag-alag तरीkon se karne ki ability hai.
+
+Java mein polymorphism do tarah se achieve hota hai:
+
+### **1. Method Overloading (Compile-time Polymorphism)**
+
+Ek hi class mein same naam ke multiple methods, lekin unke **parameters** (number of arguments ya type of arguments) alag-alag hote hain. Compiler decide karta hai ki kaunsa method call hoga.
+
+### **2. Method Overriding (Run-time Polymorphism)**
+
+Jab ek subclass (child class) apne superclass (parent class) ke method ko apni khud ki implementation deti hai. Dono methods ka naam aur parameters same hote hain. Kaunsa method call hoga, yeh run-time par (object ke type ke आधार par) decide hota hai.
+
+**Analogy**: Ek insaan (object). Woh alag-alag jagah alag-alag behave karta hai. Office mein woh ek 'Employee' hai, ghar par 'Parent' hai, aur doston ke saath 'Friend' hai. Vyakti ek hi hai, lekin uske roop (behavior) alag-alag hain.
+
+### **Java Code Example (Method Overriding)**
+
+```java
+class Animal {
+    void makeSound() {
+        System.out.println("Animal makes a sound");
+    }
+}
+
+class Pig extends Animal {
+    // Parent ke method ko override kiya
+    @Override
+    void makeSound() {
+        System.out.println("The pig says: wee wee");
+    }
+}
+
+class Cat extends Animal {
+    // Parent ke method ko override kiya
+    @Override
+    void makeSound() {
+        System.out.println("The cat says: meow meow");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Animal myAnimal = new Animal();
+        Animal myPig = new Pig(); // Animal reference, lekin object Pig ka hai
+        Animal myCat = new Cat(); // Animal reference, lekin object Cat ka hai
+
+        myAnimal.makeSound(); // Animal wala method
+        myPig.makeSound();    // Pig wala method (overridden)
+        myCat.makeSound();    // Cat wala method (overridden)
+    }
+}
+```
+
+-----
+
+## **Access Modifiers**
+
+Yeh keywords hain jo class, variable, method, ya constructor ki accessibility (pahunch) ko control karte hain.
+
+1.  **`public`**: Kahin se bhi access kiya ja sakta hai (dusre package se bhi). Sabse kam restrictive.
+2.  **`protected`**: Same package mein aur dusre package ki subclasses mein access kiya ja sakta hai.
+3.  **`default` (koi keyword nahi)**: Agar aap kuch nahi likhte, toh woh `default` hota hai. Sirf same package ke andar access ho sakta hai.
+4.  **`private`**: Sirf usi class ke andar access ho sakta hai jismein use declare kiya gaya hai. Sabse zyada restrictive.
+
+---
+
+
+
+### **Encapsulation 💊**
+
+**Encapsulation** ka matlab hai data (variables) aur us data par kaam karne wale methods ko ek saath ek single unit (class) mein baandh dena. Iska sabse bada fayda hai **data hiding**: aap variables ko **`private`** bana dete hain taaki unhe class ke bahar se direct access na kiya ja sake. Phir aap **`public`** methods (getters and setters) banate hain jinke zariye us data ko safely access ya modify kiya jaata hai.
+
+Yeh aapke data ko galat changes se bachata hai aur aapko variable ki value change karne se pehle validation logic add karne ki power deta hai.
+
+**Analogy**: Ek medical capsule ki tarah sochiye. Dawa (`private` data) capsule ke andar safe rehti hai. Aap direct dawa ko nahi chhedte, balki poore capsule (`public` methods) ko istemal karte hain.
+
+-----
+
+#### **Java Example: `BankAccount` Class**
+
+Yahan, `balance` ko `private` rakha gaya hai. Aap uski value direct set nahi kar sakte. Aapko `deposit` aur `withdraw` jaise methods ka istemal karna hoga, jinmein zaroori logic likha hua hai.
+
+```java
+public class BankAccount {
+    // 1. Data ko 'private' banakar hide kiya gaya hai.
+    private double balance;
+
+    // Constructor to set an initial balance
+    public BankAccount(double initialBalance) {
+        if (initialBalance >= 0) {
+            this.balance = initialBalance;
+        } else {
+            this.balance = 0;
+        }
+    }
+
+    // 2. Public 'getter' method: balance ko safe tarike se read karne ke liye.
+    public double getBalance() {
+        return this.balance;
+    }
+
+    // 3. Public 'setter' jaisa method: validation ke saath paise deposit karne ke liye.
+    public void deposit(double amount) {
+        if (amount > 0) {
+            this.balance += amount;
+            System.out.println("Deposit successful. New balance: $" + this.balance);
+        } else {
+            System.out.println("Invalid amount. Deposit must be positive.");
+        }
+    }
+
+    // 4. Dusra public method: validation ke saath paise nikalne ke liye.
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= this.balance) {
+            this.balance -= amount;
+            System.out.println("Withdrawal successful. New balance: $" + this.balance);
+        } else {
+            System.out.println("Withdrawal failed. Insufficient funds or invalid amount.");
+        }
+    }
+}
+
+// Ise istemal kaise karein
+class Main {
+    public static void main(String[] args) {
+        BankAccount myAccount = new BankAccount(5000.0);
+
+        // myAccount.balance = -1000; // COMPILE ERROR! private variable ko direct access nahi kar sakte.
+
+        // Public methods ka istemal hi sahi tarika hai
+        System.out.println("Initial Balance: $" + myAccount.getBalance());
+
+        myAccount.deposit(2000.0);
+        myAccount.withdraw(8000.0); // Yeh fail ho jayega
+        myAccount.withdraw(1500.0);
+
+        System.out.println("Final Balance: $" + myAccount.getBalance());
+    }
+}
+```
+
+-----
+
+### **Inheritance 👪**
+
+**Inheritance** ek process hai jismein ek nayi class (jise **subclass** ya **child class** kehte hain) ek purani class (jise **superclass** ya **parent class** kehte hain) ke gunon (properties) aur kaam (methods) ko viraasat mein leti hai. Isse **code reusability** badhti hai aur "IS-A" relationship banta hai (jaise, "A Car IS-A Vehicle").
+
+  * **`extends`**: Yeh keyword child class ko parent class se jodne ke liye istemal hota hai.
+  * **Method Overriding**: Jab child class apne parent class ke kisi method ko apni khud ki specific implementation deti hai. `@Override` annotation likhna ek acchi practice hai, yeh compiler ko batata hai ki aap method override kar rahe hain.
+  * **`super`**: Yeh keyword parent class ko refer karne ke liye hota hai. Aap isse parent class ke constructor (`super()`) ya methods (`super.methodName()`) ko call kar sakte hain.
+
+**Analogy**: Bachhon ko apne parents se kuch aadat (properties) viraasat mein milti hain. Lekin woh un aadaton ko apne tareeke se badal bhi sakte hain (method overriding) aur unke paas apni khud ki alag aadat bhi hoti hain.
+
+-----
+
+#### **Java Example: `Vehicle`, `Car`, aur `Bike` Classes**
+
+Yahan, `Car` aur `Bike` dono `Vehicle` se inherit kar rahe hain. Unhein `brand` aur `stop()` method viraasat mein milte hain. Lekin, dono `start()` method ko apne-apne tareeke se implement karte hain.
+
+```java
+// Superclass ya Parent Class
+class Vehicle {
+    String brand;
+
+    public Vehicle(String brand) {
+        this.brand = brand;
+        System.out.println("Vehicle ka constructor call hua.");
+    }
+
+    public void start() {
+        System.out.println("Vehicle ka engine start ho raha hai...");
+    }
+
+    public void stop() {
+        System.out.println("Vehicle ka engine stop ho raha hai.");
+    }
+}
+
+// Subclass ya Child Class
+class Car extends Vehicle {
+
+    public Car(String brand) {
+        // 1. 'super()' se parent class ka constructor call karna.
+        // Yeh constructor ki pehli line honi chahiye.
+        super(brand);
+        System.out.println("Car ka constructor call hua.");
+    }
+
+    // 2. Method Overriding: start() method ko Car ke liye redefine kiya gaya.
+    @Override
+    public void start() {
+        System.out.println(this.brand + " car chabi se start ho rahi hai.");
+    }
+}
+
+// Ek aur Subclass
+class Bike extends Vehicle {
+
+    public Bike(String brand) {
+        super(brand);
+        System.out.println("Bike ka constructor call hua.");
+    }
+
+    @Override
+    public void start() {
+        // 3. 'super' keyword se parent ka method call karna.
+        super.start(); // Yeh "Vehicle ka engine start ho raha hai..." print karega.
+        System.out.println(this.brand + " bike kick se start ho rahi hai.");
+    }
+}
+
+// Ise test kaise karein
+class TestDrive {
+    public static void main(String[] args) {
+        Car myCar = new Car("Maruti");
+        myCar.start(); // Car ka apna overridden start() method call hoga.
+        myCar.stop();  // Vehicle ka inherited stop() method call hoga.
+
+        System.out.println("---");
+
+        Bike myBike = new Bike("Honda");
+        myBike.start(); // Bike ka apna overridden start() method call hoga.
+        myBike.stop();
+    }
+}
+```
+
+----
+
+
+## **Polymorphism (Bahuroopata) 🎭**
+
+**Polymorphism** ka matlab hai "ek naam, anek roop." Programming mein, yeh ek object ya method ki alag-alag tarike se behave karne ki ability hai. Iska sabse powerful use hota hai **Run-time Polymorphism**, jo method overriding se achieve hota hai. Ismein, aap ek parent class ke reference variable mein child class ka object rakh sakte hain, aur jab aap us reference se koi method call karte hain, to Java run-time par decide karta hai ki child class wala method call karna hai.
+
+**Analogy**: Ek TV ka remote sochiye. Remote mein `Power` button ek hi hai. Jab aap use TV ke liye use karte hain, to TV on/off hota hai. Jab aap usi tarah ke remote ko AC ke liye use karte hain, to AC on/off hota hai. Button ek hi hai (`method`), lekin uska kaam device (`object`) ke hisaab se alag-alag hai.
+
+Polymorphism ko interfaces aur abstract classes ke zariye istemal karna sabse common tareeka hai.
+
+-----
+
+### **Java Example: `Shape` Interface**
+
+Yahan, `Circle` aur `Rectangle` dono alag-alag classes hain, lekin kyunki woh `Shape` interface ko implement karti hain, hum unke objects ko `Shape` ke reference mein store kar sakte hain. Isse humara code bahut flexible ho jaata hai.
+
+```java
+// 1. Ek interface ek contract ki tarah hai.
+// Yeh batata hai ki ek Shape ko kya-kya karna aana chahiye.
+interface Shape {
+    void draw(); // Method jiska koi body nahi hai
+    double getArea();
+}
+
+// 2. Circle class is contract ko poora karti hai.
+class Circle implements Shape {
+    private double radius;
+
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+
+    @Override
+    public void draw() {
+        System.out.println("Ek circle banaya ja raha hai.");
+    }
+
+    @Override
+    public double getArea() {
+        // Area of circle: π * r^2
+        return Math.PI * radius * radius;
+    }
+}
+
+// 3. Rectangle class bhi is contract ko poora karti hai.
+class Rectangle implements Shape {
+    private double width;
+    private double height;
+
+    public Rectangle(double width, double height) {
+        this.width = width;
+        this.height = height;
+    }
+
+    @Override
+    public void draw() {
+        System.out.println("Ek rectangle banaya ja raha hai.");
+    }
+
+    @Override
+    public double getArea() {
+        return width * height;
+    }
+}
+
+// Polymorphism ka pradarshan
+class DrawingApp {
+    public static void main(String[] args) {
+        // Yahan polymorphism ho raha hai. Reference 'Shape' type ka hai,
+        // lekin object Circle aur Rectangle type ke hain.
+        Shape myShape1 = new Circle(5.0);
+        Shape myShape2 = new Rectangle(4.0, 6.0);
+
+        // Ek hi tarah se dono alag-alag objects ko treat kar pa rahe hain.
+        myShape1.draw(); // Run-time par Circle ka draw() call hoga.
+        System.out.println("Area: " + myShape1.getArea());
+
+        System.out.println("---");
+
+        myShape2.draw(); // Run-time par Rectangle ka draw() call hoga.
+        System.out.println("Area: " + myShape2.getArea());
+    }
+}
+```
+
+-----
+
+## **Abstraction (Vivaran Chhipana)  abstra**
+
+**Abstraction** ka matlab hai zaroori cheezein dikhana aur unki implementation details (woh kaam kaise kar rahi hain) ko chhipana. Yeh complexity ko kam karta hai aur humein "kya karna hai" par focus karne deta hai, na ki "kaise karna hai" par.
+
+**Analogy**: Jab aap car chalate hain, to aap steering wheel, accelerator, aur brakes ka istemal karte hain. Yeh car ka **interface** hai. Aapko yeh janne ki zaroorat nahi ki engine ke andar kya ho raha hai ya brakes kaise kaam karte hain. Woh sab **implementation details** hain jo aapse chhipayi gayi hain.
+
+Java mein abstraction do tareekon se achieve hota hai:
+
+1.  **Abstract Classes**: Aisi class jiska object nahi banaya ja sakta. Yeh ek blueprint ki tarah hoti hai jise doosri classes `extend` karti hain. Ismein `abstract` methods (bina body ke) aur normal methods (body ke saath) dono ho sakte hain.
+2.  **Interfaces**: Yeh 100% abstract blueprint ya contract hota hai. Koi bhi class jo ise `implements` karti hai, use iske saare methods ko define karna padta hai.
+
+-----
+
+### **Java Example: `Animal` Abstract Class**
+
+Ek "Animal" apne aap mein kuch nahi hota; uske types hote hain jaise `Dog`, `Cat`, etc. Isliye hum `Animal` ko ek abstract class banate hain. Hum kehte hain ki har animal ek `sound()` nikalta hai, lekin har animal ka sound alag hota hai. Isliye `makeSound()` ko `abstract` bana dete hain taaki har child class use apne tareeke se define kare.
+
+```java
+// 1. Abstract class ka object nahi ban sakta.
+abstract class Animal {
+    // 2. Abstract method - iski body nahi hoti. Child class ko ise define karna zaroori hai.
+    public abstract void makeSound();
+
+    // Abstract class mein normal method bhi ho sakta hai.
+    public void sleep() {
+        System.out.println("Yeh janwar so raha hai... Zzz");
+    }
+}
+
+// 3. Dog class Animal ko extend kar rahi hai.
+class Dog extends Animal {
+    // Isko makeSound() method ko define karna hi padega.
+    @Override
+    public void makeSound() {
+        System.out.println("Kutta bhaukta hai: Woof Woof!");
+    }
+}
+
+// 4. Cat class bhi Animal ko extend kar rahi hai.
+class Cat extends Animal {
+    // Isko bhi makeSound() method ko define karna hi padega.
+    @Override
+    public void makeSound() {
+        System.out.println("Billi bolti hai: Meow!");
+    }
+}
+
+class PetShop {
+    public static void main(String[] args) {
+        // Animal myAnimal = new Animal(); // ERROR! Abstract class ka object nahi ban sakta.
+
+        Dog myDog = new Dog();
+        myDog.makeSound(); // Dog ka apna defined method call hoga.
+        myDog.sleep();     // Animal class se viraasat mein mila method call hoga.
+
+        System.out.println("---");
+
+        Cat myCat = new Cat();
+        myCat.makeSound(); // Cat ka apna defined method call hoga.
+        myCat.sleep();
+    }
+}
+```
+
+
+---
+
+
+## **Exception Handling 🚨**
+
+**Exception** ek aisi unwanted event hai jo program ke normal execution ko rok deti hai. Jaise zero se divide karna ya aisi file ko padhna jo exist hi nahi karti. **Exception Handling** ek mechanism hai jisse hum in runtime errors ko gracefully handle karte hain, taaki humara program crash na ho.
+
+Isko hum `try-catch-finally` block se karte hain.
+
+  * **`try`**: Is block mein hum woh code rakhte hain jismein exception aane ka chance hota hai.
+  * **`catch`**: Agar `try` block mein koi exception aati hai, to `catch` block usko pakad leta hai aur usko handle karne ke liye code chalata hai.
+  * **`finally`**: Yeh block hamesha chalta hai, chahe exception aaye ya na aaye. Ismein hum zaroori cleanup code likhte hain, jaise file ya database connection ko band karna.
+
+**Analogy**: Aap ek chef hain jo ek dish banane ki koshish (`try`) kar rahe hain. Agar koi ingredient (`Exception`) khatam ho jaye, to aap ek backup plan (`catch`) use karte hain. Chahe kuch bhi ho, aap aakhir mein kitchen hamesha saaf (`finally`) karte hain.
+
+-----
+
+### **Custom Exceptions**
+
+Kabhi-kabhi Java ki built-in exceptions humari zaroorat ke liye kaafi nahi hoti. Aise mein hum apni khud ki **custom exception** class bana sakte hain `Exception` class ko extend karke. Isse humara code zyada saaf aur padhne mein aasan ho jaata hai.
+
+### **Java Example: `BankAccount` with Custom Exception**
+
+Hum apne `BankAccount` ko behtar banate hain. Agar koi balance se zyada paise nikalne ki koshish kare, to hum ek `InsufficientFundsException` throw karenge.
+
+```java
+// 1. Apni custom exception class banayein.
+class InsufficientFundsException extends Exception {
+    public InsufficientFundsException(String message) {
+        super(message); // Message ko parent class (Exception) ko pass karein.
+    }
+}
+
+// 2. BankAccount class ko update karein.
+class BankAccount {
+    private double balance;
+
+    public BankAccount(double initialBalance) {
+        this.balance = initialBalance;
+    }
+
+    public double getBalance() {
+        return this.balance;
+    }
+
+    // Yeh method ab exception 'throw' kar sakta hai.
+    public void withdraw(double amount) throws InsufficientFundsException {
+        if (amount > this.balance) {
+            // Agar paise kam hain, to exception banakar 'throw' karein.
+            throw new InsufficientFundsException("Paise nikalne mein asamarth. Aapke account mein sirf $" + this.balance + " hain.");
+        }
+        this.balance -= amount;
+        System.out.println("Safaltapoorvak nikale gaye: $" + amount);
+    }
+}
+
+// 3. Exception ko try-catch block se handle karein.
+class BankTransaction {
+    public static void main(String[] args) {
+        BankAccount account = new BankAccount(500.0);
+
+        try {
+            System.out.println("Koshish: $200 nikalne ki...");
+            account.withdraw(200.0); // Yeh safal hoga.
+
+            System.out.println("Koshish: $400 nikalne ki...");
+            account.withdraw(400.0); // Yahan exception aayegi.
+
+            System.out.println("Yeh line kabhi print nahi hogi.");
+
+        } catch (InsufficientFundsException e) {
+            // Exception aane par catch block chalega.
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            // Finally block hamesha chalega.
+            System.out.println("\nTransaction samapt hui.");
+            System.out.println("Aapka antim balance hai: $" + account.getBalance());
+        }
+    }
+}
+```
+
+-----
+
+## **Java Collections Framework 📚**
+
+**Java Collections Framework** classes aur interfaces ka ek set hai jo objects ke group ko store aur manage karne ke liye taiyaar (ready-made) data structures provide karta hai.
+
+Iske teen mukhya hisse hain:
+
+1.  **`List`**: Ek **ordered** collection jismein **duplicate** elements ho sakte hain. Elements ko unke index se access kiya jaata hai.
+      * **`ArrayList`**: Index se element get karne ke liye tez hai.
+      * **`LinkedList`**: Beech mein se elements add ya remove karne ke liye tez hai.
+2.  **`Set`**: Ek **unordered** collection jismein **duplicate** elements **nahi** ho sakte.
+3.  **`Map`**: **Key-Value pairs** ka collection. Har key unique honi chahiye. Ek phone book ki tarah, jahan naam (key) ek number (value) se juda hota hai.
+
+-----
+
+### **Java Example: `Library` with a Collection of `Book` Objects**
+
+Hum ek `Library` class banayenge jo `Book` objects ko store karne ke liye `ArrayList` ka istemal karegi.
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+
+// Ek simple Book class.
+class Book {
+    String title;
+    String author;
+
+    public Book(String title, String author) {
+        this.title = title;
+        this.author = author;
+    }
+
+    @Override
+    public String toString() {
+        return "Kitaab: '" + title + "' by " + author;
+    }
+}
+
+// Library class jo books ko manage karti hai.
+class Library {
+    private List<Book> books;
+
+    public Library() {
+        this.books = new ArrayList<>(); // Hum ArrayList ka istemal kar rahe hain.
+    }
+
+    public void addBook(Book book) {
+        this.books.add(book);
+    }
+    
+    public List<Book> getBooks() {
+        return this.books;
+    }
+
+    public void displayBooks() {
+        System.out.println("--- Library ki Kitaabein ---");
+        // Enhanced for-loop se collection ko traverse karna.
+        for (Book book : this.books) {
+            System.out.println(book);
+        }
+        System.out.println("--------------------------");
+    }
+}
+```
+
+-----
+
+## **Java Streams API 🌊**
+
+**Java Streams API** (Java 8 mein introduce hua) collections of data ko process karne ka ek naya aur powerful tareeka hai. Yeh functional programming style ka istemal karta hai. Ismein aap yeh batate hain ki aapko **"kya karna hai"**, na ki **"kaise karna hai"**.
+
+**Analogy**: Ek factory ki assembly line ki tarah sochiye. Raw material (`data source`) ek taraf se aata hai. Phir woh alag-alag machines (`intermediate operations` jaise `filter`, `map`) se guzarta hai, aur aakhir mein final product (`terminal operation`) bankar nikalta hai.
+
+Iske kuch zaroori methods hain:
+
+  * **`filter(condition)`**: Sirf un elements ko chunta hai jo di gayi condition ko poora karte hain.
+  * **`map(function)`**: Har element ko ek naye form mein badal deta hai.
+  * **`forEach(action)`**: Har element par koi action perform karta hai.
+  * **`collect()`**: Stream ke results ko ek List, Set, ya Map mein ikattha karta hai.
+
+-----
+
+### **Java Example: `Library` with Streams**
+
+Hum upar wali `Library` class ka istemal karke uski books ko Streams se process karenge.
+
+```java
+import java.util.stream.Collectors;
+import java.util.List;
+
+class LibraryApp {
+    public static void main(String[] args) {
+        Library myLibrary = new Library();
+        myLibrary.addBook(new Book("The Alchemist", "Paulo Coelho"));
+        myLibrary.addBook(new Book("Atomic Habits", "James Clear"));
+        myLibrary.addBook(new Book("The Psychology of Money", "Morgan Housel"));
+        myLibrary.addBook(new Book("Deep Work", "Cal Newport"));
+
+        // Use Case 1: Sirf un kitabon ke title print karein jinke naam 'The' se shuru hote hain.
+
+        System.out.println("\n--- Sirf Titles (Stream se) ---");
+        
+        myLibrary.getBooks() // 1. Collection prapt karein
+                 .stream()   // 2. Stream shuru karein
+                 .filter(book -> book.title.startsWith("The")) // 3. Filter: 'The' se shuru hone wali kitabein
+                 .map(book -> book.title) // 4. Map: Har Book object ko uske title (String) mein badlein
+                 .forEach(title -> System.out.println(title)); // 5. ForEach: Har title ko print karein
+    }
+}
+```
+---
+Yeh woh C++ features hain jo ya to Java mein hain hi nahi, ya unka kaam karne ka tareeka Java se bilkul alag hai.
+
+-----
+
+### **1. Memory Management (Memory ka Prabandhan)**
+
+Yeh Java aur C++ ka sabse bada antar hai.
+
+  * **C++ mein**: Aapko memory manually manage karni padti hai. Jab aap `new` keyword se memory allocate karte hain, to aapki zimmedari hai ki kaam khatam hone par use `delete` keyword se free karein. Agar aap bhool gaye, to **memory leak** ho jaata hai. Classes mein **Destructor (`~ClassName()`)** is cleanup ke liye istemal hote hain.
+  * **Java mein**: Memory management automatic hai. **Garbage Collector** (GC) naam ka ek process background mein chalta rehta hai aur un objects ko memory se हटा deta hai jinka ab koi istemal nahi ho raha. Aapko `delete` jaisa kuch karne ki zaroorat nahi.
+
+**Analogy**: C++ mein memory manage karna ek kothi kiraye par lene jaisa hai. Aapko kiraya dena (`new`) aur chhodte waqt makaan maalik ko batana (`delete`) dono aapki zimmedari hai. Java ek hotel jaisa hai, aap bas check-out karte hain, aur room ki safai (`memory cleanup`) housekeeping (`Garbage Collector`) khud kar leti hai.
+
+#### **C++ Code Example**
+
+```cpp
+#include <iostream>
+
+class Box {
+public:
+    Box() {
+        std::cout << "Box ban gaya! (Memory allocated)" << std::endl;
+    }
+    ~Box() {
+        std::cout << "Box nasht ho gaya! (Memory freed)" << std::endl;
+    }
+};
+
+int main() {
+    // Pointer banakar 'new' se memory allocate ki
+    Box* myBox = new Box();
+
+    // Jab kaam khatam ho jaye, memory ko 'delete' karna zaroori hai
+    delete myBox; // Agar yeh line nahi likhi to memory leak ho jayegi
+
+    return 0;
+}
+```
+
+-----
+
+### **2. Operator Overloading**
+
+  * **C++ mein**: Aap `+`, `-`, `*`, `==`, `<<` jaise operators ko apne banaye hue objects (classes) ke liye naya matlab de sakte hain. For example, aap `+` operator ko sikha sakte hain ki do `ComplexNumber` objects ko kaise joda jaaye.
+  * **Java mein**: Java language ko saral rakhne ke liye operator overloading support nahi karta (sirf String concatenation ke liye `+` internally overloaded hai, lekin aap apne liye nahi kar sakte).
+
+**Analogy**: C++ mein aap ek purane auzaar (`+` operator) ko naye kaam (`ComplexNumber` add karna) ke liye istemal karna sikha sakte hain. Java mein, har auzaar ka kaam fix hai, aap use naye kaam ke liye nahi badal sakte.
+
+#### **C++ Code Example**
+
+```cpp
+#include <iostream>
+
+class Complex {
+private:
+    float real, imag;
+public:
+    Complex(float r = 0, float i = 0) : real(r), imag(i) {}
+
+    // '+' operator ko overload kar rahe hain
+    Complex operator+(const Complex& obj) {
+        Complex temp;
+        temp.real = this->real + obj.real;
+        temp.imag = this->imag + obj.imag;
+        return temp;
+    }
+
+    void print() {
+        std::cout << real << " + " << imag << "i" << std::endl;
+    }
+};
+
+int main() {
+    Complex c1(3, 2);
+    Complex c2(1, 7);
+    
+    // Yahan overloaded '+' operator call ho raha hai
+    Complex c3 = c1 + c2;
+    
+    c3.print(); // Output: 4 + 9i
+    return 0;
+}
+```
+
+-----
+
+### **3. Multiple Inheritance**
+
+  * **C++ mein**: Ek class ek se zyada parent classes se inherit kar sakti hai. Jaise ek `Bat` class `Mammal` aur `FlyingCreature` dono se inherit kar sakti hai. Isse "Diamond Problem" jaisi complexity aa sakti hai, jise C++ virtual inheritance se solve karta hai.
+  * **Java mein**: Java mein ek class sirf ek hi class ko `extends` kar sakti hai. Isse language saral rehti hai. Multiple inheritance jaisa kaam karne ke liye Java mein `interfaces` ka istemal hota hai, jahan ek class kai interfaces ko `implements` kar sakti hai.
+
+**Analogy**: C++ mein ek bachhe ke do biological parents (`class Father`, `class Mother`) ho sakte hain, aur woh dono se gun le sakta hai. Java mein, ek bachhe ka ek hi biological parent (`extends class`) ho sakta hai, lekin woh kai alag-alag guruon (`implements interface`) se alag-alag vidya seekh sakta hai.
+
+#### **C++ Code Example**
+
+```cpp
+#include <iostream>
+
+class Father {
+public:
+    void gardening() {
+        std::cout << "I love gardening." << std::endl;
+    }
+};
+
+class Mother {
+public:
+    void cooking() {
+        std::cout << "I love cooking." << std::endl;
+    }
+};
+
+// Child class ne Father aur Mother dono se inherit kiya
+class Child : public Father, public Mother {
+};
+
+int main() {
+    Child ch;
+    ch.gardening(); // Father se mila
+    ch.cooking();   // Mother se mila
+    return 0;
+}
+```
+
+-----
+
+### **4. Virtual Functions**
+
+  * **C++ mein**: Run-time polymorphism achieve karne ke liye C++ `virtual` keyword ka istemal karta hai. Jab aap base class ke pointer se derived class ke object ko point karte hain, to `virtual` function yeh sunishchit karta hai ki derived class ka hi version call ho. Jin functions ko `  = 0; ` laga kar declare karte hain, woh **pure virtual functions** kehlate hain aur woh class ko **abstract** bana dete hain.
+  * **Java mein**: Java mein saare non-static methods by default `virtual` hi hote hain. Aapko alag se koi keyword lagane ki zaroorat nahi. Abstract methods ke liye Java `abstract` keyword ka istemal karta hai.
+
+#### **C++ Code Example**
+
+```cpp
+#include <iostream>
+
+class Base {
+public:
+    // virtual keyword batata hai ki ise override kiya ja sakta hai
+    virtual void show() {
+        std::cout << "Base class show" << std::endl;
+    }
+};
+
+class Derived : public Base {
+public:
+    // Base class ke virtual function ko override karna
+    void show() override {
+        std::cout << "Derived class show" << std::endl;
+    }
+};
+
+int main() {
+    Base* ptr = new Derived();
+    ptr->show(); // Output: Derived class show (virtual ki wajah se)
+    delete ptr;
+    return 0;
+}
+```
+
+-----
+
+### **5. Templates (Generic Programming)**
+
+  * **C++ mein**: **Templates** se aap generic functions ya classes bana sakte hain jo kisi bhi data type ke saath kaam kar sakti hain (jaise `int`, `float`, `string`, ya aapke apne objects). Yeh compile-time par hota hai.
+  * **Java mein**: Java mein iske jaisa kaam **Generics** (`<T>`) se hota hai. Lekin Java ke Generics type erasure ka istemal karte hain aur woh C++ templates jitne flexible ya powerful nahi hote (jaise, aap primitive types jaise `int` use nahi kar sakte, `Integer` use karna padta hai).
+
+**Analogy**: C++ ka Template ek adjustable saancha (mould) jaisa hai. Aap use `int`, `string`, ya kisi bhi type ke liye set kar sakte hain, aur compiler us type ke liye ek special version bana dega. Java ke Generics ek "one-size-fits-all" dibbe jaise hain jiske bahar likha hota hai ki ismein sirf ek hi type ka saaman aayega, lekin andar sabhi saaman ko `Object` ki tarah treat kiya jaata hai.
+
+#### **C++ Code Example**
+
+```cpp
+#include <iostream>
+
+// Ek generic function template
+template <typename T>
+T add(T a, T b) {
+    return a + b;
+}
+
+int main() {
+    // Integer ke liye istemal
+    std::cout << "Sum of 5 and 10 is: " << add(5, 10) << std::endl;
+
+    // Double ke liye istemal
+    std::cout << "Sum of 3.5 and 7.2 is: " << add(3.5, 7.2) << std::endl;
+
+    return 0;
+}
+```
+
+----
+
+### **6. Pointer Arithmetic**
+
+  * **C++ mein**: C++ aapko **pointers** ka poora control deta hai. Pointer ek variable hota hai jo doosre variable ka memory address store karta hai. Aap in pointers par ganit (arithmetic) jaise `ptr++` (agle memory location par jao) ya `ptr - 5` (5 memory location peeche jao) kar sakte hain. Yeh arrays ke saath kaam karne mein bahut powerful hai, lekin khatarnaak bhi, kyunki galat istemal se program crash ho sakta hai.
+  * **Java mein**: Suraksha (safety) ke liye, Java pointers ka direct access nahi deta. Java mein **references** hote hain, jo internally memory address hi rakhte hain, lekin aap unpar C++ jaisi arithmetic nahi kar sakte. Yeh Java ko memory-related bugs se bachata hai.
+
+**Analogy**: C++ ka pointer ek ghar ke poore address (`Plot No. 420, Sector 10`) jaisa hai. Aapko address pata hai to aap uske bagal wale ghar (`Plot No. 421`) ka address khud nikal sakte hain. Java ka reference ek contact list mein save naam (`Anjali`) jaisa hai. Aap Anjali ko call kar sakte hain, lekin aapko uska address nahi pata, aur na hi aap uske naam se uske padosi ka naam nikal sakte hain.
+
+#### **C++ Code Example**
+
+```cpp
+#include <iostream>
+
+int main() {
+    int arr[] = {10, 20, 30, 40, 50};
+    
+    // Pointer 'ptr' array ke pehle element ko point kar raha hai
+    int* ptr = arr;
+
+    std::cout << "Array ke elements pointer se:" << std::endl;
+    for (int i = 0; i < 5; ++i) {
+        // *ptr se value print karo
+        std::cout << *ptr << " ";
+        // ptr++ se pointer ko agle integer location par le jao
+        ptr++; 
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
+```
+
+-----
+
+### **7. RAII (Resource Acquisition Is Initialization)**
+
+Yeh C++ ka ek bahut hi important design pattern hai.
+
+  * **C++ mein**: RAII ka matlab hai ki aap resource (jaise file, network connection, memory) ko object ke banne (construction) ke waqt haasil (acquire) karte hain, aur jab object nasht (destroy) hota hai to uske **destructor** mein resource ko automatically release kar dete hain. Isse yeh pakka ho jaata hai ki resource kabhi leak nahi hoga, chahe koi exception hi kyun na aa jaye.
+  * **Java mein**: Kyunki Java mein destructors nahi hote, isliye woh RAII pattern ka istemal nahi kar sakta. Iske badle, Java mein `try-with-resources` statement ka istemal hota hai un resources ke liye jo `AutoCloseable` interface ko implement karte hain.
+
+**Analogy**: C++ ka RAII ek automated system jaisa hai. Jab aap ek object banate hain (kamre mein enter karte hain), to light (`resource`) apne aap on ho jaati hai. Jab object destroy hota hai (aap kamre se bahar jaate hain), to light apne aap band ho jaati hai. Java ka `try-with-resources` ek special room jaisa hai jahan aapko pehle batana padta hai ki aap light istemal kar rahe hain, aur us room (`try` block) se nikalte hi light band ho jaayegi.
+
+#### **C++ Code Example**
+
+```cpp
+#include <iostream>
+#include <fstream>
+
+class FileManager {
+private:
+    std::ofstream file;
+public:
+    // Constructor mein file acquire (open) ho rahi hai
+    FileManager(const char* filename) {
+        file.open(filename);
+        if (file.is_open()) {
+            std::cout << "File khul gayi." << std::endl;
+        }
+    }
+    // Destructor mein file automatically release (close) ho jayegi
+    ~FileManager() {
+        if (file.is_open()) {
+            file.close();
+            std::cout << "File band ho gayi." << std::endl;
+        }
+    }
+};
+
+void manageFile() {
+    // Jaise hi 'fm' object banega, constructor file khol dega
+    FileManager fm("test.txt"); 
+    // Jaise hi yeh function khatam hoga, 'fm' destroy hoga
+    // aur destructor automatically file band kar dega.
+}
+
+int main() {
+    manageFile();
+    return 0;
+}
+```
+
+-----
+
+### **8. C++ `friend` Keyword**
+
+  * **C++ mein**: `friend` keyword encapsulation ko todne ka ek tareeka hai. Agar ek class kisi doosre function ya class ko apna `friend` banati hai, to woh friend function/class us class ke `private` aur `protected` members ko direct access kar sakta hai.
+  * **Java mein**: Java mein `friend` jaisa koi concept nahi hai. Access sirf `public`, `protected`, `default`, aur `private` modifiers se hi control hota hai.
+
+**Analogy**: Ek class ke `private` members ek personal diary ki tarah hain. Normally koi use nahi padh sakta. Kisi function ko `friend` banana matlab apne best friend ko us diary ki chabi de dena. Woh aapke parivar (`class`) ka hissa nahi hai, lekin aap uspar vishwas karte hain. Java is tarah diary ki chabiyan baantne mein vishwas nahi rakhta.
+
+#### **C++ Code Example**
+
+```cpp
+#include <iostream>
+
+class MyClass {
+private:
+    int secret = 42;
+public:
+    // Is function ko friend declare kiya gaya
+    friend void showSecret(const MyClass& obj);
+};
+
+// Yeh ek normal function hai, class ka member nahi
+void showSecret(const MyClass& obj) {
+    // Lekin 'friend' hone ki wajah se yeh private member access kar sakta hai
+    std::cout << "The secret value is: " << obj.secret << std::endl;
+}
+
+int main() {
+    MyClass obj;
+    showSecret(obj); // Friend function ko call kiya
+    return 0;
+}
+```
+
+-----
+
+### **9. Static Methods & Variables**
+
+  * **C++ aur Java mein**: Dono mein concept lagbhag same hai. **Static** members class se jude hote hain, na ki uske individual objects se. Ek static variable ki sirf ek copy banti hai jo saare objects share karte hain. Static methods ko bina object banaye, seedhe class ke naam se call kiya ja sakta hai.
+  * **Antar**: Inheritance ke mamle mein kuch chote-mote antar hain (jaise Java mein static methods override nahi hote, hide hote hain), lekin basic behavior dono mein ek jaisa hai.
+
+**Analogy**: Ek static variable ek cricket team (`class`) ke scoreboard jaisa hai. Woh poori team ka hota hai, na ki kisi ek player (`object`) ka. Koi bhi player score update kar sakta hai, aur sabhi players ko wahi score dikhega.
+
+#### **C++ Code Example**
+
+```cpp
+#include <iostream>
+
+class Player {
+public:
+    static int playerCount; // Static variable declare kiya
+    
+    Player() {
+        playerCount++; // Jab bhi object banega, count badhega
+    }
+};
+
+int Player::playerCount = 0; // Static variable ko initialize karna zaroori hai
+
+int main() {
+    std::cout << "Initial players: " << Player::playerCount << std::endl;
+    Player p1;
+    Player p2;
+    std::cout << "Players after creation: " << Player::playerCount << std::endl;
+    return 0;
+}
+```
+
+-----
+
+### **10. Destructors**
+
+  * **C++ mein**: **Destructor** (`~ClassName()`) ek special function hai jo tab call hota hai jab object ki lifetime khatam hoti hai (jaise woh scope se bahar chala jaye ya use `delete` kiya jaye). Iska mukhya kaam object dwara li gayi resources (jaise memory, files) ko release karna hota hai.
+  * **Java mein**: Java mein **destructors nahi hote**. Garbage Collector memory saaf karta hai, lekin doosre resources ki safai ke liye `finally` block ya `try-with-resources` ka istemal kiya jaata hai. Java mein `finalize()` method hota tha, lekin woh deprecated hai aur use istemal nahi karna chahiye.
+
+#### **C++ Code Example**
+
+```cpp
+#include <iostream>
+
+class MyResource {
+private:
+    int* data;
+public:
+    MyResource() {
+        data = new int[100]; // Constructor mein memory allocate ki
+        std::cout << "Resource acquired." << std::endl;
+    }
+
+    ~MyResource() {
+        delete[] data; // Destructor mein memory free ki
+        std::cout << "Resource released." << std::endl;
+    }
+};
+
+int main() {
+    {
+        MyResource res; // Object bana
+    } // Yahan scope khatam hua, 'res' ka destructor automatically call ho jayega
+    
+    return 0;
+}
+```
+
+----
+hum Java mein core OOP concepts ko implement karte hain Hinglish mein, jaisa aapne kaha. Har example mein concept ko code aur uski explanation ke saath samjhaya gaya hai.
+
+-----
+
+### **1. `BankAccount` Class (Encapsulation ka Example)**
+
+**Concept**: Encapsulation ka matlab hai data (variables) aur uss data par kaam karne wale methods ko ek saath ek unit (class) mein baandh dena. Hum data ko `private` banakar hide karte hain aur use access karne ke liye `public` methods (getters/setters) banate hain. Isse data safe rehta hai aur uspar control bana rehta hai.
+
+**Analogy**: Ek medical capsule ki tarah. Dawa (`private` data) capsule ke andar safe rehti hai, aur aap use sirf public tareeke se (poora capsule kha kar) hi le sakte hain.
+
+#### **Java Code**
+
+```java
+// BankAccount.java
+
+public class BankAccount {
+    // 1. Encapsulation: balance ko private rakha gaya hai taaki koi ise direct access na kar sake.
+    private double balance;
+    private String accountHolderName;
+
+    // Constructor: Jab object banega tab initial values set karne ke liye.
+    public BankAccount(String accountHolderName, double initialBalance) {
+        this.accountHolderName = accountHolderName;
+        // Balance negative na ho, isliye check laga rahe hain.
+        if (initialBalance > 0) {
+            this.balance = initialBalance;
+        } else {
+            this.balance = 0;
+        }
+    }
+
+    // 2. Public method: Paise deposit karne ke liye.
+    // Yahan hum validation kar sakte hain.
+    public void deposit(double amount) {
+        if (amount > 0) {
+            this.balance = this.balance + amount;
+            System.out.println("Rs. " + amount + " safaltapoorvak deposit hue. Naya balance: " + this.balance);
+        } else {
+            System.out.println("Anya maan. Deposit amount positive hona chahiye.");
+        }
+    }
+
+    // 3. Public method: Paise nikalne ke liye.
+    // Yahan bhi validation hai.
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= this.balance) {
+            this.balance = this.balance - amount;
+            System.out.println("Rs. " + amount + " safaltapoorvak nikale gaye. Bacha hua balance: " + this.balance);
+        } else {
+            System.out.println("Transaction fail hui. Ya to amount galat hai ya balance kaafi nahi hai.");
+        }
+    }
+
+    // 4. Getter method: Private balance ko read karne ka safe tareeka.
+    public double getBalance() {
+        return this.balance;
+    }
+
+    public String getAccountHolderName() {
+        return this.accountHolderName;
+    }
+}
+
+// Main.java (Ise run karne ke liye)
+class Main {
+    public static void main(String[] args) {
+        BankAccount myAccount = new BankAccount("Anjali Sharma", 5000.0);
+        
+        // myAccount.balance = -1000; // ERROR! Aisa nahi kar sakte kyunki balance private hai.
+
+        System.out.println(myAccount.getAccountHolderName() + " ka initial balance: " + myAccount.getBalance());
+
+        myAccount.deposit(2000.0);
+        myAccount.withdraw(1500.0);
+        myAccount.withdraw(6000.0); // Yeh fail ho jayega
+        
+        System.out.println(myAccount.getAccountHolderName() + " ka final balance: " + myAccount.getBalance());
+    }
+}
+```
+
+#### **Code ki Explanation**
+
+  * Humne `balance` ko `private` banakar **Data Hiding** achieve ki hai. Iska matlab hai ki koi bhi class ke bahar se `myAccount.balance = ...` likhkar balance ko galat value (jaise negative) nahi de sakta.
+  * Paise daalne (`deposit`) ya nikalne (`withdraw`) ke liye `public` methods hain. In methods ke andar humne logic likha hai jo check karta hai ki amount sahi hai ya nahi. Yahi **Encapsulation** ka fayda hai.
+
+-----
+
+### **2. `Employee` Class (Inheritance aur Polymorphism ka Example)**
+
+**Concept**: **Inheritance** se hum ek parent class ki properties child class mein laate hain (code reusability). **Polymorphism** ka matlab hai "ek naam, anek roop". Yahan, alag-alag type ke employee hain (`Manager`, `Developer`), lekin sabhi ki salary calculate ho sakti hai, bas sabka tareeka alag hai. Hum ek hi method `calculateMonthlySalary()` ko alag-alag classes mein override karke yeh achieve karte hain.
+
+#### **Java Code**
+
+```java
+// Employee.java (Parent Class)
+class Employee {
+    String name;
+    double baseSalary;
+
+    public Employee(String name, double baseSalary) {
+        this.name = name;
+        this.baseSalary = baseSalary;
+    }
+
+    // Yeh ek general method hai. Child classes ise override karengi.
+    public double calculateMonthlySalary() {
+        return baseSalary;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+
+// Manager.java (Child Class)
+class Manager extends Employee {
+    private double bonus;
+
+    public Manager(String name, double baseSalary, double bonus) {
+        // 'super' keyword se parent class ka constructor call kiya.
+        super(name, baseSalary);
+        this.bonus = bonus;
+    }
+
+    // 1. Polymorphism: Method Overriding. Manager ki salary alag tareeke se calculate hogi.
+    @Override
+    public double calculateMonthlySalary() {
+        // Parent ka method call karke base salary li aur usmein bonus joda.
+        return super.calculateMonthlySalary() + bonus;
+    }
+}
+
+// Developer.java (Ek aur Child Class)
+class Developer extends Employee {
+    private int overtimeHours;
+    private double hourlyRate;
+
+    public Developer(String name, double baseSalary, int overtimeHours, double hourlyRate) {
+        super(name, baseSalary);
+        this.overtimeHours = overtimeHours;
+        this.hourlyRate = hourlyRate;
+    }
+
+    // 2. Polymorphism: Method Overriding. Developer ki salary alag tareeke se calculate hogi.
+    @Override
+    public double calculateMonthlySalary() {
+        return super.calculateMonthlySalary() + (overtimeHours * hourlyRate);
+    }
+}
+
+// Company.java (Ise run karne ke liye)
+class Company {
+    public static void main(String[] args) {
+        // 3. Polymorphism in action: Humne Employee type ke array mein Manager aur Developer dono ke objects rakhe hain.
+        Employee[] employees = new Employee[2];
+        employees[0] = new Manager("Rohan Singh", 80000, 15000);
+        employees[1] = new Developer("Priya Verma", 60000, 20, 500);
+
+        for (Employee emp : employees) {
+            // Yahan Java run-time par decide karega ki kaunsa calculateMonthlySalary() call karna hai.
+            // Manager ke liye Manager wala, aur Developer ke liye Developer wala.
+            System.out.println("Employee: " + emp.getName() + ", Salary: Rs. " + emp.calculateMonthlySalary());
+        }
+    }
+}
+```
+
+#### **Code ki Explanation**
+
+  * `Manager` aur `Developer` dono `Employee` ko `extends` kar rahe hain, isliye unhein `name` aur `baseSalary` viraasat (`Inheritance`) mein mil gaye.
+  * Dono child classes ne `calculateMonthlySalary()` method ko `@Override` karke apni-apni logic likhi hai.
+  * `Company` class ke `main` method mein, humne `Employee` ke array mein `Manager` aur `Developer` dono ko store kiya. Jab hum loop mein `emp.calculateMonthlySalary()` call karte hain, to Java dekhta hai ki `emp` اصل mein `Manager` hai ya `Developer`, aur usi ke hisaab se sahi method call karta hai. Yahi **Run-time Polymorphism** hai.
+
+-----
+
+### **3. `Shape` Drawing System (Abstraction ka Example)**
+
+**Concept**: **Abstraction** ka matlab hai zaroori cheezein dikhana aur unki implementation details ko chhipana. Hum ek `abstract class` banate hain jiska object nahi ban sakta. Yeh ek adhura blueprint hota hai. Hum usmein `abstract methods` (bina body ke) define karte hain, jinko uski child classes ko zaroor implement karna padta hai.
+
+**Analogy**: Ek "Vehicle" ek abstract concept hai. Aap "Vehicle" nahi chala sakte, aap ek specific vehicle jaise "Car" ya "Bike" chalaate hain. Hum `Vehicle` class ko `abstract` bana sakte hain aur usmein `start()` naam ka ek `abstract` method daal sakte hain, kyunki har vehicle start hota hai, lekin sabka tareeka alag hai.
+
+#### **Java Code**
+
+```java
+// Shape.java (Abstract Class)
+abstract class Shape {
+    String color;
+
+    public Shape(String color) {
+        this.color = color;
+    }
+
+    // 1. Abstract method: Iski koi body nahi hai.
+    // Har child class ko ise zaroor define karna hoga.
+    public abstract void draw();
+
+    // Abstract class mein normal (concrete) method bhi ho sakta hai.
+    public String getColor() {
+        return color;
+    }
+}
+
+// Circle.java (Concrete Child Class)
+class Circle extends Shape {
+    double radius;
+
+    public Circle(String color, double radius) {
+        super(color);
+        this.radius = radius;
+    }
+
+    // 2. Abstract method ko implement karna zaroori hai.
+    @Override
+    public void draw() {
+        System.out.println(super.getColor() + " rang ka ek circle banaya ja raha hai jiska radius " + radius + " hai.");
+    }
+}
+
+// Rectangle.java (Ek aur Concrete Child Class)
+class Rectangle extends Shape {
+    double length;
+    double width;
+
+    public Rectangle(String color, double length, double width) {
+        super(color);
+        this.length = length;
+        this.width = width;
+    }
+
+    // 3. Yahan bhi abstract method ko implement kiya gaya.
+    @Override
+    public void draw() {
+        System.out.println(super.getColor() + " rang ka ek rectangle banaya ja raha hai (Length: " + length + ", Width: " + width + ").");
+    }
+}
+
+// DrawingBoard.java (Ise run karne ke liye)
+class DrawingBoard {
+    public static void main(String[] args) {
+        // Shape myShape = new Shape("Blue"); // ERROR! Abstract class ka object nahi bana sakte.
+
+        Shape circle = new Circle("Laal", 10.5);
+        Shape rectangle = new Rectangle("Neela", 20, 10);
+
+        circle.draw();      // Circle ka draw() method call hoga.
+        rectangle.draw();   // Rectangle ka draw() method call hoga.
+    }
+}
+```
+
+#### **Code ki Explanation**
+
+  * `Shape` ek `abstract class` hai. Iska matlab hai ki hum iska object nahi bana sakte. Yeh sirf ek template hai.
+  * `draw()` ek `abstract method` hai. Isse humne yeh rule bana diya ki jo bhi class `Shape` ko extend karegi, use `draw()` method banana hi padega.
+  * `Circle` aur `Rectangle` concrete classes hain jinhone `Shape` ke `draw()` method ko implement kiya hai. Isse **Abstraction** achieve hoti hai - humein pata hai ki har shape `draw()` ho sakti hai, lekin kaise hogi, yeh us shape ki class batayegi.
+----
 # **Questions To look Forward**
 
 * Make **class hierarchy**
