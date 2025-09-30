@@ -352,3 +352,96 @@ MyCo.propTypes = {
 
 
 
+
+
+
+
+
+### **Core OOP Concepts**
+
+* What is Object-Oriented Programming (OOP) and why is it popular?
+* What are the advantages and disadvantages of OOP?
+* What are the main features (or principles) of OOP?
+* What is the difference between Object-Oriented Programming and Structured Programming?
+* What is the difference between a **Class** and an **Object**?
+* What are some commonly used OOP languages?
+
+---
+
+### **The Four Pillars of OOP**
+
+#### **1. Encapsulation**
+* What is **Encapsulation** and why is it important?
+* What are **access modifiers** (e.g., public, private, protected) and what is their role?
+* What is the difference between a **public** and a **private** constructor?
+
+#### **2. Abstraction**
+* What is **Abstraction**?
+* What is the difference between **encapsulation** and **data abstraction**?
+* How can you achieve data abstraction?
+
+#### **3. Inheritance**
+* What is **Inheritance** and what is its purpose?
+* What are the different types of inheritance?
+* What are the limitations of inheritance?
+* What is a **subclass** and a **superclass**?
+* What is the **Diamond Problem** in the context of multiple inheritance?
+
+#### **4. Polymorphism**
+* What is **Polymorphism**?
+* What is the difference between **static (compile-time)** and **dynamic (run-time)** polymorphism?
+* What is the difference between method **overloading** and method **overriding**?
+
+---
+
+### **Class & Object In-Depth**
+
+* What is the difference between a **static** and a **non-static** method?
+* What is a **static member** (variable or method) in a class?
+* What is the role of the **"this" keyword**?
+* What is the difference between a **shallow copy** and a **deep copy**?
+* How much memory does a class occupy?
+* Is it always necessary to create objects from a class?
+
+---
+
+### **Abstract Classes & Interfaces**
+
+* What is an **Abstract Class**?
+* What is an **Interface** and what is its purpose?
+* What are the key differences between an abstract class and an interface?
+
+---
+
+### **Object Lifecycle**
+
+* What is a **constructor**?
+* What is a **copy constructor**? (Primarily C++)
+* What is a **destructor**? (Primarily C++)
+* What is **Garbage Collection**?
+
+---
+
+### **Advanced Concepts & Design Principles**
+
+* What is the difference between **early (static)** and **late (dynamic) binding**?
+* What is **Coupling** and **Cohesion** in OOP?
+* What is the difference between **Aggregation** and **Composition**?
+* What is the principle of **"Composition over Inheritance"**?
+* What are the **SOLID** principles of design?
+
+---
+
+### **Language-Specific Concepts**
+
+* What is the difference between a **Class** and a **Struct**? (Primarily C++)
+* What is **operator overloading**? (Primarily C++)
+* What is a **virtual function** and a **pure virtual function**? (Primarily C++)
+* What is the purpose of the **`final` keyword** in Java?
+* What is the purpose of the **`super` keyword** in Java?
+
+---
+
+### **Exception Handling**
+* What is the difference between an **exception** and an **error**?
+* What is the purpose of the **`finally` block**?

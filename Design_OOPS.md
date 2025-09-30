@@ -1458,6 +1458,492 @@ class DrawingBoard {
   * `draw()` ek `abstract method` hai. Isse humne yeh rule bana diya ki jo bhi class `Shape` ko extend karegi, use `draw()` method banana hi padega.
   * `Circle` aur `Rectangle` concrete classes hain jinhone `Shape` ke `draw()` method ko implement kiya hai. Isse **Abstraction** achieve hoti hai - humein pata hai ki har shape `draw()` ho sakti hai, lekin kaise hogi, yeh us shape ki class batayegi.
 ----
+
+
+
+### **Q: What is Object-Oriented Programming (OOP) and why is it popular?**
+**A:** **Object-Oriented Programming (OOP)** ek programming style hai jo "objects" ke concept par aadharit hai. Ismein hum real-duniya ki cheezon (jaise car, insaan, ya bank account) ko code mein objects ke roop mein represent karte hain. Har object ke paas apna data (properties) aur behavior (methods) hota hai.
+
+Yeh **isliye popular hai** kyunki:
+1.  **Real-World Connection**: Yeh asal duniya ki problems ko code mein model karna aasan bana deta hai.
+2.  **Code Reusability**: Inheritance jaise features se hum ek baar likhe gaye code ko baar-baar istemal kar sakte hain.
+3.  **Manageability**: Bade aur complex software ko chote-chote objects mein todkar manage karna aasan ho jaata hai.
+4.  **Security**: Encapsulation se data ko hide karke use safe rakha jaata hai.
+
+---
+
+### **Q: What are the advantages and disadvantages of OOP?**
+**A:**
+#### **Advantages (Fayde)** 👍
+* **Code Reusability (Code ka dobara istemal)**: Inheritance ki wajah se code ko dobara likhne ki zaroorat kam padti hai.
+* **Modularity (Hisson mein vibhajit)**: Har object ek alag unit hota hai, isliye code saaf-suthra aur organized rehta hai.
+* **Easy Maintenance**: Code organized hone ki wajah se use aage aakar badalna ya theek karna aasan hota hai.
+* **Security (Suraksha)**: Data hiding se program ka data anchahe badlav se surakshit rehta hai.
+* **Flexibility (Lacheelapan)**: Polymorphism ki wajah se code bahut flexible ho jaata hai.
+
+#### **Disadvantages (Nuksan)** 👎
+* **Bade Programs**: OOPs ke program procedural programs se aakaar mein bade ho sakte hain.
+* **Thoda Dheema**: Kuch mamlon mein, OOPs programs thode dheeme chal sakte hain dynamic binding jaise features ki wajah se.
+* **Adhik Planning**: Ise istemal karne ke liye shuruaat mein zyada planning aur design ki zaroorat padti hai.
+* **Chote Projects ke liye Overkill**: Bahut hi simple aur chote projects ke liye yeh zaroorat se zyada complex ho sakta hai.
+
+---
+
+### **Q: What are the main features (or principles) of OOP?**
+**A:** OOPs ke chaar mukhya stambh (pillars) ya features hain:
+1.  **Encapsulation**: Data aur methods ko ek saath ek class mein baandh dena.
+2.  **Abstraction**: Zaroori cheezein dikhana aur unki complexity (implementation details) ko chhipana.
+3.  **Inheritance**: Ek class (child) ka doosri class (parent) se gunon (properties) ko viraasat mein lena.
+4.  **Polymorphism**: Ek cheez ke anek roop, jaise ek method ka alag-alag classes mein alag-alag kaam karna.
+
+---
+
+### **Q: What is the difference between Object-Oriented Programming and Structured Programming?**
+**A:**
+
+| Feature                 | Structured Programming (Jaise C)                                             | Object-Oriented Programming (Jaise Java)                                              |
+| :---------------------- | :--------------------------------------------------------------------------- | :------------------------------------------------------------------------------------ |
+| **Approach**            | **Top-Down Approach**. Program ko chote-chote functions mein toda jaata hai. | **Bottom-Up Approach**. Chote-chote objects ko jodkar poora program banaya jaata hai. |
+| **Focus**               | Functions aur logic par zyada focus hota hai.                                | Data aur objects par zyada focus hota hai.                                            |
+| **Data Security**       | Data aam taur par `global` hota hai, isliye kam secure hota hai.             | Data `private` banakar hide kiya ja sakta hai, isliye zyada secure hota hai.          |
+| **Reusability**         | Code ko dobara istemal karna mushkil hota hai.                               | Inheritance ki wajah se code ko dobara istemal karna aasan hai.                       |
+| **Real-World Modeling** | Asal duniya ki problems ko model karna mushkil hai.                          | Asal duniya ki problems ko objects ke roop mein model karna aasan hai.                |
+
+---
+
+### **Q: What is the difference between a Class and an Object?**
+**A:**
+* **Class**: Ek **class** ek **blueprint** ya template hota hai. Yeh batata hai ki ek particular type ke object mein kya-kya properties (variables) aur behaviors (methods) honge. Yeh memory mein jagah nahi leta.
+    * **Analogy**: Ghar ka naksha (blueprint).
+
+* **Object**: Ek **object** uss class ka ek **instance** yaani asli roop hota hai. Jab aap class se object banate hain, tab woh memory mein jagah leta hai aur uski apni values hoti hain.
+    * **Analogy**: Naksh-e ko dekhkar banaya gaya asli ghar. Aap ek hi naksh-e se kai ghar (objects) bana sakte hain.
+
+---
+
+### **Q: What are some commonly used OOP languages?**
+**A:** Kuch mashhoor OOP languages yeh hain:
+* Java
+* C++
+* Python
+* C# (C-sharp)
+* Ruby
+* PHP
+* Swift
+
+---
+
+
+
+## **1. Encapsulation (डेटा छिपाना)** 💊
+
+### **Q: What is Encapsulation and why is it important?**
+**A:** **Encapsulation** ka matlab hai data (variables) aur uss data par kaam karne wale methods (functions) ko ek saath ek single unit, yaani **class**, mein baandh dena.
+
+Yeh **isliye important hai** kyunki yeh **data hiding** achieve karta hai. Hum class ke data ko `private` bana dete hain taaki koi use bahar se direct badal na sake. Uss data ko access ya modify karne ke liye `public` methods banaye jaate hain. Isse data par control rehta hai aur woh anchahe badlav se surakshit rehta hai.
+
+**Analogy**: Ek medical capsule. Dawa (`private` data) capsule ke andar safe rehti hai. Aap use sirf capsule ke zariye (`public` methods) hi le sakte hain.
+
+***
+
+### **Q: What are access modifiers and what is their role?**
+**A:** **Access Modifiers** (ya access specifiers) keywords hote hain jo yeh tay karte hain ki ek class, variable, ya method ko code mein kahan-kahan se access kiya ja sakta hai. Inka mukhya kaam encapsulation aur security laagu karna hai.
+
+Java mein yeh chaar tarah ke hote hain:
+
+1.  **`private` (सबसे ज़्यादा सख़्त)**
+    * **Kaun access kar sakta hai?** Sirf usi class ke andar, jismein use banaya gaya hai.
+    * **Kab istemal karein?** Jab aap data ko poori tarah se hide karna chahte hain, jaise ek bank account ka `balance`. Bahar ki duniya use sirf methods ke zariye hi chhu sakti hai.
+
+2.  **`default` (कोई कीवर्ड नहीं)**
+    * **Kaun access kar sakta hai?** Usi class mein aur usi **package** ke andar ki doosri classes.
+    * **Kab istemal karein?** Jab aap chahte hain ki kuch cheezein sirf ek hi package ke andar aapas mein share hon, lekin package ke bahar se unhe koi access na kar paaye. Agar aap koi modifier nahi likhte, to woh `default` hota hai.
+
+3.  **`protected`**
+    * **Kaun access kar sakta hai?** Usi package ki saari classes aur doosre package ki sirf **subclasses** (child classes).
+    * **Kab istemal karein?** Jab aap chahte hain ki koi feature uske child classes mein inherit to ho, lekin aam public ke liye available na ho. Yeh inheritance ke liye bahut upyogi hai.
+
+4.  **`public` (सबसे कम सख़्त)**
+    * **Kaun access kar sakta hai?** Kahin se bhi. Poore program mein koi bhi class ise access kar sakti hai.
+    * **Kab istemal karein?** Jab aap ek aisi functionality banana chahte hain jo har koi istemal kar sake, jaise `deposit()` ya `withdraw()` methods.
+
+**Analogy**: Ek ghar sochiye.
+* `public` -> Ghar ka Drawing Room. Koi bhi mehmaan aa sakta hai.
+* `protected` -> Family Room. Sirf parivar ke log (`same package`) aur kuch khaas rishtedaar (`subclasses`) aa sakte hain.
+* `default` -> Ghar ke andar ke kamre. Sirf parivar ke log (`same package`) hi jaa sakte hain.
+* `private` -> Aapki personal tijori (safe). Sirf aap (`same class`) hi use khol sakte hain.
+
+***
+
+### **Q: What is the difference between a public and a private constructor?**
+**A:**
+* **Public Constructor**: Ek `public` constructor ko koi bhi class, kahin se bhi call kar sakti hai. Iska matlab hai ki koi bhi uss class ka object (`new ClassName()`) bana sakta hai. Yeh sabse aam tarika hai.
+
+* **Private Constructor**: Ek `private` constructor ko sirf usi class ke andar se call kiya ja sakta hai. Iska matlab hai ki class ke bahar se koi bhi uss class ka object nahi bana sakta. Iska sabse bada istemal **Singleton Design Pattern** banane mein hota hai, jahan aap yeh sunishchit karna chahte hain ki ek class ka poore program mein sirf ek hi object bane.
+
+***
+
+## **2. Abstraction (ज़रूरी चीज़ें दिखाना)** 🎭
+
+### **Q: What is Abstraction?**
+**A:** **Abstraction** ka matlab hai user ko sirf zaroori jaankari dikhana aur parde ke peeche ki complex details ko chhipana. Yeh "kya karna hai" par focus karta hai, na ki "kaise karna hai" par.
+
+**Analogy**: Jab aap car chalate hain, to aap steering wheel, accelerator aur brakes ka istemal karte hain. Aapko yeh janne ki zaroorat nahi ki engine ke andar kya ho raha hai. Yahan, steering wheel aur pedals ek abstraction hain.
+
+***
+
+### **Q: What is the difference between encapsulation and data abstraction?**
+**A:** Yeh ek aam confusion hai.
+* **Abstraction** ek **design principle** hai. Iska focus बाहरी look and feel par hota hai, yaani complexity ko chhipana.
+* **Encapsulation** ek **implementation mechanism** hai. Iska focus data ko methods ke saath baandhne aur data ko hide karne par hota hai.
+
+Aasan shabdon mein, **Encapsulation data ko chhipata hai, jabki Abstraction kaam karne ki complexity ko chhipata hai.** Encapsulation, abstraction ko haasil karne ka ek tareeka ho sakta hai.
+
+***
+
+### **Q: How can you achieve data abstraction?**
+**A:** Java mein abstraction do mukhya tareekon se haasil kiya jaata hai:
+1.  **Abstract Classes**: Aisi classes banakar jinka object nahi banaya ja sakta aur jinmein `abstract` methods hote hain (bina body ke).
+2.  **Interfaces**: Ek 100% abstract blueprint banakar, jise classes implement karti hain.
+
+***
+
+## **3. Inheritance (विरासत)** 👨‍👩‍👧‍👦
+
+### **Q: What is Inheritance and what is its purpose?**
+**A:** **Inheritance** ek process hai jismein ek nayi class (jise **child** ya **subclass** kehte hain) ek purani class (jise **parent** ya **superclass** kehte hain) ke gunon (properties) aur kaam (methods) ko viraasat mein leti hai.
+
+Iska mukhya **purpose** hai **code reusability (code ka dobara istemal)**. Isse aapko baar-baar same code likhne ki zaroorat nahi padti aur classes ke beech ek **"IS-A" relationship** (jaise, "A Car IS-A Vehicle") banta hai.
+
+***
+
+### **Q: What are the different types of inheritance?**
+**A:** Inheritance ke mukhya prakar hain:
+1.  **Single Inheritance**: Ek child class sirf ek parent class se inherit karti hai. (A -> B)
+2.  **Multilevel Inheritance**: Ek class doosri class se inherit karti hai, aur woh class teesri class se inherit karti hai. (A -> B -> C)
+3.  **Hierarchical Inheritance**: Ek parent class se kai child classes inherit karti hain. (A -> B, A -> C)
+4.  **Multiple Inheritance**: Ek child class ek se zyada parent classes se inherit karti hai. (Java mein yeh classes ke saath possible nahi hai, sirf interfaces ke saath hai).
+5.  **Hybrid Inheritance**: Upar diye gaye do ya do se zyada inheritance types ka combination.
+
+
+
+***
+
+### **Q: What are the limitations of inheritance?**
+**A:**
+* **Tightly Coupled**: Parent aur child classes aapas mein mazbooti se jud jaati hain. Parent class mein kiya gaya koi bhi badlav child class ko prabhavit kar sakta hai.
+* **Slow Performance**: Inheritance mein ek method call ko resolve karne ke liye poori hierarchy mein travel karna pad sakta hai, jisse performance thodi kam ho sakti hai.
+* **Complexity**: Agar inheritance ka design theek se na kiya jaye, to code bahut complex aur samajhne mein mushkil ho sakta hai.
+
+***
+
+### **Q: What is a subclass and a superclass?**
+**A:**
+* **Superclass (Parent Class)**: Woh class jiski properties aur methods ko doosri class inherit karti hai. Ise **base class** bhi kehte hain.
+* **Subclass (Child Class)**: Woh class jo doosri class se properties aur methods inherit karti hai. Ise **derived class** bhi kehte hain.
+
+***
+
+### **Q: What is the Diamond Problem in the context of multiple inheritance?**
+**A:** **Diamond Problem** ek aisi samasya hai jo multiple inheritance waali languages (jaise C++) mein aati hai.
+
+Yeh tab hoti hai jab ek class `D` do classes `B` aur `C` se inherit karti hai, aur `B` aur `C` dono ek hi superclass `A` se inherit karti hain. Ab agar `A` mein koi method hai jise `B` aur `C` ne override kiya hai, aur `D` uss method ko call karta hai, to compiler confuse ho jaata hai ki woh `B` ke zariye wala method call kare ya `C` ke zariye wala. Isi confusion ko Diamond Problem kehte hain.
+
+Java is samasya se bachne ke liye classes ke saath multiple inheritance support nahi karta.
+
+***
+
+## **4. Polymorphism (बहुरूपता)** 🎭
+
+### **Q: What is Polymorphism?**
+**A:** **Polymorphism** do shabdon se bana hai: "Poly" (matlab anek) aur "Morph" (matlab roop). Iska matlab hai **"ek naam, anek roop"**. OOPs mein, yeh ek object, variable, ya method ki alag-alag tarike se behave karne ki ability hai.
+
+**Analogy**: Ek insaan. Woh office mein ek 'Employee' hai, ghar par ek 'Parent' hai, aur doston ke saath ek 'Friend' hai. Vyakti ek hi hai, lekin uske roop (behavior) alag-alag hain.
+
+***
+
+### **Q: What is the difference between static and dynamic polymorphism?**
+**A:**
+* **Static Polymorphism (Compile-time)**: Ismein, compiler ko program run hone se **pehle** hi pata hota hai ki kaunsa method call karna hai. Yeh **Method Overloading** ke zariye achieve kiya jaata hai. Isko **early binding** bhi kehte hain.
+
+* **Dynamic Polymorphism (Run-time)**: Ismein, kaunsa method call hoga, yeh program ke **run hone ke waqt** decide hota hai, object ke actual type ke aadhar par. Yeh **Method Overriding** ke zariye achieve kiya jaata hai. Isko **late binding** bhi kehte hain.
+
+***
+
+### **Q: What is the difference between method overloading and method overriding?**
+**A:**
+
+| Feature                | Method Overloading                                          | Method Overriding                                         |
+| :--------------------- | :---------------------------------------------------------- | :-------------------------------------------------------- |
+| **Kahan hota hai?**    | Ek hi class ke andar.                                       | Parent aur Child classes ke beech.                        |
+| **Kya same hota hai?** | Sirf method ka **naam**.                                    | Method ka **naam, parameters, aur return type** (mostly). |
+| **Kya alag hota hai?** | Method ke **parameters** (ya to unki sankhya ya unka type). | Method ki **implementation** (body).                      |
+| **Polymorphism Type**  | Compile-time (Static) Polymorphism.                         | Run-time (Dynamic) Polymorphism.                          |
+| **Relationship**       | Koi relationship zaroori nahi.                              | **Inheritance (IS-A)** relationship zaroori hai.          |
+
+---
+
+
+## **Class & Object In-Depth** 🔬
+
+### **Q: What is the difference between a static and a non-static method?**
+**A:**
+* **Non-static Method (Instance Method)**: Yeh method class ke **object (instance)** se juda hota hai. Ise call karne ke liye aapko pehle uss class ka object banana padta hai. Yeh class ke static aur non-static, dono tarah ke members ko access kar sakta hai.
+    * **Example**: `myCar.getSpeed()` - Yahan `getSpeed()` ek particular car object ki speed batayega.
+
+* **Static Method (Class Method)**: Yeh method poori **class** se juda hota hai, kisi ek object se nahi. Ise bina object banaye, seedhe class ke naam se call kiya ja sakta hai. Yeh sirf class ke **static members** ko hi access kar sakta hai.
+    * **Example**: `Math.sqrt(25)` - Yahan `sqrt()` ko call karne ke liye `Math` class ka object banane ki zaroorat nahi hai.
+
+**Analogy**: Ek `Car` class sochiye.
+* `getColor()` ek **non-static** method hoga, kyunki har car (object) ka rang alag ho sakta hai.
+* `getNumberOfWheels()` ek **static** method ho sakta hai, kyunki sabhi caron ke liye yeh value (4) same hai aur class ka ek universal feature hai.
+
+***
+
+### **Q: What is a static member (variable or method) in a class?**
+**A:** Ek **static member** (chahe woh variable ho ya method) woh member hota hai jo class se belong karta hai, na ki uske individual objects se.
+
+Iska matlab hai ki uski sirf **ek hi copy** banti hai jo uss class ke **sabhi objects aapas mein share karte hain**. Agar ek object static variable ki value badalta hai, to woh badlav baaki sabhi objects ke liye bhi dikhega.
+
+**Analogy**: Ek college (`class`) mein, har student (`object`) ka apna Roll Number (`non-static variable`) hota hai. Lekin, college ka naam (`static variable`) sabhi students ke liye ek hi hota hai aur sabke ID card par wahi print hota hai.
+
+***
+
+### **Q: What is the role of the "this" keyword?**
+**A:** `this` ek reference variable hai jo hamesha **current object** ko refer karta hai (yaani, woh object jiske andar se `this` ko call kiya gaya hai).
+
+Iske mukhya role hain:
+1.  **Instance variables aur parameters mein antar karna**: Jab constructor ya method ke parameter ka naam instance variable jaisa hi ho, to `this` ka istemal karke compiler ko bataya jaata hai ki hum instance variable ki baat kar rahe hain.
+    * `this.name = name;`
+2.  **Constructor chaining**: Ek constructor se usi class ka doosra constructor call karne ke liye (`this(...)`).
+3.  **Current object ko pass karna**: Kisi method mein current object ko as an argument bhejne ke liye.
+
+***
+
+### **Q: What is the difference between a shallow copy and a deep copy?**
+**A:** Jab hum ek object ki copy banate hain, to do tarah ki copy ho sakti hai:
+
+* **Shallow Copy**: Ismein, sirf object ke top-level fields copy hote hain. Agar object ke andar koi doosra object (referenced object) hai, to uss object ki copy nahi banti, sirf uska **reference (memory address)** copy hota hai. Iska natija yeh hota hai ki original aur copied object, dono andar ke same object ko point karte hain. Agar aap ek mein badlav karenge, to woh doosre mein bhi dikhega.
+
+* **Deep Copy**: Ismein, object ke top-level fields ke saath-saath uske andar ke **sabhi referenced objects bhi recursively copy hote hain**. Har referenced object ki ek nayi copy banti hai. Iska natija yeh hota hai ki original aur copied object ek doosre se poori tarah se azaad (independent) hote hain.
+
+**Analogy**: Aapke paas ek file folder hai.
+* **Shallow Copy**: Aapne folder ki ek copy banayi, lekin andar jo documents hain, unki copy banane ke bajaye unke shortcuts bana diye jo original documents ko hi point kar rahe hain.
+* **Deep Copy**: Aapne folder ki copy banayi aur uske andar ke har document ki bhi alag-alag copy banakar naye folder mein rakhi.
+
+***
+
+### **Q: How much memory does a class occupy?**
+**A:** Yeh ek trick question hai. Ek **class** memory occupy **nahi karti**. Class sirf ek blueprint ya template hai.
+
+Memory uss class ka **object (instance)** occupy karta hai. Ek object kitni memory lega, yeh uske **non-static instance variables** par depend karta hai. `Static` variables ki memory alag se, class level par, sirf ek baar allocate hoti hai, na ki har object ke liye. Methods (code) bhi class ke saath store hote hain, har object ke saath alag se nahi.
+
+***
+
+### **Q: Is it always necessary to create objects from a class?**
+**A:** Nahi, hamesha zaroori nahi hai.
+
+Agar ek class mein sirf `static` methods aur `static` variables hain, to aap uski functionality ko bina object banaye, seedhe class ke naam se istemal kar sakte hain.
+
+**Best Example**: Java ki `Math` class. Hum hamesha `Math.sqrt()` ya `Math.PI` likhte hain, kabhi bhi `Math m = new Math();` karke object nahi banate, kyunki uske saare members static hain.
+
+***
+
+## **Abstract Classes & Interfaces** ✍️
+
+### **Q: What is an Abstract Class?**
+**A:** Ek **Abstract Class** ek aisi class hai jiska aap **object nahi bana sakte** (`new` karke instantiate nahi kar sakte). Yeh ek adhoora blueprint hota hai jo doosri classes ke liye ek common template ka kaam karta hai.
+
+Iske andar **abstract methods** (jinki body nahi hoti) aur **non-abstract (concrete) methods** (jinki body hoti hai) dono ho sakte hain. Jo bhi class is abstract class ko `extend` karegi, uski zimmedari hai ki woh saare abstract methods ko implement kare.
+
+***
+
+### **Q: What is an Interface and what is its purpose?**
+**A:** Ek **Interface** ek 100% abstract blueprint hota hai. Yeh ek **contract** ki tarah kaam karta hai. Iske andar sirf methods ke signature hote hain (body nahi hoti, Java 8 se pehle).
+
+**Purpose**:
+1.  **100% Abstraction achieve karna**: Yeh batata hai ki ek object ko "kya karna chahiye", lekin yeh nahi batata "kaise karna chahiye".
+2.  **Multiple Inheritance support karna**: Java mein ek class ek se zyada class ko `extend` nahi kar sakti, lekin woh ek se zyada interfaces ko `implement` kar sakti hai. Isse multiple inheritance jaisi functionality milti hai.
+
+***
+
+### **Q: What are the key differences between an abstract class and an interface?**
+**A:**
+
+| Feature                 | Abstract Class                                                                                                 | Interface                                                                                                                   |
+| :---------------------- | :------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------- |
+| **Methods**             | Ismein `abstract` (bina body ke) aur `non-abstract` (body ke saath) dono tarah ke methods ho sakte hain.       | Ismein by default saare methods `public abstract` hote hain. (Java 8+ se `default` aur `static` methods bhi ho sakte hain). |
+| **Variables**           | Ismein `final`, `non-final`, `static`, `non-static` har tarah ke variables ho sakte hain.                      | Ismein variables by default `public static final` hote hain (yaani, constants).                                             |
+| **Constructor**         | Iska apna constructor hota hai (jo child class se `super()` ke zariye call hota hai).                          | Iska koi constructor nahi hota.                                                                                             |
+| **Inheritance**         | Ek class sirf **ek** hi abstract class ko `extend` kar sakti hai.                                              | Ek class **kai** interfaces ko `implement` kar sakti hai.                                                                   |
+| **Keyword**             | `extends` keyword ka istemal hota hai.                                                                         | `implements` keyword ka istemal hota hai.                                                                                   |
+| **Kab Istemal Karein?** | Jab aap kuch common code share karna chahte hain jo related classes istemal kar sakein. ("IS-A" relationship). | Jab aap ek contract define karna chahte hain jo unrelated classes bhi follow kar sakein. ("CAN-DO" relationship).           |
+---
+
+
+## **Object Lifecycle (ऑब्जेक्ट का जीवन चक्र)** 🔄
+
+### **Q: What is a constructor?**
+**A:** Ek **constructor** ek special method hota hai jo tab call hota hai jab kisi class ka object banaya jaata hai (`new` keyword se). Iska naam class ke naam jaisa hi hota hai aur iska koi return type nahi hota.
+
+Iska mukhya kaam object ke **instance variables** ko shuruaati (initial) value dena hai.
+
+**Analogy**: Jab aap ek naya ghar (`object`) khareedte hain, to constructor uss Mistri (`mechanic`) ki tarah hai jo ghar mein initial setup karta hai—jaise paani ka connection, bijli meter lagana, etc.
+
+***
+
+### **Q: What is a copy constructor? (Primarily C++)**
+**A:** Ek **copy constructor** ek khaas tarah ka constructor hota hai jo ek naye object ko, pehle se maujood object ki a-to-z copy ke roop mein banata hai. Yeh apne argument mein usi class ke doosre object ka reference leta hai.
+
+**Analogy**: Yeh objects ke liye ek high-quality photocopier machine ki tarah hai. Aap ek original document (`object`) daalte hain, aur machine ek bilkul nayi, hubahu copy (`new object`) bana deti hai.
+
+***
+
+### **Q: What is a destructor? (Primarily C++)**
+**A:** Ek **destructor** ek special method hai jo tab automatically call hota hai jab ek object nasht (destroy) hota hai (yaani, jab uska scope khatam ho jaata hai ya use `delete` kiya jaata hai). Iska naam class ke naam ke aage ek tilde (`~`) lagakar banta hai (jaise `~ClassName()`).
+
+Iska mukhya kaam object dwara istemal kiye gaye resources (jaise memory, files, ya network connections) ko azaad (release) karna hota hai, taaki resource leak na ho.
+
+**Analogy**: Jab aap hotel ke kamre (`object`) se check-out karte hain, to destructor uss housekeeping staff ki tarah hai jo kamre ko saaf karta hai aur use agle guest ke liye taiyaar karta hai.
+
+***
+
+### **Q: What is Garbage Collection?**
+**A:** **Garbage Collection** ek automatic memory management process hai, jo khaas kar Java aur C# jaisi languages mein hota hai.
+
+**Garbage Collector (GC)** naam ka ek program background mein chalta rehta hai aur aise objects ko dhoondhta hai jinka ab code mein koi istemal nahi ho raha (yaani, unhe koi refer nahi kar raha). Phir, GC un "laawaris" objects dwara gheri hui memory ko apne aap saaf kar deta hai. Isse programmer ko memory manually manage karne ki chinta nahi rehti.
+
+**Analogy**: Yeh ek sheher mein kaam karne wali automatic safai team ki tarah hai, jo sadak par khadi laawaris gaadiyon (`unreferenced objects`) ko dhoondhkar kabaadkhane (`memory cleanup`) bhej deti hai, taaki nayi gaadiyon ke liye jagah ban sake.
+
+***
+
+## **Advanced Concepts & Design Principles** 🧠
+
+### **Q: What is the difference between early (static) and late (dynamic) binding?**
+**A:** **Binding** ka matlab hai ek method call ko uske actual code se jodna. Yeh do tarah ka hota hai:
+
+* **Early Binding (Static Binding)**: Yeh **compile-time** par hota hai. Yahan, compiler ko program run hone se pehle hi theek-theek pata hota hai ki kaunsa method call karna hai. Yeh **Method Overloading** mein istemal hota hai. Yeh tez (fast) hota hai.
+
+* **Late Binding (Dynamic Binding)**: Yeh **run-time** par hota hai. Yahan, kaunsa method call hoga, iska faisla program ke chalne ke dauraan, object ke actual type ke aadhar par kiya jaata hai. Yeh **Method Overriding** mein istemal hota hai. Yeh flexible hota hai lekin thoda dheema ho sakta hai.
+
+***
+
+### **Q: What is Coupling and Cohesion in OOP?**
+**A:** Yeh do principles hain jo software design ki quality ko naapte hain. Ek achhe software design mein **Low Coupling** aur **High Cohesion** hona chahiye.
+
+* **Coupling (जुड़ाव)**: Yeh batata hai ki do classes ek doosre par kitna nirbhar (dependent) hain.
+    * **Low Coupling (अच्छा)**: Classes azaad hain. Ek class mein badlav karne se doosri class par koi asar nahi padta.
+    * **High Coupling (बुरा)**: Classes ek doosre se bahut zyada judi hui hain. Ek mein badlav karne se doosri bhi toot sakti hai.
+
+* **Cohesion (एकजुटता)**: Yeh batata hai ki ek class ke andar ke members (methods aur variables) aapas mein kitne aache se jude hue hain aur ek hi kaam kar rahe hain.
+    * **High Cohesion (अच्छा)**: Ek class sirf ek hi kaam karti hai aur use aache se karti hai.
+    * **Low Cohesion (बुरा)**: Ek class biryani bhi bana rahi hai aur car bhi chala rahi hai (yaani, bahut saare alag-alag kaam kar rahi hai).
+
+**Analogy**:
+* **Coupling**: Low coupling ek USB port jaisa hai (koi bhi device lagao). High coupling ek ajeeb sa charger hai jo sirf ek hi phone model mein lagta hai.
+* **Cohesion**: High cohesion ek aache se organize kiya gaya toolbox hai (saare screwdrivers ek jagah). Low cohesion ek "junk drawer" jaisa hai jismein sab kuch mix pada hai.
+
+***
+
+### **Q: What is the difference between Aggregation and Composition?**
+**A:** Dono hi **"HAS-A" relationship** (ek object ke paas doosra object hona) ko darshate hain, lekin inki mazbooti mein fark hai.
+
+* **Aggregation (कमज़ोर रिश्ता)**: Ismein, child object parent object ke bina bhi azaad roop se exist kar sakta hai. Agar parent object ko delete kar diya jaye, to child object delete nahi hota.
+    * **Analogy**: Ek `Department` ke paas kai `Teachers` hote hain. Agar department band ho jaaye, to bhi teachers exist karte hain aur doosre department mein jaa sakte hain.
+
+* **Composition (मजबूत रिश्ता)**: Ismein, child object parent object ka ek hissa (`part-of`) hota hai aur uske bina exist nahi kar sakta. Agar parent object ko delete kar diya jaye, to child object bhi apne aap delete ho jaata hai.
+    * **Analogy**: Ek `Ghar` ke paas kai `Kamre` hote hain. Agar aap ghar ko tod denge, to kamre bhi apne aap nasht ho jaayenge.
+
+***
+
+### **Q: What is the principle of "Composition over Inheritance"?**
+**A:** Yeh ek design salah hai jo kehti hai: **"Jab bhi possible ho, Inheritance (IS-A) ke bajaye Composition (HAS-A) ka istemal karein."**
+
+**Aisa kyun?** Kyunki Inheritance, classes ke beech ek bahut hi **tight coupling** bana deta hai. Composition zyada **flexible** hota hai. Composition se aap run-time par bhi kisi object ka behavior badal sakte hain, jabki Inheritance compile-time par fix ho jaata hai.
+
+***
+
+### **Q: What are the SOLID principles of design?**
+**A:** **SOLID** paanch design principles ka ek acronym hai jo Object-Oriented code ko behtar, flexible aur maintainable banane mein madad karte hain.
+
+* **S - Single Responsibility Principle**: Ek class ke paas badalne ka sirf **ek hi kaaran** hona chahiye (yaani, ek class ko sirf ek hi kaam karna chahiye).
+* **O - Open/Closed Principle**: Software ko **extension ke liye open** hona chahiye, lekin **modification ke liye closed** hona chahiye (yaani, naya feature jodne ke liye purana code na badalna pade).
+* **L - Liskov Substitution Principle**: Child class ke objects parent class ke objects ki jagah bina kisi problem ke istemal kiye jaa sakne chahiye.
+* **I - Interface Segregation Principle**: Clients ko aise interfaces par depend hone ke liye majboor nahi karna chahiye jinka woh istemal nahi karte (bade-bade interfaces ke bajaye chote aur specific interfaces banayein).
+* **D - Dependency Inversion Principle**: High-level modules ko low-level modules par depend nahi karna chahiye. Dono ko abstractions (interfaces) par depend karna chahiye.
+
+---
+## **Language-Specific Concepts (भाषा-विशेष अवधारणाएं)** C++/Java
+
+### **Q: What is the difference between a Class and a Struct? (Primarily C++)**
+**A:** C++ mein `class` aur `struct` lagbhag ek jaise hi hain, lekin unmein ek mukhya antar hai: **default access**.
+
+* **`struct`**: Iske members by default **public** hote hain. Yani, agar aap `public` ya `private` nahi likhte, to sab kuch public maana jayega.
+* **`class`**: Iske members by default **private** hote hain.
+
+**Istemal ka Antar**: Rivaaj (convention) ke anusaar, `struct` ka istemal simple data containers ke liye kiya jaata hai jismein sirf data hota hai (Plain Old Data). Jabki, `class` ka istemal bade objects ke liye kiya jaata hai jinke paas data (variables) aur behavior (methods) dono hote hain, aur jahan encapsulation aur inheritance jaise features zaroori hote hain. Java mein `struct` nahi hota.
+
+***
+
+### **Q: What is operator overloading? (Primarily C++)**
+**A:** **Operator Overloading** C++ ka ek feature hai jo programmer ko maujooda operators (jaise `+`, `-`, `==`, `<<`) ko apne banaye hue custom data types (classes) ke liye ek naya matlab dene ki anumati deta hai.
+
+**Analogy**: Aap `+` operator ko sikha sakte hain ki do `ComplexNumber` objects ko kaise joda jaaye, ya `==` operator ko sikha sakte hain ki do `Employee` objects ko kab barabar maana jaaye. Isse code padhne mein aasan aur swabhavik (intuitive) lagta hai. Java yeh feature support nahi karta.
+
+***
+
+### **Q: What is a virtual function and a pure virtual function? (Primarily C++)**
+**A:** Dono hi C++ mein run-time polymorphism haasil karne ke liye istemal hote hain.
+
+* **Virtual Function**: Yeh base class ka ek member function hota hai jiske aage `virtual` keyword lagaya jaata hai. Yeh compiler ko batata hai ki is function ko child class mein **override** kiya ja sakta hai. Ek `virtual` function ki base class mein apni default implementation ho sakti hai.
+
+* **Pure Virtual Function**: Yeh ek aisa virtual function hai jiski base class mein koi implementation nahi hoti. Ise ` = 0;` laga kar declare kiya jaata hai (jaise, `virtual void draw() = 0;`). Jis class mein ek bhi pure virtual function hota hai, woh apne aap ek **abstract class** ban jaati hai, aur uske child classes ko us pure virtual function ko zaroor implement karna padta hai.
+
+**Aasan shabdon mein**: Ek `virtual function` kehta hai, "Yeh mera default kaam hai, lekin agar tum chaho to ise behtar tareeke se kar sakte ho." Ek `pure virtual function` kehta hai, "Yeh kaam karna hai, lekin kaise karna hai, yeh tumhe (child class ko) hi batana hoga."
+
+***
+
+### **Q: What is the purpose of the `final` keyword in Java?**
+**A:** Java mein `final` keyword kisi bhi cheez ko **aparivartansheel (unchangeable)** banane ke liye istemal hota hai. Iske teen istemal hain:
+
+1.  **`final` variable**: Iski value ek baar assign hone ke baad dobara badli nahi ja sakti. Yeh ek **constant** ban jaata hai. (Jaise `final double PI = 3.14;`).
+2.  **`final` method**: Is method ko child class mein **override nahi kiya ja sakta**.
+3.  **`final` class**: Is class ko **inherit nahi kiya ja sakta** (yaani, iski koi child class nahi banayi ja sakti). Java mein `String` class iska ek achha udaharan hai.
+
+***
+
+### **Q: What is the purpose of the `super` keyword in Java?**
+**A:** `super` keyword ek reference variable hai jo hamesha **immediate parent class** ke object ko refer karta hai.
+
+Iske do mukhya kaam hain:
+1.  **Parent class ke constructor ko call karna**: Child class ke constructor se parent class ke constructor ko call karne ke liye (`super(arguments)`). Yeh hamesha constructor ki pehli line honi chahiye.
+2.  **Parent class ke members ko access karna**: Jab child class mein parent class ke jaisa hi koi method ya variable ho, to `super` ka istemal karke parent version ko access kiya ja sakta hai (jaise, `super.methodName()`).
+
+***
+
+## **Exception Handling (अपवाद प्रबंधन)** ⚙️
+
+### **Q: What is the difference between an exception and an error?**
+**A:** Java mein, `Exception` aur `Error` dono `Throwable` class ke child hain, lekin unmein ek bada fark hai.
+
+* **Exception**: Yeh aisi samasyaayein hain jinhein ek program ke andar **handle kiya ja sakta hai** (`try-catch` se). Yeh aam taur par program ki galti ya unexpected situation se aati hain jinse recover kiya ja sakta hai.
+    * **Example**: `FileNotFoundException`, `NullPointerException`.
+
+* **Error**: Yeh aisi gambhir samasyaayein hain jinhein ek program ko handle **nahi karna chahiye**. Yeh aam taur par JVM (Java Virtual Machine) ke level par hoti hain aur inhein recover karna lagbhag namumkin hota hai. Program aam taur par crash ho jaata hai.
+    * **Example**: `OutOfMemoryError` (memory khatam ho jana), `StackOverflowError`.
+
+**Aasan shabdon mein**: `Exception` ek flat tyre jaisa hai jise aap theek kar sakte hain. `Error` ek engine failure jaisa hai, jiske baad gaadi aage nahi badh sakti.
+
+***
+
+### **Q: What is the purpose of the `finally` block?**
+**A:** `finally` block `try-catch` statement ka ek hissa hai. Iska mukhya uddeshya "cleanup code" ko execute karna hai.
+
+`finally` block mein likha gaya code **hamesha execute hota hi hai**, chahe `try` block mein exception aaye ya na aaye, aur agar aaye to woh `catch` block mein pakda jaaye ya na pakda jaaye.
+
+**Sabse Zaroori Istemal**: Aise resources ko band karna jo program ke baad khule na reh jaayein, jaise files (`file.close()`), database connections, ya network sockets. Isse resource leak hone se bachta hai.
+
+----
 # **Questions To look Forward**
 
 * Make **class hierarchy**
